@@ -187,20 +187,43 @@ def load_data():
     return data.get("as_of", ""), data.get("action_plan"), df
 
 
+def _issue_is_clean(txt):
+    """오류가 없는(또는 해당 없는) 이슈 문구인지 판정."""
+    t = (txt or "").strip()
+    return (not t) or ("오류 0" in t) or t.startswith("해당 없음") or t.startswith("차단오류 없음")
+
+
 def detail_block(r):
-    """펼쳤을 때 보이는 상세 작업내용."""
+    """펼쳤을 때 보이는 상세 작업내용 — 산출물과 오류/이슈를 함께 표시."""
     st.markdown(f"**핵심목표**  {r['goal']}")
     if r.get("detail"):
-        st.markdown(f"**작업내용 / 인계 노트**  {r['detail']}")
+        st.markdown(f"**작업내용 / 결과**  {r['detail']}")
+
+    # 산출물
+    if r.get("outputs"):
+        st.markdown(f"**산출물**  {r['outputs']}")
+    if r.get("inputs"):
+        st.caption(f"주요 입력: {r['inputs']}")
+
+    # 오류 / 이슈
+    issue = r.get("issues", "")
+    if _issue_is_clean(issue):
+        st.caption(f"✅ 오류/이슈: {issue or '무결성/QA 검사 통과 — 오류 0'}")
+    else:
+        st.warning(f"**⚠️ 오류/이슈**  {issue}")
+
+    # 현재 차단/보류 사유(있을 때만)
     if r.get("blocker"):
-        st.warning(f"**차단/보류 사유**  {r['blocker']}")
+        st.error(f"**⛔ 차단/보류 사유**  {r['blocker']}")
+
     c1, c2 = st.columns(2)
     with c1:
         st.markdown(f"**선행 Task**  {r.get('pred') or '—'}")
-        st.markdown(f"**산출물**  {r.get('outputs') or '—'}")
     with c2:
         st.markdown(f"**후속 Task**  {r.get('succ') or '—'}")
-        st.markdown(f"**협업/검토**  {r.get('collab') or '—'}")
+    if r.get("collab"):
+        st.caption(f"협업/검토: {r['collab']}")
+
     st.caption(f"담당 {r['owner']}  ·  마감 {r['due']}  ·  진행률 {int(r['progress'])}%")
     st.progress(int(r["progress"]) / 100)
 
