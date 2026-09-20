@@ -25,6 +25,11 @@ PAPER = {
                 "for Reliable Question Answering over Korean Aviation "
                 "Safety Regulations",
     "venue": "한국항공운항학회 투고 예정",
+    # 대시보드 요약 정보
+    "submit_venue": "한국항공운항학회 (26년 12월 발행)",
+    "expected_end": "2026년 10월 4일",
+    "advisor_meeting": "2026년 10월 5일 21시 (한국시간)",
+    "meeting_link": "https://teams.live.com/meet/9349506101230?p=0DiRlJMahcZsydxd0d",
     "summary": (
         "본 연구는 대한민국 고정익 항공운송사업 운항승무원 규정을 대상으로 네 가지 "
         "RAG 시스템 — 현행 Vector(A), 전체버전 Naive(B), Temporal-Filtered Vector(C), "
@@ -184,7 +189,7 @@ def load_data():
         data = json.load(f)
     df = pd.DataFrame(data["tasks"])
     df["progress"] = pd.to_numeric(df["progress"], errors="coerce").fillna(0).astype(int)
-    return data.get("as_of", ""), data.get("action_plan"), df
+    return data.get("as_of", ""), data.get("action_plan"), df, data.get("handoff_note", "")
 
 
 def _issue_is_clean(txt):
@@ -198,6 +203,13 @@ def detail_block(r):
     # 연구결과 요약 (무엇이 나왔나) — 가장 위에 강조
     if r.get("result"):
         st.info(f"📊 **연구결과 요약**　{r['result']}")
+
+    # 핵심 수치 표 (지표 · 값)
+    metrics = r.get("metrics")
+    if isinstance(metrics, list) and metrics:
+        st.markdown("**핵심 수치**")
+        st.dataframe(pd.DataFrame(metrics, columns=["지표", "값"]),
+                     use_container_width=True, hide_index=True)
 
     st.markdown(f"**핵심목표**  {r['goal']}")
     if r.get("detail"):
@@ -278,7 +290,7 @@ def action_plan_panel(ap):
 
 @st.fragment(run_every="10s")   # 이 블록만 10초마다 자동 갱신
 def dashboard():
-    as_of, ap, df = load_data()
+    as_of, ap, df, handoff = load_data()
 
     total = len(df)
     done = (df["status"] == "완료").sum()
@@ -291,9 +303,10 @@ def dashboard():
     if os.path.exists(SOURCE):
         mtime = pd.Timestamp(os.path.getmtime(SOURCE), unit="s", tz="Africa/Lagos")
         mtime_txt = f"  ·  파일 최종수정 {mtime:%Y-%m-%d %H:%M}"
+    now_wat = pd.Timestamp.now(tz="Africa/Lagos")
     head_l.caption(
         f"데이터 기준 {as_of}{mtime_txt}  ·  원본: Research_Master.xlsx TEAM_TASKS_40"
-        f"  ·  화면 갱신 {pd.Timestamp.now():%H:%M:%S}"
+        f"  ·  화면 갱신 {now_wat:%H:%M:%S} (WAT/나이지리아, KST=+8h)"
     )
     if head_r.button("🔄 지금 새로고침", use_container_width=True):
         st.cache_data.clear()
@@ -306,6 +319,18 @@ def dashboard():
     c4.metric("미착수", todo)
     c5.metric("전체 공정률", f"{overall}%")
     st.progress(overall / 100)
+
+    # 전체 공정률 아래 요약 정보
+    st.markdown(
+        f"**투고예정학회:** {PAPER['submit_venue']}  \n"
+        f"**예상 작업종료일:** {PAPER['expected_end']}  \n"
+        f"**지도교수님과 논문초안 리뷰 미팅:** {PAPER['advisor_meeting']}  \n"
+        f"**미팅링크:** {PAPER['meeting_link']}"
+    )
+    st.caption("⏰ 모든 업데이트/갱신 시간은 나이지리아(WAT) 기준입니다. 한국시간(KST)은 +8시간 하세요.")
+
+    if handoff:
+        st.warning(f"🔄 **재실행 대기 (핸드오프 2026-09-20)**　{handoff}")
     st.divider()
 
     action_plan_panel(ap)
