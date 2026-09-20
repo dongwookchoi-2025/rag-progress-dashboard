@@ -203,16 +203,19 @@ def detail_block(r):
     if r.get("detail"):
         st.markdown(f"**작업내용**  {r['detail']}")
 
-    # 결과 표(청킹 비교 등)
-    for tb in r.get("tables", []):
-        st.markdown(f"**{tb.get('title','')}**")
-        st.dataframe(pd.DataFrame(tb.get("rows", []), columns=tb.get("columns")),
-                     use_container_width=True, hide_index=True)
+    # 결과 표(청킹 비교 등) — 일부 TT에만 존재하므로 리스트일 때만 렌더
+    tables = r.get("tables")
+    if isinstance(tables, list):
+        for tb in tables:
+            st.markdown(f"**{tb.get('title','')}**")
+            st.dataframe(pd.DataFrame(tb.get("rows", []), columns=tb.get("columns")),
+                         use_container_width=True, hide_index=True)
 
     # 파일럿 Gold 질문 등
-    if r.get("questions"):
-        st.markdown(f"**파일럿 Gold 질문 ({len(r['questions'])}문항)**")
-        st.dataframe(pd.DataFrame(r["questions"]),
+    questions = r.get("questions")
+    if isinstance(questions, list) and questions:
+        st.markdown(f"**파일럿 Gold 질문 ({len(questions)}문항)**")
+        st.dataframe(pd.DataFrame(questions),
                      use_container_width=True, hide_index=True)
 
     # 산출물
