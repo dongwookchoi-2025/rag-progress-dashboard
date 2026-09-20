@@ -13,6 +13,133 @@ SOURCE = "progress.json"
 
 STATUS_COLOR = {"완료": "🟢", "검토중": "🟡", "진행중": "🔵", "미착수": "⚪"}
 
+# ── 논문 정보 ──────────────────────────────────────────────────
+# 제목·저자·요약·주요지표를 여기 한 곳에서 관리합니다.
+# static/ 폴더에 manuscript.pdf, manuscript.hwp 원고가 있어야 다운로드 버튼이 활성화됩니다.
+PAPER = {
+    "title_ko": "구조·시간·인식 그래프 RAG를 활용한 "
+                "대한민국 항공안전법령 질의응답 신뢰성 검증 연구",
+    # 공식 영문 제목이 확정되면 아래를 교체하세요 (현재는 국문 기준 초안).
+    "title_en": "Verifying the Reliability of Question Answering on Korea's "
+                "Aviation Safety Legislation Using Structural, Temporal, "
+                "and Cognitive Graph RAG",
+    "venue": "한국항공운항학회 투고 예정",
+    # 연구요약(초록) — 확정 초록이 있으면 교체하세요 (현재는 연구설계 기준 초안).
+    "summary": (
+        "본 연구는 대한민국 항공안전법령을 대상으로 네 가지 RAG(검색증강생성) "
+        "시스템 — 현행 Vector 기반, 전체버전 Naive, Temporal-Filtered, 그리고 "
+        "구조·시간·인식 그래프(SAT-Graph) — 의 질의응답 신뢰성을 비교·검증한다. "
+        "법령 특유의 개정 이력과 조문 간 참조 구조가 답변의 정확도와 시점 정합성에 "
+        "미치는 영향을 분석하고, 그래프 기반 접근이 환각(hallucination)과 시점 오류를 "
+        "얼마나 줄이는지를 정량적으로 평가한다."
+    ),
+    "authors": {
+        "주저자": "최동욱",
+        "공동저자": "설지원, 정재훈, 손상우",
+        "교신저자": "이규정 교수",
+    },
+    # ▼▼ 주요 중요지표 — 실제 실험 결과값으로 채우세요 ▼▼
+    #   각 항목: {"label": 지표명, "value": 값, "help": 보조설명(선택)}
+    #   값이 하나도 없으면 대시보드에는 "입력 필요" 안내가 표시됩니다.
+    #   예시(형식만 참고 — 실제 수치로 교체):
+    #     {"label": "정답 정확도 (Accuracy)",     "value": "0.00", "help": "SAT-Graph"},
+    #     {"label": "충실도 (Faithfulness)",       "value": "0.00", "help": "SAT-Graph"},
+    #     {"label": "시점 정합성 (Temporal Acc.)", "value": "0.00"},
+    #     {"label": "환각률 (Hallucination)",      "value": "0.0%"},
+    "key_metrics": [],
+    # 4개 시스템 비교표를 넣고 싶으면 아래에 행을 채우세요(선택).
+    #   컬럼: system, accuracy, faithfulness, temporal, hallucination
+    #   예: {"system": "SAT-Graph", "accuracy": "0.00", "faithfulness": "0.00",
+    #        "temporal": "0.00", "hallucination": "0.0%"}
+    "systems_table": [],
+}
+
+STATIC_DIR = "static"
+
+
+def _download_button(filename, label, mime, key):
+    """static/ 폴더의 원고 파일을 다운로드 버튼으로 노출."""
+    path = os.path.join(STATIC_DIR, filename)
+    if os.path.exists(path):
+        with open(path, "rb") as f:
+            st.download_button(
+                label,
+                data=f.read(),
+                file_name=filename,
+                mime=mime,
+                key=key,
+                use_container_width=True,
+            )
+    else:
+        st.caption(f"⚠️ {filename} 없음 ({path})")
+
+
+def paper_header():
+    """상단: 정식 제목 · 영문 제목 · 다운로드 · 연구요약 · 저자."""
+    st.title(PAPER["title_ko"])
+    st.markdown(f"*{PAPER['title_en']}*")
+    if PAPER.get("venue"):
+        st.caption(PAPER["venue"])
+
+    # 논문 다운로드 링크
+    d1, d2, _ = st.columns([1, 1, 3])
+    with d1:
+        _download_button("manuscript.pdf", "📄 논문 PDF 다운로드",
+                         "application/pdf", key="dl_pdf")
+    with d2:
+        _download_button("manuscript.hwp", "📝 논문 HWP 다운로드",
+                         "application/x-hwp", key="dl_hwp")
+
+    # 연구요약
+    st.subheader("연구요약")
+    st.markdown(PAPER["summary"])
+
+    # 저자 정보 (요약 바로 밑)
+    a = PAPER["authors"]
+    st.markdown(
+        f"**주저자** {a['주저자']}　·　"
+        f"**공동저자** {a['공동저자']}　·　"
+        f"**교신저자** {a['교신저자']}"
+    )
+    st.divider()
+
+
+def key_metrics_panel():
+    """맨 아래: 연구 주요 중요지표."""
+    st.divider()
+    st.subheader("주요 중요지표")
+
+    metrics = PAPER.get("key_metrics") or []
+    table = PAPER.get("systems_table") or []
+
+    if not metrics and not table:
+        st.info(
+            "지표 값이 아직 입력되지 않았습니다. "
+            "app.py 상단의 `PAPER[\"key_metrics\"]`(핵심 지표) 또는 "
+            "`PAPER[\"systems_table\"]`(4개 시스템 비교표)에 "
+            "실제 실험 결과값을 넣으면 이 자리에 표시됩니다."
+        )
+        return
+
+    # 핵심 지표 카드
+    if metrics:
+        cols = st.columns(len(metrics))
+        for col, m in zip(cols, metrics):
+            col.metric(m.get("label", ""), m.get("value", "—"),
+                       help=m.get("help"))
+
+    # 4개 시스템 비교표
+    if table:
+        st.markdown("**시스템별 비교**")
+        tdf = pd.DataFrame(table).rename(columns={
+            "system": "시스템",
+            "accuracy": "정확도",
+            "faithfulness": "충실도",
+            "temporal": "시점 정합성",
+            "hallucination": "환각률",
+        })
+        st.dataframe(tdf, use_container_width=True, hide_index=True)
+
 
 @st.cache_data(ttl=10)          # 원본을 10초에 한 번만 재조회
 def load_data():
@@ -139,5 +266,10 @@ def dashboard():
         )
 
 
-st.title("항공안전법령 RAG 검증 — 진행 현황")
-dashboard()
+# ── 페이지 구성 ────────────────────────────────────────────────
+paper_header()                 # 제목·영문제목·다운로드·요약·저자
+
+st.header("진행 현황")
+dashboard()                    # 기존 진행현황 대시보드
+
+key_metrics_panel()            # 맨 아래: 주요 중요지표
