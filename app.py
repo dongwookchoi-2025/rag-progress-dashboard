@@ -2,6 +2,7 @@ import os
 import json
 import pandas as pd
 import streamlit as st
+import streamlit.components.v1 as components
 
 st.set_page_config(page_title="항공안전법령 RAG 검증 진행 현황", layout="wide")
 
@@ -20,7 +21,55 @@ def load_data():
         data = json.load(f)
     df = pd.DataFrame(data["tasks"])
     df["progress"] = pd.to_numeric(df["progress"], errors="coerce").fillna(0).astype(int)
-    return data.get("as_of", ""), df
+    return data.get("as_of", ""), data.get("manuscript"), df
+
+
+@st.cache_data(ttl=10)
+def read_bytes(path):
+    if path and os.path.exists(path):
+        with open(path, "rb") as f:
+            return f.read()
+    return None
+
+
+def manuscript_section(m):
+    if not m:
+        return
+    st.subheader("📄 최신 원고")
+    st.markdown(f"**{m['title']}**")
+    if m.get("note"):
+        st.caption("⚠️ " + m["note"])
+
+    # 다운로드 버튼 (저장소에 담긴 파일 바이트를 그대로 내려줌 — 항상 동작)
+    pdf_bytes = read_bytes(m.get("pdf_path"))
+    hwp_bytes = read_bytes(m.get("hwp_path"))
+    c1, c2 = st.columns(2)
+    if pdf_bytes:
+        c1.download_button(
+            f"⬇️ PDF 다운로드 · {m.get('pdf_label','')} ({m.get('pdf_updated','')})",
+            data=pdf_bytes, file_name=m.get("pdf_download_name", "manuscript.pdf"),
+            mime="application/pdf", use_container_width=True,
+        )
+    else:
+        c1.info("PDF 파일이 static 폴더에 없습니다.")
+    if hwp_bytes:
+        c2.download_button(
+            f"⬇️ HWP 다운로드 · {m.get('hwp_label','')} ({m.get('hwp_updated','')})",
+            data=hwp_bytes, file_name=m.get("hwp_download_name", "manuscript.hwp"),
+            mime="application/x-hwp", use_container_width=True,
+        )
+    else:
+        c2.info("HWP 파일이 static 폴더에 없습니다.")
+
+    # 인라인 PDF 뷰어 (Streamlit 정적 서빙 경로를 iframe으로 표시)
+    if pdf_bytes and m.get("pdf_url"):
+        components.html(
+            f'<iframe src="/{m["pdf_url"]}" width="100%" height="820" '
+            f'style="border:1px solid #ccc;border-radius:6px;"></iframe>',
+            height=840,
+        )
+        st.caption("PDF가 안 보이면 위의 ⬇️ PDF 다운로드 버튼으로 열어보세요.")
+    st.divider()
 
 
 def detail_block(r):
@@ -43,7 +92,7 @@ def detail_block(r):
 
 @st.fragment(run_every="10s")   # 이 블록만 10초마다 자동 갱신
 def dashboard():
-    as_of, df = load_data()
+    as_of, manuscript, df = load_data()
 
     total = len(df)
     done = (df["status"] == "완료").sum()
@@ -72,6 +121,9 @@ def dashboard():
     c5.metric("전체 공정률", f"{overall}%")
     st.progress(overall / 100)
     st.divider()
+
+    # ── 최신 원고 (PDF 뷰어 + 다운로드) ────────────────────────
+    manuscript_section(manuscript)
 
     # ── Phase별 요약 ───────────────────────────────────────────
     st.subheader("Phase별 진행률")

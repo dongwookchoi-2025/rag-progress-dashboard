@@ -1,5 +1,18 @@
 {
   "as_of": "2026-09-19 22:48",
+  "manuscript": {
+    "title": "구조·시간·인식 그래프 RAG를 활용한 대한민국 항공안전법령 질의응답 신뢰성 검증 연구",
+    "pdf_path": "static/manuscript.pdf",
+    "pdf_url": "app/static/manuscript.pdf",
+    "pdf_label": "보완본 V0.5",
+    "pdf_updated": "2026-09-19 22:01",
+    "pdf_download_name": "항공안전법령_RAG_신뢰성검증_보완본_V0.5.pdf",
+    "hwp_path": "static/manuscript.hwp",
+    "hwp_label": "초안 V0.4",
+    "hwp_updated": "2026-09-19 21:42",
+    "hwp_download_name": "항공안전법령_RAG_신뢰성검증_초안_V0.4.hwp",
+    "note": "PDF는 보완본 V0.5, HWP는 초안 V0.4 기준입니다(HWP V0.5는 아직 없음)."
+  },
   "tasks": [
     {
       "id": "TT01",
