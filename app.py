@@ -194,10 +194,26 @@ def _issue_is_clean(txt):
 
 
 def detail_block(r):
-    """펼쳤을 때 보이는 상세 작업내용 — 산출물과 오류/이슈를 함께 표시."""
+    """펼쳤을 때 보이는 상세 작업내용 — 연구결과 요약·산출물·오류/이슈를 함께 표시."""
+    # 연구결과 요약 (무엇이 나왔나) — 가장 위에 강조
+    if r.get("result"):
+        st.info(f"📊 **연구결과 요약**　{r['result']}")
+
     st.markdown(f"**핵심목표**  {r['goal']}")
     if r.get("detail"):
-        st.markdown(f"**작업내용 / 결과**  {r['detail']}")
+        st.markdown(f"**작업내용**  {r['detail']}")
+
+    # 결과 표(청킹 비교 등)
+    for tb in r.get("tables", []):
+        st.markdown(f"**{tb.get('title','')}**")
+        st.dataframe(pd.DataFrame(tb.get("rows", []), columns=tb.get("columns")),
+                     use_container_width=True, hide_index=True)
+
+    # 파일럿 Gold 질문 등
+    if r.get("questions"):
+        st.markdown(f"**파일럿 Gold 질문 ({len(r['questions'])}문항)**")
+        st.dataframe(pd.DataFrame(r["questions"]),
+                     use_container_width=True, hide_index=True)
 
     # 산출물
     if r.get("outputs"):

@@ -1,6 +1,6 @@
 {
-  "as_of": "2026-09-20 09:42",
-  "source_note": "Research_Master.xlsx(정본) TEAM_TASKS_40 + Infra_QA/Development_Pilots/CHANGE_LOG, research_pipeline.log, RAG_Config_Master.yaml 기준 재생성",
+  "as_of": "2026-09-20 09:55",
+  "source_note": "Research_Master.xlsx(정본)+Infra_QA/Development_Pilots/TT21_PILOT_GOLD, research_pipeline.log, RAG_Config_Master.yaml 기준",
   "action_plan": null,
   "tasks": [
     {
@@ -17,7 +17,7 @@
       "collab": "정재훈",
       "inputs": "선행 Team Task 없음. 연구아이디어와 핵심 선행연구를 직접 확인 | 공용폴더 07_Research_Management/ 에서 기존 연구아이디어/회의결정 확인 | 원 논문은 각 DOI/arXiv 공식 페이지에서 확인. 연구자가 작성한 요약본보다 원문 우선",
       "outputs": "[UPDATE] 07_Research_Management/Research_Master.xlsx  → Protocol, Experiment_Rules, Change_Log, Decision_Log 시트 | Research_Master.xlsx의 LEGAL_SCOPE·CHANGE_LOG·TEAM_TASKS_40, 필요 시 Thesis_Manuscript.docx 1장/3장",
-      "detail": "연구범위·비교조건을 Protocol/Experiment_Rules/Decision_Log로 공식화. RQ1~RQ4 및 A/B/C/D 4개 시스템 비교구조 확정.",
+      "result": "연구범위·비교조건을 공식 규칙(Protocol/Experiment_Rules/Decision_Log)으로 동결. RQ1~RQ4와 A/B/C/D 4개 시스템 비교틀 확정 → 이후 모든 TT가 이 기준에서 출발.",
       "issues": "무결성/QA 검사 통과 — 오류 0",
       "blocker": ""
     },
@@ -35,7 +35,7 @@
       "collab": "손상우·설지원",
       "inputs": "TT01의 연구범위 + SAT-Graph 원 논문 | 07_Research_Management/Research_Master.xlsx의 Protocol/Experiment_Rules 시트(최동욱이 승인본 표시) | 해당 선행연구 원문 PDF/HTML 및 DOI/arXiv 페이지",
       "outputs": "[UPDATE] 07_Research_Management/Research_Master.xlsx  → Literature_SAT, SAT_Entity_Map, SAT_Retrieval_Flow 시트 | Research_Master.xlsx CHANGE_LOG에 재현/조작화 결정 기록; RAG_Config_Master.yaml의 graph_database/systems.D 후보 설정; Thesis_Manuscript.docx 2.6/3.12 메모",
-      "detail": "SAT-Graph 개념을 항공법령용 node/edge·검색절차로 조작화(Literature_SAT 20항목, Entity_Map 15, Retrieval_Flow 13).",
+      "result": "SAT-Graph 개념을 항공법령용 node/edge·검색절차로 번역 완료(Literature_SAT 20·Entity_Map 15·Retrieval_Flow 13항목). System D 설계 근거 확보.",
       "issues": "무결성/QA 검사 통과 — 오류 0",
       "blocker": ""
     },
@@ -53,7 +53,7 @@
       "collab": "설지원",
       "inputs": "TT01의 연구 프로토콜 + VersionRAG + BGE-M3 논문 | 07_Research_Management/Research_Master.xlsx의 Protocol/Experiment_Rules 시트(최동욱이 승인본 표시) | 해당 선행연구 원문 PDF/HTML 및 DOI/arXiv 페이지",
       "outputs": "[UPDATE] 07_Research_Management/Research_Master.xlsx  → Literature_VersionRAG, Literature_Embedding, Method_Decisions 시트 | YAML의 chunking/embedding/systems.B·C 후보; Research_Master.xlsx CHANGE_LOG·PILOT_FREEZE·REPRODUCIBILITY에 결정/환경 기록",
-      "detail": "VersionRAG·변경탐지·Embedding 방법 확정. embedding 후보 BGE-M3.",
+      "result": "버전 구분·개정 전후 비교·한국어 embedding 방법 확정. embedding 후보를 BGE-M3로 결정.",
       "issues": "무결성/QA 검사 통과 — 오류 0",
       "blocker": ""
     },
@@ -71,7 +71,7 @@
       "collab": "최동욱",
       "inputs": "TT01의 연구 프로토콜 + LegalBench-RAG/LegalBench 평가문헌 | 07_Research_Management/Research_Master.xlsx의 Protocol/Experiment_Rules 시트(최동욱이 승인본 표시) | 해당 선행연구 원문 PDF/HTML 및 DOI/arXiv 페이지",
       "outputs": "[UPDATE] 07_Research_Management/Research_Master.xlsx  → Literature_Map, Citation_Map 시트 | [CREATE/UPDATE] 07_Research_Management/Research_Master.xlsx  → Metrics_Dictionary, Gold_Guideline, Answer_Rubric 시트 | METRICS 정의, Gold 작성원칙, 전문가 평가기준; 향후 03_Code/modules/evaluation.py의 구현 기준",
-      "detail": "LegalBench-RAG/LegalBench 기반 Metrics_Dictionary·Gold_Guideline·Answer_Rubric 사전 확정(결과 전 평가기준 동결).",
+      "result": "결과가 나오기 전에 평가기준을 못 바꾸도록 Metrics_Dictionary(M001~M015)·Gold_Guideline·Answer_Rubric을 사전 동결.",
       "issues": "무결성/QA 검사 통과 — 오류 0",
       "blocker": ""
     },
@@ -89,7 +89,7 @@
       "collab": "손상우·정재훈",
       "inputs": "TT01의 확정 연구범위 + 대한민국 항공안전법령 원문/체계 | 07_Research_Management/Research_Master.xlsx의 Protocol/Experiment_Rules 시트(최동욱이 승인본 표시) | 해당 선행연구 원문 PDF/HTML 및 DOI/arXiv 페이지",
       "outputs": "[UPDATE] 07_Research_Management/Research_Master.xlsx  → Legal_Scope, QA_Candidates 시트 | LEGAL_SCOPE 승인본 및 SOURCE_INVENTORY 수집대상; 01_Raw_Corpus_V1/의 폴더별 수집계획",
-      "detail": "LEGAL_SCOPE LS001~LS120을 CORE/LINK/SUPPORT/EXCLUDE로 구조화, bounded exhaustive scope 확정(FRZ-TT05-001).",
+      "result": "수집범위를 LEGAL_SCOPE LS001~LS120으로 명시(CORE/LINK/SUPPORT/EXCLUDE). 무한 확장을 막는 bounded scope 확정.",
       "issues": "무결성/QA 검사 통과 — 오류 0",
       "blocker": ""
     },
@@ -107,7 +107,7 @@
       "collab": "TT07 인계 완료; 실제 Raw/Registry 상태와 Workplan 정합화",
       "inputs": "TT05의 Legal_Scope와 Source 목록 | 07_Research_Management/Research_Master.xlsx의 Legal_Scope/Corpus_Registry 시트 | 01_Raw_Corpus_V1/ 폴더의 공식 원문; source URL은 Corpus_Registry의 source_url 열에서 확인",
       "outputs": "[UPDATE] 07_Research_Management/Research_Master.xlsx  → Corpus_Registry 시트 | [SAVE SOURCE] 01_Raw_Corpus_V1/  → 현행/연혁 원문은 원본 형식 그대로 저장 | 01_Raw_Corpus_V1/01_Law, 02_Decree, 03_Rule에 원본 저장; SOURCE_INVENTORY의 URL/경로/수집상태; 99_Logs_Backup/01_Run_Logs/",
-      "detail": "현행 4종 확정, SRC004 canonical row로 통합, 물리 XML 95개 기준으로 경로 정합.",
+      "result": "연구대상 법령의 현행·과거 버전을 공식 출처(국가법령정보센터 등)에서 확보. 현행 4종 canonical 통합.",
       "issues": "무결성/QA 검사 통과 — 오류 0",
       "blocker": ""
     },
@@ -125,7 +125,7 @@
       "collab": "TT08 정재훈 인계대기: Raw_Corpus_V1 + Corpus_Registry(status=완료) 사용",
       "inputs": "TT06의 Corpus_Registry와 이미 수집한 현행/연혁 원문 | 07_Research_Management/Research_Master.xlsx의 Legal_Scope/Corpus_Registry 시트 | 01_Raw_Corpus_V1/ 폴더의 공식 원문; source URL은 Corpus_Registry의 source_url 열에서 확인",
       "outputs": "[UPDATE] 07_Research_Management/Research_Master.xlsx  → Corpus_Registry 시트 | [SAVE SOURCE] 01_Raw_Corpus_V1/  → 제·개정문/부칙/별표/기술기준 원문 추가 | 01_Raw_Corpus_V1/04_Appendix, 05_Administrative_Rule, 06_Technical_Standard; SOURCE_INVENTORY; 99_Logs_Backup/01_Run_Logs/",
-      "detail": "별표 PDF 3, 기술기준 XML 28+PDF, 제·개정문/부칙/별표/기술기준 원문 완비, provenance 기록.",
+      "result": "제·개정문·부칙·별표·기술기준 원문까지 완비(별표 PDF 3, 기술기준 XML 28+PDF). 개정 이유·효력변화 복원 가능.",
       "issues": "무결성/QA 검사 통과 — 오류 0",
       "blocker": ""
     },
@@ -143,8 +143,8 @@
       "collab": "TT09 최동욱 인계대기: Raw 99건(95 XML+4 PDF) 전수 QA PASS; 0-byte/손상/syntax 오류 0건; exact-hash alias 2쌍은 current endpoint↔latest history 의도 중복으로 문서화",
       "inputs": "TT06~TT07의 Raw_Corpus_V1 폴더 + Corpus_Registry | 07_Research_Management/Research_Master.xlsx의 Legal_Scope/Corpus_Registry 시트 | 01_Raw_Corpus_V1/ 폴더의 공식 원문; source URL은 Corpus_Registry의 source_url 열에서 확인",
       "outputs": "[UPDATE] 07_Research_Management/Research_Master.xlsx  → Corpus_Registry의 checksum/QA/status 열 + Validation_Log 시트 | Research_Master.xlsx DATA_QA·REPRODUCIBILITY·CHANGE_LOG; 99_Logs_Backup/03_Freeze/ Raw V1 manifest/hash",
-      "detail": "Raw 99건(95 XML+4 PDF) 전수 SHA-256·file_exists·parse_ok QA. current↔latest 중복 2쌍 duplicate_ok 명시.",
-      "issues": "오류 0 (mismatch·0-byte·XML syntax·손상 PDF 모두 0). current↔latest exact-hash alias 2쌍은 의도된 중복으로 문서화.",
+      "result": "Raw 99건(95 XML+4 PDF) 전수 무결성 QA 통과 — mismatch·0-byte·XML syntax·손상 PDF 모두 0.",
+      "issues": "오류 0. current↔latest exact-hash alias 2쌍은 의도된 중복으로 문서화.",
       "blocker": ""
     },
     {
@@ -161,8 +161,8 @@
       "collab": "TT10 손상우 인계 완료: FRZ-TT09-001 RAW-V1만 읽기전용 기준입력으로 사용. Freeze_Log 및 99_Logs_Backup/03_Freeze/Raw_V1_FREEZE_RECORD.json 참조. Full network recollection은 collector 미구현으로 미실행(PASS WITH NOTE); Raw 직접 수정 금지, 변경 시 RAW-V2 + CHANGE_LOG 승인.",
       "inputs": "TT08에서 QA 통과한 Raw_Corpus_V1 + QA 결과 | 07_Research_Management/Research_Master.xlsx의 Legal_Scope/Corpus_Registry 시트 | 01_Raw_Corpus_V1/ 폴더의 공식 원문; source URL은 Corpus_Registry의 source_url 열에서 확인",
       "outputs": "[UPDATE] 07_Research_Management/Research_Master.xlsx  → Freeze_Log 시트에 cutoff, file count, SHA-256 summary, 승인자 기록 | Research_Master.xlsx REPRODUCIBILITY·CHANGE_LOG; 99_Logs_Backup/03_Freeze/에 Raw V1 freeze 기록",
-      "detail": "FRZ-TT09-001 FROZEN(cutoff 2026-09-09, 99 files). TT10+ RAW-V1 read-only.",
-      "issues": "차단오류 없음. 전체 네트워크 재수집은 collector 미교차로 미실행(PASS WITH NOTE).",
+      "result": "연구용 Raw V1을 공식 기준본으로 동결(FRZ-TT09-001, cutoff 2026-09-09, 99 files). 이후 읽기전용.",
+      "issues": "차단오류 없음. 전체 네트워크 재수집은 미실행(PASS WITH NOTE).",
       "blocker": ""
     },
     {
@@ -179,7 +179,7 @@
       "collab": "TT11 손상우 인계 완료: RAW-V1/FRZ-TT09-001 읽기전용 기준. Data_Schema + ID_Rules v1.0 및 04_Config/RAG_Config_Master.yaml > legal_schema 사용. 02_Database/Aviation_Law_Data.duckdb만 정본으로 사용; 03_Code의 동명 DB 사본은 사용 금지. TT11에서 Pydantic/Parser + components/parser_qa 구현.",
       "inputs": "TT02의 SAT 구조정의 + TT09 Raw V1 | 07_Research_Management/Research_Master.xlsx의 Data_Schema/Cleaning_Rules/Validation_Log 중 해당 시트 | 02_Database/Aviation_Law_Data.duckdb의 선행 table; DuckDB에서 SELECT로 건수와 schema를 먼저 확인 | 01_Raw_Corpus_V1/는 원문 대조가 필요할 때만 읽기전용으로 확인",
       "outputs": "[UPDATE] 07_Research_Management/Research_Master.xlsx  → Data_Schema, ID_Rules 시트 | [UPDATE] 04_Config/RAG_Config_Master.yaml  → legal_schema 섹션 | DuckDB schema/ID 규칙 확정; 03_Code/research_pipeline.py 및 03_Code/modules/의 구현 기준; CHANGE_LOG 기록",
-      "detail": "Data_Schema+ID_Rules v1.0 (NORM/DOCV/COMP/PV 규칙, hierarchy/cardinality, XML mapping).",
+      "result": "법률-조-항-호-목-별표+버전을 기계가 식별하도록 Data_Schema+ID_Rules v1.0 확정.",
       "issues": "무결성/QA 검사 통과 — 오류 0",
       "blocker": ""
     },
@@ -197,7 +197,7 @@
       "collab": "설지원·최동욱 검토 완료: RAW-V1 XML 95/95 파싱, semantic document versions 93, norms 4, components 239,509, parser_qa 25,654, instance collision 0. 20-sample QA PASS. 동일 parse 2회 결과/데이터셋 digest 완전 일치로 idempotency PASS. TT12 인계 완료.",
       "inputs": "TT10의 Data_Schema + TT09의 Raw XML/JSON | 07_Research_Management/Research_Master.xlsx의 Data_Schema/Cleaning_Rules/Validation_Log 중 해당 시트 | 02_Database/Aviation_Law_Data.duckdb의 선행 table; DuckDB에서 SELECT로 건수와 schema를 먼저 확인 | 01_Raw_Corpus_V1/는 원문 대조가 필요할 때만 읽기전용으로 확인",
       "outputs": "[CREATE/UPDATE] 03_Code/research_pipeline.py  → parse_xml(), validate_schema() 함수 | [CREATE/UPDATE] 02_Database/Aviation_Law_Data.duckdb  → components, parser_qa 테이블 | 03_Code/research_pipeline.py의 ingest/parse 구현, 03_Code/modules/collector.py·parser.py; DuckDB source_documents·norms·components·load_batches; logs",
-      "detail": "RAW XML 95/95 파싱 → doc version 93·norm 4·component 239,509·parser_qa 25,654. instance collision 0, idempotency PASS.",
+      "result": "자동 Parser 구축·전체 변환: doc version 93·norm 4·component 239,509 생성. instance collision 0, idempotency PASS.",
       "issues": "무결성/QA 검사 통과 — 오류 0",
       "blocker": ""
     },
@@ -215,7 +215,7 @@
       "collab": "최동욱 검토 완료: components 239,509 → cleaned_components 239,509 (행 손실 0), normalized 67,161, NFKC changed 51,695, meaningful text loss 0, legal/cross-ref QA issue 0, 20-sample cleaning QA PASS. TT13 인계 가능.",
       "inputs": "TT11의 components 테이블 | 07_Research_Management/Research_Master.xlsx의 Data_Schema/Cleaning_Rules/Validation_Log 중 해당 시트 | 02_Database/Aviation_Law_Data.duckdb의 선행 table; DuckDB에서 SELECT로 건수와 schema를 먼저 확인 | 01_Raw_Corpus_V1/는 원문 대조가 필요할 때만 읽기전용으로 확인",
       "outputs": "[UPDATE] 03_Code/research_pipeline.py  → clean_text() 함수 | [UPDATE] 02_Database/Aviation_Law_Data.duckdb  → cleaned_components 테이블 | 03_Code/modules/cleaning.py(또는 research_pipeline.py 정제 함수); DuckDB 구조화 text; Research_Master.xlsx DATA_QA",
-      "detail": "components 239,509 → cleaned 239,509(손실 0). normalized 67,161, NFKC changed 51,695. 의미손실 0·상호참조 오류 0.",
+      "result": "본문 정제 결과 component 239,509 유지(행 손실 0). NFKC 51,695건 변경에도 의미손실·상호참조 오류 0.",
       "issues": "무결성/QA 검사 통과 — 오류 0",
       "blocker": ""
     },
@@ -233,7 +233,7 @@
       "collab": "손상우 검토/인계 준비 완료: FRZ-TT09-001 RAW-V1 기준 별표 PDF 3/3 hash verification PASS. TT13-CLEAN-v1.0으로 supplementary_provision 912 components -> supplementary 3,634 rows, appendix 1,856 components -> cleaned_appendices 354,503 lines 구조보존 정제. Meaning/number/unit issues=0, 고정 seed 130013의 raw/parsed/cleaned 30건 QA PASS. TT13 dataset digest=7ad5dcab0a4f4a1b449ccff4769baeda4c1c667c391bdaab13bf36c3fabd9666. Cleaning Rules FRZ-TT13-001 동결 후 TT14/TT16 인계 가능. TT14·TT16은 미착수 유지.",
       "inputs": "TT12 정제결과 + TT11의 부칙/별표 파싱결과 | 07_Research_Management/Research_Master.xlsx의 Data_Schema/Cleaning_Rules/Validation_Log 중 해당 시트 | 02_Database/Aviation_Law_Data.duckdb의 선행 table; DuckDB에서 SELECT로 건수와 schema를 먼저 확인 | 01_Raw_Corpus_V1/는 원문 대조가 필요할 때만 읽기전용으로 확인",
       "outputs": "[UPDATE] 03_Code/research_pipeline.py  → supplementary/appendix cleaning 함수 | [UPDATE] 02_Database/Aviation_Law_Data.duckdb  → supplementary, cleaned_appendices 테이블 | [UPDATE] 07_Research_Management/Research_Master.xlsx  → Cleaning_Rules, Validation_Log 시트 | 별표/부칙 정제 로직을 03_Code/modules/에 반영; DuckDB components/provision_versions용 정제 결과; DATA_QA·CHANGE_LOG",
-      "detail": "별표 PDF 3/3 hash PASS. 부칙 912→3,634 rows, 별표 1,856→354,503 line 구조보존. Cleaning Rules FRZ-TT13-001.",
+      "result": "부칙 912→3,634 rows, 별표 1,856→354,503 line으로 구조보존 정제. 정제 전후 법적 의미 동일(QA issue 0).",
       "issues": "무결성/QA 검사 통과 — 오류 0",
       "blocker": ""
     },
@@ -251,8 +251,8 @@
       "collab": "TT14 완료. 최초 기술적 구축 후 TT15 법적검증 과정의 source-verified corrections를 반영한 최종 temporal baseline은 TT14-TEMPORAL-v1.0.6. provision_versions=212,970; 93 semantic DOCV(86 content-bearing + 7 attachment/no-component) 검증, RAW 93/93 hash PASS. CURRENT 4,770 / EXPIRED 203,831 / FUTURE_EFFECTIVE 1,704 / SUPERSEDED_AT_EFFECTIVE_BOUNDARY 25 / SUPERSEDED_BEFORE_EFFECTIVE 1 / SUPERSEDED_PRE_EFFECTIVE_COPY 87 / SUPERSEDED_SAME_DAY 2,552. invalid interval=0, multiple CURRENT/component=0, premature FUTURE=0, idempotency PASS. final TT14 digest=39860fd74f7319ad29bfb8839323e536801910f1f4c7e56f551c9bf11a841b94. 4,138 attachment/unparsed boundaries는 TT16 구조화 대상으로 명시적으로 deferred.",
       "inputs": "TT13 정제 데이터 + TT03 VersionRAG 방식 | 07_Research_Management/Research_Master.xlsx의 Data_Schema/Cleaning_Rules/Validation_Log 중 해당 시트 | 02_Database/Aviation_Law_Data.duckdb의 선행 table; DuckDB에서 SELECT로 건수와 schema를 먼저 확인 | 01_Raw_Corpus_V1/는 원문 대조가 필요할 때만 읽기전용으로 확인",
       "outputs": "[UPDATE] 03_Code/research_pipeline.py  → build_versions() 함수 | [UPDATE] 02_Database/Aviation_Law_Data.duckdb  → provision_versions 테이블 | 03_Code/research_pipeline.py temporal 및 03_Code/modules/temporal.py; DuckDB provision_versions; DATA_QA",
-      "detail": "provision_versions 212,970 (CURRENT 4,770/EXPIRED 203,831/FUTURE_EFFECTIVE 1,704/SUPERSEDED 계열). invalid interval 0, multiple CURRENT 0, premature FUTURE 0.",
-      "issues": "오류 0. 과거 첨부파일만 존재하는 attachment 4,138건은 TT16으로 이월(deferred).",
+      "result": "버전 유효기간 부여: provision_versions 212,970 (CURRENT 4,770 / EXPIRED 203,831 / FUTURE 1,704 / SUPERSEDED 계열). 구간·중복 오류 0.",
+      "issues": "오류 0. 과거 첨부파일만 존재하는 4,138건은 TT16으로 이월.",
       "blocker": ""
     },
     {
@@ -269,8 +269,8 @@
       "collab": "TT15 완료/승인. TT15-LEGAL-TEMPORAL-v1.1.4가 final TT14-TEMPORAL-v1.0.6의 212,970 provision versions를 법적·시간정합성 검증. temporal_exceptions=39,545; temporal_validation rules=23 (PASS 22, PASS_WITH_NOTE 1, FAIL 0); absence boundaries validated=4,910; unresolved TT15-only=0; pre-promulgation review=0; idempotency PASS; 30 point-in-time boundary QA PASS. TT15 dataset digest=2782003a2a7028c006ee214076538becc2764dcff1a9e1ffadcc47af719465dd. 승인 범위는 PARSED TEMPORAL SCOPE PASS. attachment/no-component temporal coverage 4,138건은 TT16으로 명시적 deferred이며 TT16은 미착수 유지. TT17/TT18/TT31/TT32 handoff READY (TT16 deferred coverage 조건 명시).",
       "inputs": "TT14 provision_versions 테이블 + 공식 법령 연혁 | 07_Research_Management/Research_Master.xlsx의 Data_Schema/Cleaning_Rules/Validation_Log 중 해당 시트 | 02_Database/Aviation_Law_Data.duckdb의 선행 table; DuckDB에서 SELECT로 건수와 schema를 먼저 확인 | 01_Raw_Corpus_V1/는 원문 대조가 필요할 때만 읽기전용으로 확인",
       "outputs": "[UPDATE] 02_Database/Aviation_Law_Data.duckdb  → temporal_exceptions, temporal_validation 테이블 | [UPDATE] 07_Research_Management/Research_Master.xlsx  → Validation_Log 시트 | Research_Master.xlsx DATA_QA에 시간정합성 검증결과; 오류 시 CHANGE_LOG와 temporal.py 수정요청",
-      "detail": "TT15-LEGAL-TEMPORAL-v1.1.4. temporal_exceptions 39,545, validation rules 23(PASS 22·PASS_WITH_NOTE 1·FAIL 0), 30 point-in-time QA PASS.",
-      "issues": "검증규칙 23건 중 1건 PASS_WITH_NOTE(부칙·경과조치 handoff, source-driven 보정). FAIL 0. attachment 4,138건 TT16 이월.",
+      "result": "특이 시행일·경과조치·미시행 버전 법적 검증: temporal_exceptions 39,545, 검증규칙 23건(PASS 22·NOTE 1·FAIL 0).",
+      "issues": "검증규칙 23건 중 1건 PASS_WITH_NOTE(부칙·경과조치), FAIL 0.",
       "blocker": ""
     },
     {
@@ -287,8 +287,8 @@
       "collab": "TT16 완료/승인. TT16-STRUCTURE-v1.0.2 corrected canonical run PASS. appendix18=1,567; operations_requirements=15,751; IN_SCOPE/retrievable=14,135; OUT_OF_SCOPE_LEGAL_SCOPE=1,610; out-of-scope retrievable=0; review_required=0; Appendix36 in/out=1,120/1,610; QA candidates=9,576; frozen official PDFs=3/3 PASS; 30 deterministic structured requirement QA sample PASS; idempotency PASS; dataset digest=97b1351791cc2b05424678675322d7b5542c1d5176f92256de5e18abcea40104. 승인 범위는 LEGAL_SCOPE-filtered frozen available sources. RAW-V1에 없는 historical technical-standard attachment 6건은 비검색 COVERAGE_GAP으로 명시 보존하며 향후 확보 시 RAW-V2 + CHANGE_LOG + 새 structure version/freeze 필요. TT19/TT33 handoff READY subject to explicit historical attachment gap. TT17은 미착수 유지.",
       "inputs": "TT13 정제 별표 + TT14 버전 Master | 07_Research_Management/Research_Master.xlsx의 Data_Schema/Cleaning_Rules/Validation_Log 중 해당 시트 | 02_Database/Aviation_Law_Data.duckdb의 선행 table; DuckDB에서 SELECT로 건수와 schema를 먼저 확인 | 01_Raw_Corpus_V1/는 원문 대조가 필요할 때만 읽기전용으로 확인",
       "outputs": "[UPDATE] 03_Code/research_pipeline.py  → structure_appendix() 함수 | [UPDATE] 02_Database/Aviation_Law_Data.duckdb  → appendix18, operations_requirements 테이블 | 03_Code/modules/appendix_parser.py 등; DuckDB components/provision_versions; DATA_QA",
-      "detail": "TT16-STRUCTURE-v1.0.2. appendix18=1,567, operations_requirements=15,751, IN_SCOPE retrievable 14,135, review_required 0. 별표36 in/out 1,120/1,610.",
-      "issues": "과거 첨부파일만 존재하는 6개 snapshot은 명시적 COVERAGE_GAP(비검색)으로 유지.",
+      "result": "표/행 규정을 검색가능 requirement로 변환: 별표18 요건 1,567·운항요건 15,751(검색대상 14,135). review_required 0.",
+      "issues": "과거 첨부파일 6개 snapshot은 명시적 COVERAGE_GAP(비검색).",
       "blocker": ""
     },
     {
@@ -305,7 +305,7 @@
       "collab": "TT17 완료/승인. TT17-DIFF-v1.0.1 corrected canonical run PASS. provision_versions=212,970; candidate next-version links=199,854; legally contiguous pairs=196,293; noncontiguous links excluded=3,561 (NEXT_SNAPSHOT_ABSENCE 3,560 + TT15_DATE_ONLY_POSTPONEMENT_GAP_START 1). Changed/unchanged pairs=6,058/190,235; version_diffs=26,431 (ADDED 7,964 / DELETED 5,998 / MODIFIED 12,469); token-equivalent cleaned-text SHA-change pairs=5,160, explicit audited non-change. Structural QA issues=0; deterministic changed-pair sample 30/30 reviewed PASS; idempotency PASS; QA seed=170017; final dataset digest=a67bfd6e6ae92d9cf21f9ad4189e8fac335744122ad6d0c26c1ac7d1871f6091. 승인 범위는 전체 parsed temporal corpus의 기계적 연속버전 후보 diff이며 법적 amendment 의미판단은 TT18, 최종 retrieval/LEGAL_SCOPE 적용은 TT19 책임. TT16의 historical technical attachment gap 6건은 계속 범위 밖. FRZ-TT17-001 FROZEN; TT18 handoff READY.",
       "inputs": "TT14 provision_versions + TT03 변경탐지 규칙 | 07_Research_Management/Research_Master.xlsx의 Data_Schema/Cleaning_Rules/Validation_Log 중 해당 시트 | 02_Database/Aviation_Law_Data.duckdb의 선행 table; DuckDB에서 SELECT로 건수와 schema를 먼저 확인 | 01_Raw_Corpus_V1/는 원문 대조가 필요할 때만 읽기전용으로 확인",
       "outputs": "[UPDATE] 03_Code/research_pipeline.py  → build_version_pairs(), detect_diff() 함수 | [UPDATE] 02_Database/Aviation_Law_Data.duckdb  → version_pairs, version_diffs 테이블 | 03_Code/modules/changes.py; DuckDB amendment_actions/legal_relations 생성에 필요한 diff; DATA_QA/CHANGE_LOG",
-      "detail": "TT17-DIFF-v1.0.1. 연속 pairs 196,293, version_diffs 26,431(ADDED 7,964/DELETED 5,998/MODIFIED 12,469). FRZ-TT17-001.",
+      "result": "연속버전 자동 비교: pairs 196,293에서 version_diffs 26,431 추출(추가 7,964·삭제 5,998·수정 12,469).",
       "issues": "무결성/QA 검사 통과 — 오류 0",
       "blocker": ""
     },
@@ -323,8 +323,8 @@
       "collab": "TT18 완료/승인/동결. TT18-AMENDMENT-v1.0.11 + TT18-REVIEW-v1.0.11-r1. FRZ-TT17-001의 changed pairs 6,058을 1:1 amendment action으로 확정하고 edges 18,174 (TERMINATES/CREATES/SUPERSEDES 각 6,058) 생성. 공식 successor evidence 6,058/6,058 (제·개정문 6,011 + 부칙 47) 연결. Deterministic T100 30-action sample PASS 후 explicit review queue 756건 전수 검토: 755 기존분류 승인 + 1건(ACT:55f6df10d094ffaa195dd297) TEXTUAL_MODIFICATION→PROVISION_TERMINATED 수동 재분류, unresolved=0. Canonical review application 결과 review_required=0, action QA non-PASS=0, edge QA non-PASS=0, idempotency replay PASS. 최종 category: MIXED 33 / NON_SUBSTANTIVE 3,359 / NUMERIC 106 / OBLIGATION_RELAXED 2 / OBLIGATION_STRENGTHENED 1 / PROVISION_CREATED 7 / PROVISION_TERMINATED 118 / SCOPE_CHANGED 97 / TEXTUAL_MODIFICATION 2,335. Final dataset digest=3bb42e22e513f9721981d0755a2aedd06543d0ed6624f58c1f988ac2b4ef1f9e. FRZ-TT18-001 FROZEN. TT19/TT26/TT32 handoff READY.",
       "inputs": "TT17 version_diffs + 공식 제·개정문 | 07_Research_Management/Research_Master.xlsx의 Data_Schema/Cleaning_Rules/Validation_Log 중 해당 시트 | 02_Database/Aviation_Law_Data.duckdb의 선행 table; DuckDB에서 SELECT로 건수와 schema를 먼저 확인 | 01_Raw_Corpus_V1/는 원문 대조가 필요할 때만 읽기전용으로 확인",
       "outputs": "[UPDATE] 03_Code/research_pipeline.py  → classify_amendment(), build_amendment_edges() 함수 | [UPDATE] 02_Database/Aviation_Law_Data.duckdb  → amendment_actions, amendment_edges 테이블 | [UPDATE] 07_Research_Management/Research_Master.xlsx  → Validation_Log 시트 | DuckDB amendment_actions·legal_relations; 03_Code/modules/relations.py; DATA_QA",
-      "detail": "TT18-AMENDMENT-v1.0.11. amendment actions 6,058, edges 18,174(CREATES/TERMINATES/SUPERSEDES 각 6,058). successor evidence 6,058/6,058. FRZ-TT18-001.",
-      "issues": "검토대상 756건 수동판정(755 승인 + 1 수동 재분류), unresolved 0. v1.0~v1.0.11 오분류는 fail-closed로 반복 교정.",
+      "result": "문자열 diff를 법률 개정행위로 확정: amendment actions 6,058, 관계 edge 18,174. 검토 756건 전건 해소(미해결 0).",
+      "issues": "검토대상 756건 수동판정(755 승인+1 재분류), 미해결 0.",
       "blocker": ""
     },
     {
@@ -341,8 +341,8 @@
       "collab": "2026-09-15 운영 복구 완료(최동욱 승인). TT19-TEXTUNIT-v1.1 / FRZ-TT19-002 FROZEN_CORPUS_ONLY. Text Unit 61,239: CONTENT 22,146 / ACTION 6,058 / TEMPORAL_METADATA 10,014 / HIERARCHY_METADATA 22,146 / DELEGATION_RELATION 658 / IMPLEMENTATION_RELATION 217. 부모 고유 본문 1,189건 복구 및 시간·계층 메타데이터 추가. 기존 TU·legal_relations 875건 보존. 전체 필드 readback·원문 범위 보존 PASS. digest=d8d52b04007e422e6d4bdfd10c0a2859494044930669e2b0deb4f69114fd3a21. 이전 FRZ-TT19-001 및 실행 증빙 보존(CHG066). TT20 재생성 완료; TT26 새 코퍼스 갱신 필요. 근거: 99_Logs_Backup/04_Repair_Staging/TT19_TT20_PROMOTION_20260915_235530_6b5a1fbf/promotion_report.json",
       "inputs": "TT13~TT18의 구조·시간·개정 데이터 | 07_Research_Management/Research_Master.xlsx의 Data_Schema/Cleaning_Rules/Validation_Log 중 해당 시트 | 02_Database/Aviation_Law_Data.duckdb의 선행 table; DuckDB에서 SELECT로 건수와 schema를 먼저 확인 | 01_Raw_Corpus_V1/는 원문 대조가 필요할 때만 읽기전용으로 확인",
       "outputs": "[UPDATE] 03_Code/research_pipeline.py  → build_text_units() 함수 | [UPDATE] 02_Database/Aviation_Law_Data.duckdb  → text_units 테이블 | [UPDATE] 07_Research_Management/Research_Master.xlsx  → Validation_Log 시트 | DuckDB text_units·legal_relations; 03_Code/modules/text_units.py; DATA_QA",
-      "detail": "TT19-TEXTUNIT-v1.1/FRZ-TT19-002. Text Unit 61,239(CONTENT 22,146·ACTION 6,058·TEMPORAL_METADATA 10,014·HIERARCHY 22,146·DELEGATION 658·IMPLEMENTATION 217). 부모 고유본문 1,189건 복구.",
-      "issues": "오류 0. 부모 고유본문 1,189건 누락을 body-fix로 복구(2026-09-15 반영).",
+      "result": "검색 공통 최소단위 Text Unit 61,239 생성(CONTENT 22,146 등). 부모 고유본문 1,189건 복구.",
+      "issues": "오류 0. 부모 고유본문 1,189건 body-fix로 복구.",
       "blocker": ""
     },
     {
@@ -359,9 +359,52 @@
       "collab": "2026-09-15 운영 재생성 완료(최동욱 승인). TT20-CHUNK-v2.2; TT19 v1.1 CONTENT 22,146건 입력. 8개 후보 총 140,546: fixed_512 22,155 / fixed_512_overlap50 22,155 / fixed_char_lbrag 22,146 / recursive_paragraph_sentence 22,155 / structural_component 22,146 / structural_article_paragraph 15,654 / appendix18_row 1,594 / appendix36_technical 12,541. 기존 알고리즘·청크 크기·overlap 유지. 전체 입력 포함·원문 보존·결정론적 재생성·운영 readback PASS. digest=839c3204e7bd6c7c3a13c09bd70577dc5f82a2197f6bb92fb0f73cce2f2f5212. 후보 단계이며 최종 정책은 TT21에서 Gold 검토와 비교평가 후 확정. 이전 v2.1 보존(CHG066).",
       "inputs": "TT19 text_units 테이블 | 02_Database/Aviation_Law_Data.duckdb의 text_units/chunks/version 관련 table | 04_Config/RAG_Config_Master.yaml의 이미 동결된 upstream 설정 | 07_Research_Management/Research_Master.xlsx의 Development_Pilots/Infra_QA 시트(이전 QA 확인)",
       "outputs": "[UPDATE] 03_Code/research_pipeline.py  → chunk candidate 함수들 | [UPDATE] 02_Database/Aviation_Law_Data.duckdb  → chunk_candidates 테이블 | [UPDATE] 04_Config/RAG_Config_Master.yaml  → chunking.candidates 섹션 | DuckDB chunks의 후보 전략 데이터; 03_Code/modules/chunking.py; YAML chunking 후보; DATA_QA",
-      "detail": "TT20-CHUNK-v2.2. 8개 후보 총 140,546 candidate 생성(structural_article_paragraph 15,654 등). blocking QA 0, idempotency PASS.",
+      "result": "청킹 8개 후보를 실제로 생성해 비교 준비: 총 140,546 chunk candidate(전략별 아래 표). blocking QA 0.",
       "issues": "무결성/QA 검사 통과 — 오류 0",
-      "blocker": ""
+      "blocker": "",
+      "tables": [
+        {
+          "title": "청킹 8개 후보 생성 결과(candidate 수)",
+          "columns": [
+            "전략",
+            "청크수"
+          ],
+          "rows": [
+            [
+              "structural_article_paragraph",
+              "15,654"
+            ],
+            [
+              "fixed_char_lbrag",
+              "22,146"
+            ],
+            [
+              "structural_component",
+              "22,146"
+            ],
+            [
+              "fixed_512",
+              "22,155"
+            ],
+            [
+              "fixed_512_overlap50",
+              "22,155"
+            ],
+            [
+              "recursive_paragraph_sentence",
+              "22,155"
+            ],
+            [
+              "appendix36_technical",
+              "12,541"
+            ],
+            [
+              "appendix18_row",
+              "1,594"
+            ]
+          ]
+        }
+      ]
     },
     {
       "id": "TT21",
@@ -377,9 +420,219 @@
       "collab": "2026-09-18 FINAL: TT21 완료/승인/동결. A100 GPU에서 승인된 Q001~Q020(질문 SHA-256=04d4039d8b6615ce29c25842547db87150a172e89b0775b68240ab93c4240ae0)으로 8개 후보를 동일 조건 비교했다. structural_article_paragraph가 1위: chunks=15,654, Recall@5=0.5700, MRR@10=0.583333, Hit@10=0.8000. 최동욱 검토 의견에 따라 Q014·Q017~Q020은 예상 가능한 retrieval 한계로 수용하고 추가 보완검증·재평가 없이 FRZ-TT21-001로 동결한다. 기존 20문항과 Gold는 변경하지 않는다. 후속 TT23~TT25는 chunks_final 및 chunking.final만 사용한다.\n\n2026-09-17 FINAL GOLD APPROVAL: Q001~Q020 20/20 APPROVED. Research_Master.TT21_PILOT_GOLD 및 06_Experiment/TT21_최종청킹확정을 위한 질문.xlsm 동기화. 질문/as_of_date/Gold는 8개 청킹 후보 비교 종료까지 고정. 다음: TT22 embedding smoke → 8개 후보 Hit@K/Recall@K/MRR/nDCG/Legal Fragmentation 비교 → chunks_final 동결.\n\n2026-09-17 Gold 검토: CONDITIONAL PASS. Q001 예외범위 명확화, Q004 신규노선 면제 optional evidence, Q007 '최종예비연료 포함' 명시, Q014 법 제55조+시행규칙 제121조 required Gold 승인, Q017~Q020 [valid_from, valid_to) 및 Forbidden Version 유지. required edits 반영 전 PENDING_REVIEW 유지. QA107 / DEC-TT21-01 / CHG067 기록. 이후 Gold 승인→TT20 v2.2 입력 TT22 smoke→8개 후보 비교→chunks_final 동결.\n\n2026-09-15 후속 상태: TT19 v1.1/TT20 v2.2 운영 반영 완료. Q001·Q014 핵심 부모 본문 누락 복구 확인. 20문항 Gold 근거·조건·예외 적용범위 재검토 필요; Gold 승인 및 검색 성능평가 미실행. 질문 변경 없음. 기존 추출·검토 기록은 이전 코퍼스 기준으로 보존.\n\n[이전 수행 기록]\n2026-09-15: PILOT Q001 후보 597건 추출 및 관련 본문 17건 검토 완료. TT20 청크 후보 테이블·뷰 존재 확인. Gold 미확정, 검색 성능평가 미실행. 다음: Q001 Gold 확정 후 나머지 PILOT 검토 및 8개 청킹 후보 비교.",
       "inputs": "TT20의 chunk 후보 테이블들 | 02_Database/Aviation_Law_Data.duckdb의 text_units/chunks/version 관련 table | 04_Config/RAG_Config_Master.yaml의 이미 동결된 upstream 설정 | 07_Research_Management/Research_Master.xlsx의 Development_Pilots/Infra_QA 시트(이전 QA 확인)",
       "outputs": "[UPDATE] 02_Database/Aviation_Law_Data.duckdb  → chunks_final 테이블 | [UPDATE] 04_Config/RAG_Config_Master.yaml  → chunking.final 섹션 | [CREATE/UPDATE] 07_Research_Management/Research_Master.xlsx  → Development_Pilots 시트에 청킹 파일럿 결과 | Research_Master.xlsx PILOT_FREEZE·CHANGE_LOG; 04_Config/RAG_Config_Master.yaml chunking 최종값; DuckDB chunks 최종 집합",
-      "detail": "FRZ-TT21-001 동결(2026-09-18). 최종 청킹 structural_article_paragraph: Recall@5=0.5700, MRR@10=0.5833, Hit@10=0.8000, chunks 15,654(일반 후보 대비 ~29% 감소). Gold Q001~Q020 20/20.",
-      "issues": "Q014 상위법(항공안전법 제55조) Top-10 미검색 → 법률↔시행규칙 관계확장 필요. Q017-19 시점질문 Gold 미검색 → 조문번호 보완검색·temporal filter 필요(조치계획 후 동일조건 재평가).",
-      "blocker": ""
+      "result": "★청킹 비교 결과 → 최종 채택 structural_article_paragraph: Recall@5 57.0%·MRR@10 58.3%·Hit@10 80.0%로 1위(2위 대비 Recall@5 +10.5%p), 청크수 15,654(일반 후보 22,155 대비 ~29%↓). 2026-09-18 동결. (파일럿 Gold 20문항은 아래 표)",
+      "issues": "Q014 상위법 Top-10 미검색→관계확장 필요, Q017-19·Q020 시점질문 Gold 미검색→조문번호 보완검색·temporal filter 필요(8개 후보 공통 한계, 후속작업).",
+      "blocker": "",
+      "tables": [
+        {
+          "title": "청킹 후보 검색성능 비교 (파일럿 20문항 · 1위=structural_article_paragraph)",
+          "columns": [
+            "전략",
+            "청크수",
+            "Hit@5",
+            "Hit@10",
+            "Recall@5",
+            "MRR@10",
+            "nDCG@5"
+          ],
+          "rows": [
+            [
+              "structural_article_paragraph",
+              "15,654",
+              "75.0%",
+              "80.0%",
+              "57.0%",
+              "58.3%",
+              "0.486"
+            ],
+            [
+              "fixed_char_lbrag",
+              "22,146",
+              "70.0%",
+              "75.0%",
+              "46.5%",
+              "50.5%",
+              "0.405"
+            ],
+            [
+              "structural_component",
+              "22,146",
+              "70.0%",
+              "75.0%",
+              "46.5%",
+              "50.5%",
+              "0.405"
+            ],
+            [
+              "fixed_512",
+              "22,155",
+              "70.0%",
+              "75.0%",
+              "46.5%",
+              "50.5%",
+              "0.397"
+            ],
+            [
+              "fixed_512_overlap50",
+              "22,155",
+              "70.0%",
+              "75.0%",
+              "46.5%",
+              "50.5%",
+              "0.397"
+            ],
+            [
+              "recursive_paragraph_sentence",
+              "22,155",
+              "70.0%",
+              "75.0%",
+              "46.5%",
+              "50.5%",
+              "0.397"
+            ],
+            [
+              "appendix36_technical",
+              "12,541",
+              "40.0%",
+              "40.0%",
+              "24.5%",
+              "31.2%",
+              "0.248"
+            ],
+            [
+              "appendix18_row",
+              "1,594",
+              "5.0%",
+              "10.0%",
+              "5.0%",
+              "3.1%",
+              "0.032"
+            ]
+          ]
+        }
+      ],
+      "questions": [
+        {
+          "ID": "Q001",
+          "유형": "현행·단일규정",
+          "질문": "조종사가 최근의 비행경험 요건을 충족하기 위해 갖추어야 하는 비행경험 기준은 무엇인가?",
+          "정답요지": "최근 90일 동안 조종하려는 항공기와 같은 형식의 항공기에 탑승하여 이륙과 착륙을 각각 3회 이상 해야 한다. 야간 운항업무에 종사하려면 그 비행경험 중 적어도 야간 이륙 및 착륙 1회가 포함되어야 한다. 다만, 교"
+        },
+        {
+          "ID": "Q002",
+          "유형": "현행·상하위연결",
+          "질문": "운항승무원에게 적용되는 승무시간, 비행근무시간 및 휴식시간 기준은 어떻게 정해지는가?",
+          "정답요지": "항공안전법 제56조제1항의 피로관리 원칙에 따라 운항승무원의 승무시간·비행근무시간·근무시간 및 휴식 기준을 관리하며, 시행규칙 제127조제1항은 구체적인 기준을 별표 18로 정한다. 항공운송사업자 및 항공기사용사업자"
+        },
+        {
+          "ID": "Q003",
+          "유형": "현행·단일규정",
+          "질문": "항공신체검사증명의 유효기간은 어떤 기준에 따라 결정되는가?",
+          "정답요지": "증명의 종류와 유효기간은 자격증명 종류별로 시행규칙 제92조제1항과 별표 8에 따라 결정된다. 일부 기준 미달 시 업무범위 한정이나 유효기간 단축이 가능하다."
+        },
+        {
+          "ID": "Q004",
+          "유형": "현행·기술기준",
+          "질문": "기장이 특정 지역·노선 및 공항에서 운항하기 위해 충족해야 하는 경험요건은 무엇인가?",
+          "정답요지": "법 제63조제7항 및 시행규칙 제155조에 따라 기장은 운항기술기준에서 정한 지역·노선·공항 경험을 갖춰야 한다. 운항기술기준 8.4.8.30에 따라 원칙적으로 최근 12개월 이내 해당 지역·노선의 착륙공항에 대해 "
+        },
+        {
+          "ID": "Q005",
+          "유형": "현행·기술기준",
+          "질문": "검열운항승무원(Check Airman)에게 적용되는 제한사항은 무엇인가?",
+          "정답요지": "검열운항승무원은 비행심사 형태에 따라 요구되는 자격을 갖추지 못하면 임무를 수행할 수 없다. ① 항공기에서 임무 운항승무원으로 심사하는 경우 해당 자격증명·한정자격과 심사할 승무원 위치/운항에 필요한 훈련·자격·자격"
+        },
+        {
+          "ID": "Q006",
+          "유형": "현행·기술기준",
+          "질문": "비행인가(Flight Release)를 할 수 있는 사람은 어떤 자격을 갖추어야 하는가?",
+          "정답요지": "비행인가 업무 수행자는 운항관리사 자격증명과 해당 운항 및 항공기 형식에 대해 운항증명소지자가 부여한 자격을 갖춰야 한다."
+        },
+        {
+          "ID": "Q007",
+          "유형": "조건·예외",
+          "질문": "목적지 공항이 고립공항(Isolated Aerodrome)인 경우 추가로 고려해야 하는 예비연료 기준은 무엇인가?",
+          "정답요지": "목적공항이 고립공항인 경우, 왕복엔진 항공기는 최종예비연료를 포함하여 순항고도에서 45분간 비행할 수 있는 연료에 순항고도 비행시간의 15퍼센트에 해당하는 연료를 더한 양과 2시간분 연료 중 더 적은 양을 적용한다."
+        },
+        {
+          "ID": "Q008",
+          "유형": "조건·예외",
+          "질문": "운항연료의 일정 비율을 보정연료로 탑재할 수 있는 경우에는 어떤 승인 또는 조건이 필요한가?",
+          "정답요지": "보정연료는 예상치 못한 요인에 대비하여 계획된 운항연료(또는 비행 중 재비행계획 지점에서 요구되는 운항연료)의 5퍼센트를 탑재할 수 있다. 다만, 항로상 교체공항이 별표 8.1.9.13에서 정한 범위 안에 있으면 운"
+        },
+        {
+          "ID": "Q009",
+          "유형": "복합조건",
+          "질문": "기장 자격을 위한 운항경험 중 검열운항승무원 또는 비행교관의 좌석 위치와 추가 부기장 편성에 관한 기준은 무엇인가?",
+          "정답요지": "검열운항승무원 또는 비행교관은 기장임무 자격자로서 조종사 좌석에 위치해야 하며, 유자격 부기장 추가편성을 운항규정 등에 반영해야 한다."
+        },
+        {
+          "ID": "Q010",
+          "유형": "기술기준·훈련",
+          "질문": "CFIT 상황을 인지하고 회피하기 위한 지상훈련프로그램에는 어떤 내용이 포함되어야 하는가?",
+          "정답요지": "CFIT 선행요소 인식, 예방수단, 상황인식, 회피 및 탈출방법과 기술이 지상훈련프로그램에 포함되어야 한다."
+        },
+        {
+          "ID": "Q011",
+          "유형": "기술기준·훈련",
+          "질문": "ACAS II 장비가 장착된 항공기에 대한 형식한정 훈련에서는 ACAS II 사용 및 운영이 어떻게 반영되어야 하는가?",
+          "정답요지": "ACAS II 사용과 운영을 장착 항공기의 형식한정 훈련요목과 조종사 초기·정기교육훈련에 포함해야 한다."
+        },
+        {
+          "ID": "Q012",
+          "유형": "별표18·표",
+          "질문": "비행근무시간이 13시간 이상 14시간 미만인 운항승무원에게 필요한 최소 휴식시간은 얼마인가?",
+          "정답요지": "비행근무시간이 13시간 이상 14시간 미만이면 최소 휴식시간은 16시간 이상이다."
+        },
+        {
+          "ID": "Q013",
+          "유형": "위임관계",
+          "질문": "운항승무원의 승무시간 등의 기준은 상위 법률의 어떤 피로관리 규정을 구체화한 것인가?",
+          "정답요지": "시행규칙 제127조제1항은 항공안전법 제56조제1항제1호의 승무시간·비행근무시간·근무시간 제한에 따른 피로관리 방법을 구체화한다."
+        },
+        {
+          "ID": "Q014",
+          "유형": "위임관계",
+          "질문": "조종사의 최근 비행경험에 관한 시행규칙 기준은 항공안전법의 어떤 규정을 구체화한 것인가?",
+          "정답요지": "시행규칙 제121조는 항공안전법 제55조의 운항승무원 비행경험 규정을 구체화한 것이다."
+        },
+        {
+          "ID": "Q015",
+          "유형": "시행관계·별표17",
+          "질문": "항공기에 실어야 할 연료와 오일의 양에 관한 별표 기준은 시행규칙의 어떤 규정과 연결되는가?",
+          "정답요지": "연료와 오일의 양을 정한 별표 17은 시행규칙 제119조와 연결된다."
+        },
+        {
+          "ID": "Q016",
+          "유형": "시행관계·별표9",
+          "질문": "항공신체검사기준 별표는 시행규칙의 어떤 항공신체검사 규정을 구체화한 것인가?",
+          "정답요지": "별표 9는 시행규칙 제92조제2항의 종류별 항공신체검사기준을 구체화하며, 제93조제2항의 적합성 판정과 증명서 발급에 연결된다."
+        },
+        {
+          "ID": "Q017",
+          "유형": "과거시점",
+          "질문": "2021년 9월 1일 기준, 항공안전법 시행규칙 제148조 관련 규정에 적용되는 유효한 버전은 어느 시기의 버전인가?",
+          "정답요지": "2021년 9월 1일 유효 Version은 DOCV-KR-LS-012848-20210827-00882이며 유효기간은 2021년 8월 27일 이상 2021년 11월 19일 미만이다."
+        },
+        {
+          "ID": "Q018",
+          "유형": "과거시점",
+          "질문": "2024년 8월 1일 기준, 항공안전법 시행규칙 제144조 관련 규정에 적용되는 당시 유효 버전은 무엇인가?",
+          "정답요지": "2024년 8월 1일 유효 Version은 DOCV-KR-LS-012848-20240717-01365이며 유효기간은 2024년 7월 17일 이상 2024년 9월 20일 미만이다."
+        },
+        {
+          "ID": "Q019",
+          "유형": "시간·유효기간",
+          "질문": "2025년 1월 17일 기준, 항공안전법 제36조제2항에 적용되는 버전의 유효기간은 어떻게 되는가?",
+          "정답요지": "2025년 1월 17일 유효 Version은 DOCV-KR-LS-012524-20240116-20051이며 유효기간은 2025년 1월 17일 이상 2025년 11월 28일 미만이다."
+        },
+        {
+          "ID": "Q020",
+          "유형": "미래시행",
+          "질문": "2026년 9월 12일 기준, 2026년 5월 12일 공포된 항공안전법 제63조제7항 버전은 현재 적용 중인가, 아니면 아직 시행 전인가?",
+          "정답요지": "2026년 5월 12일 공포판은 2026년 9월 12일 현재 시행 전이며 2026년 11월 13일부터 시행된다. 당시 유효판은 DOCV-KR-LS-012524-20251230-21268이다."
+        }
+      ]
     },
     {
       "id": "TT22",
@@ -395,8 +648,8 @@
       "collab": "2026-09-15 후속 상태: 기존 TT22 환경·모델 smoke 완료 이력은 유효하나, TT20 v2.2 새 청크 입력 smoke는 미실행. 새 결과는 tt22_embedding_smoke_TT20_v2_2.json에 별도 기록하고 코퍼스/청크 digest를 연결해야 함. E/F 완료 표시는 과거 환경 구축 이력이며 새 입력 검증 완료를 뜻하지 않음.\n\n[이전 수행 기록]\nTT22 완료(정재훈 검토). 2026-09-14 GPU(NVIDIA A100-SXM4-80GB x2) 환경에서 BAAI/bge-m3(revision 5617a9f61b028005a4858fdac845db406aefb181) smoke test 실행. 샘플 10건은 TT19 raw text_units에서 추출(TT21 최종 chunk 미동결 상태이므로 대체 샘플 사용; TT23 전수 인코딩 시 TT21 최종 chunks로 교체 예정). fp32/fp16 각각 dense_dim=1024 확인, NaN/Inf/all-zero 없음 QA PASS. fp32 대비 fp16이 encode 75.36% 단축, peak GPU 메모리 49.78% 절감 확인되어 precision=fp16 확정. 결과: 99_Logs_Backup/01_Run_Logs/tt22_embedding_smoke.json. RAG_Config_Master.yaml embedding 섹션 갱신(status=tt22_smoke_passed, freeze_status=smoke_passed_pending_corpus_run — 전수 config 동결은 TT21 최종 chunk 확정 후 TT23에서 진행). CHG063에 상세 기록됨. TT23 인계사항: TT21 chunks_final 확정 대기 후 동일 revision/config로 전체 chunk encode 진행.",
       "inputs": "TT03 BGE-M3 적용기준 + TT21 final chunks | 02_Database/Aviation_Law_Data.duckdb의 text_units/chunks/version 관련 table | 04_Config/RAG_Config_Master.yaml의 이미 동결된 upstream 설정 | 07_Research_Management/Research_Master.xlsx의 Development_Pilots/Infra_QA 시트(이전 QA 확인)",
       "outputs": "[UPDATE] 04_Config/RAG_Config_Master.yaml  → environment, packages, embedding.model, precision, batch_size 섹션 | [UPDATE] 03_Code/research_pipeline.py  → embedding setup/smoke 함수 | YAML embedding 설정; 03_Code/modules/embedding.py; Research_Master.xlsx REPRODUCIBILITY",
-      "detail": "A100x2에서 BGE-M3 smoke PASS(dense_dim=1024, NaN/Inf/zero 0). fp16 vs fp32 encode 75.36% 단축·peak GPU 49.78% 절감 → precision=fp16.",
-      "issues": "TT20 v2.2 새 청크 입력에 대한 smoke 및 digest 연결 필요(기존 환경테스트와 구분).",
+      "result": "BGE-M3 실행환경 동결·smoke PASS(dim=1024, NaN/Inf/zero 0). fp16이 fp32 대비 encode 75.4%↓·GPU 49.8%↓ → precision=fp16 채택.",
+      "issues": "TT20 v2.2 새 청크 입력 smoke·digest 연결 필요.",
       "blocker": ""
     },
     {
@@ -413,7 +666,7 @@
       "collab": "정재훈 (2026-09-18 완료 확인)",
       "inputs": "TT21 final chunks + TT22 embedding config | 02_Database/Aviation_Law_Data.duckdb의 text_units/chunks/version 관련 table | 04_Config/RAG_Config_Master.yaml의 이미 동결된 upstream 설정 | 07_Research_Management/Research_Master.xlsx의 Development_Pilots/Infra_QA 시트(이전 QA 확인)",
       "outputs": "[UPDATE] 03_Code/research_pipeline.py  → encode_all() 함수 | [UPDATE] 02_Database/Aviation_Law_Data.duckdb  → embedding_meta 테이블(벡터 자체는 Milvus 저장) | [UPDATE] 07_Research_Management/Research_Master.xlsx  → Infra_QA 시트 | DuckDB embedding_registry; 05_Vector_Graph_DB/Milvus/ 적재용 vector/metadata; 99_Logs_Backup/01_Run_Logs/",
-      "detail": "A100x2에서 BGE-M3(fp16)로 chunks_final 15,654건 전량 인코딩, embeddings 테이블 dim=1024. (CHG072)",
+      "result": "최종 chunk 15,654건 전량 벡터화(dim=1024) 완료, NaN/Inf/zero 오류 0. (CHG072)",
       "issues": "무결성/QA 검사 통과 — 오류 0",
       "blocker": ""
     },
@@ -431,7 +684,7 @@
       "collab": "최동욱 (2026-09-18 스키마 일치 확인)",
       "inputs": "TT23 embedding metadata + TT14 temporal master | 02_Database/Aviation_Law_Data.duckdb의 text_units/chunks/version 관련 table | 04_Config/RAG_Config_Master.yaml의 이미 동결된 upstream 설정 | 07_Research_Management/Research_Master.xlsx의 Development_Pilots/Infra_QA 시트(이전 QA 확인)",
       "outputs": "[UPDATE] 04_Config/RAG_Config_Master.yaml  → vector_db.collection/schema/metadata 섹션; Milvus collection 생성 | Milvus collection/schema/index 설계; 05_Vector_Graph_DB/Milvus/; YAML vector_database; DATA_QA",
-      "detail": "Milvus Lite collection aviation_law_chunks 스키마가 RAG_Config_Master.yaml과 일치함을 확인(재작업 불필요).",
+      "result": "Milvus collection aviation_law_chunks 스키마가 Config와 일치 확인(재작업 불필요).",
       "issues": "무결성/QA 검사 통과 — 오류 0",
       "blocker": ""
     },
@@ -449,7 +702,7 @@
       "collab": "설지원 (2026-09-18 완료 확인)",
       "inputs": "TT24 Milvus schema + TT23 생성벡터 | 02_Database/Aviation_Law_Data.duckdb의 text_units/chunks/version 관련 table | 04_Config/RAG_Config_Master.yaml의 이미 동결된 upstream 설정 | 07_Research_Management/Research_Master.xlsx의 Development_Pilots/Infra_QA 시트(이전 QA 확인)",
       "outputs": "[UPDATE] 07_Research_Management/Research_Master.xlsx  → Infra_QA 시트에 Milvus count/mapping/smoke test 결과 | 05_Vector_Graph_DB/Milvus/ 실제 collection; DuckDB embedding_registry mapping; Research_Master.xlsx DATA_QA",
-      "detail": "aviation_law_chunks에 15,654 rows 전량 적재, search self-check 통과. (CHG073)",
+      "result": "Milvus에 15,654 rows 전량 적재, 실제 질문 근접검색 self-check 통과. (CHG073)",
       "issues": "무결성/QA 검사 통과 — 오류 0",
       "blocker": ""
     },
@@ -467,8 +720,8 @@
       "collab": "2026-09-15 후속 상태: TT19 v1.1 코퍼스에 맞춘 그래프 갱신·전수 QA 미실행. 기존 그래프와 QA 증빙 보존. 그래프 검색은 비활성화되어 있으며 TT32는 갱신·재검증까지 보류. E/F 완료 표시는 과거 구축 이력이며 새 코퍼스 검증 완료를 뜻하지 않음.\n\n[이전 수행 기록]\nTT26 완료(최동욱·정재훈 검토). Neo4j 5.26.0(bolt://172.16.251.50:7687) 구축: 노드 286,008건(Norm 4 / Component 10,451 / CTV 212,970 / Action 6,058 / TextUnit 56,525), 엣지 482,340건(CREATES 6,058 / TERMINATES 6,058 / DELEGATES_TO 658 / IMPLEMENTS 217 / HAS_VERSION 212,970 / SUPERSEDES 199,854 / HAS_TEXT 56,525). DuckDB graph_nodes/graph_edges 스테이징 대비 속성 전수대조 불일치 0건. QA 5항목: orphan_node=4(전부 Norm, 구조상 정상)/dangling_edge=0/duplicate_edge=856(18그룹, REVIEW_REQUIRED)/version_cycle=0/invalid_temporal_edge=0. 추가 QA: REVIEW_REQUIRED CTV 4,137건(PASS_WITH_NOTE), CTV without HAS_TEXT 197,986건(PASS_WITH_NOTE, 본문 추정·복제 없음 확인). CHG065 및 Infra_QA 시트 TT26-GRAPH-001~010에 상세 기록. RAG_Config_Master.yaml graph_database 섹션 갱신 완료(status→graph_built_pending_qa_review, connection_uri/auth_user/password_env/schema/constraints/indexes/qa 항목 추가, candidate_relations에 IMPLEMENTS 추가). 실행 로그: 99_Logs_Backup/01_Run_Logs/tt26_graph_build.json. TT32 인계사항: duplicate_edge 856건 및 REVIEW_REQUIRED CTV 4,137건 검토 필요. 작업 스크래치 디렉터리 tt26_work/(~5GB) 보존/삭제 여부 결정 필요.",
       "inputs": "TT10 schema + TT14 versions + TT18 amendments + TT19 text units | 02_Database/Aviation_Law_Data.duckdb의 text_units/chunks/version 관련 table | 04_Config/RAG_Config_Master.yaml의 이미 동결된 upstream 설정 | 07_Research_Management/Research_Master.xlsx의 Development_Pilots/Infra_QA 시트(이전 QA 확인)",
       "outputs": "[UPDATE] 04_Config/RAG_Config_Master.yaml  → graph_db.schema/index/constraint 섹션; Neo4j DB 구축 | [UPDATE] 07_Research_Management/Research_Master.xlsx  → Infra_QA 시트에 Graph QA 결과 | 05_Vector_Graph_DB/Neo4j/; DuckDB graph_nodes·graph_edges staging; YAML graph_database; DATA_QA",
-      "detail": "Neo4j 재구축(2026-09-18): 노드 289,575(CTV 212,970·TextUnit 60,092·Component 10,451·Action 6,058·Norm 4), 엣지 485,907(HAS_VERSION 212,970·SUPERSEDES 199,854·HAS_TEXT 60,092·CREATES/TERMINATES 각 6,058·DELEGATES_TO 658·IMPLEMENTS 217).",
-      "issues": "orphan_node 4(Norm 연결 edge 없음)·duplicate_edge 856은 REVIEW_REQUIRED로 원본 보존(TT32 검토). REVIEW_REQUIRED CTV 4,137 포함 유지. dangling/version_cycle/invalid_temporal 0.",
+      "result": "SAT-Graph용 Neo4j 구축: 노드 289,575·엣지 485,907. deterministic traversal 가능. (일부 REVIEW_REQUIRED는 아래 오류 참조)",
+      "issues": "orphan_node 4·duplicate_edge 856은 REVIEW_REQUIRED로 원본 보존(TT32 검토), REVIEW_REQUIRED CTV 4,137. dangling/cycle/invalid_temporal 0.",
       "blocker": ""
     },
     {
@@ -485,7 +738,7 @@
       "collab": "정재훈 (검토 대기 — Claude Code 자동 실행, 2026-09-18)",
       "inputs": "TT25 Milvus collection + TT22 embedding config | 04_Config/RAG_Config_Master.yaml의 common/system 설정 | 03_Code/research_pipeline.py의 공통 API | 02_Database/Aviation_Law_Data.duckdb 및 Milvus/Neo4j의 동결된 검색 corpus",
       "outputs": "[CREATE/UPDATE] 03_Code/research_pipeline.py  → query, embed, retrieve, rerank 공통 함수 | [UPDATE] 04_Config/RAG_Config_Master.yaml  → common_retrieval 섹션 | 03_Code/modules/retrieval.py 등 공통 query/embed/retrieve/rerank 함수; research_pipeline.py 연결; run trace 구조",
-      "detail": "retrieval.py 공통모듈(query/embed/retrieve/rerank) self-check PASS(seed chunk direct_top5/candidate_top20/rerank 전부 rank=1). reranker=BAAI/bge-reranker-v2-m3. (CHG075)",
+      "result": "A/B/C 공통 검색모듈(query/embed/retrieve/rerank) 구축·self-check PASS(seed rank=1). reranker=bge-reranker-v2-m3. (CHG075)",
       "issues": "무결성/QA 검사 통과 — 오류 0",
       "blocker": ""
     },
@@ -503,8 +756,8 @@
       "collab": "최동욱 (v1.1 코드 검증 완료; live A-D rerun 대기)",
       "inputs": "TT01 시스템비교 원칙 + TT04 평가기준 | 04_Config/RAG_Config_Master.yaml의 common/system 설정 | 03_Code/research_pipeline.py의 공통 API | 02_Database/Aviation_Law_Data.duckdb 및 Milvus/Neo4j의 동결된 검색 corpus",
       "outputs": "[UPDATE] 03_Code/research_pipeline.py  → generate(), logger() 공통 함수 | [UPDATE] 04_Config/RAG_Config_Master.yaml  → generation, prompt, logging 섹션 | [CREATE/UPDATE] 06_Experiment/Experiment_Run_Master.parquet  → 공통 run schema 정의 | 공통 generation/prompt/logger; YAML llm/generation/logging; Parquet run schema",
-      "detail": "TT28-GENERATION-v1.1 + LEGAL-GROUNDED-v1.1. 단위테스트 7/7 PASS, offline-smoke PASS, OpenAI live-smoke PASS. 생성모델 gpt-4.1-mini-2025-04-14. no-evidence short-circuit PASS. 최신 offline 계약 PASS(2026-09-20).",
-      "issues": "TT28 v1.1 공통 계약 변경으로 A~D 재실행 전 완료·동결 불가. 공란(blank)은 abstained=true일 때만 표준 기권문으로 정규화, 그 외 공란은 ERROR 유지.",
+      "result": "공통 생성부(Prompt/LLM/출력/logging) v1.1 완성: 단위 7/7·offline·live smoke PASS. 생성모델 gpt-4.1-mini(로컬 파일럿은 Qwen3). 계약변경으로 A~D 재실행 전 동결 보류.",
+      "issues": "공통계약 v1.1 변경으로 A~D 재실행 전 동결 불가. 공란은 abstained=true일 때만 표준 기권문, 그 외 공란은 ERROR.",
       "blocker": "TT28-GENERATION-v1.1 및 TT28-LEGAL-GROUNDED-v1.1 보강 완료. blank answer는 abstained=true일 때만 표준 기권문으로 정규화하고, 그 외 공란은 계속 ERROR 처리한다. 검증 전 response hash/request/usage와 비내용 payload 진단을 기록한다. 로컬 regression PASS. 공통 계약 변경으로 A-D 재실행 전까지 완료/동결 불가."
     },
     {
@@ -521,8 +774,8 @@
       "collab": "설지원·최동욱·정재훈 / rerun pending",
       "inputs": "TT25 Vector DB + TT27 검색모듈 + TT28 생성모듈 | 04_Config/RAG_Config_Master.yaml의 common/system 설정 | 03_Code/research_pipeline.py의 공통 API | 02_Database/Aviation_Law_Data.duckdb 및 Milvus/Neo4j의 동결된 검색 corpus",
       "outputs": "[UPDATE] 03_Code/research_pipeline.py  → SystemA 클래스/함수 | [UPDATE] 04_Config/RAG_Config_Master.yaml  → system_A 섹션 | [UPDATE] 06_Experiment/Experiment_Run_Master.parquet  → pilot/system=A rows | [UPDATE] 07_Research_Management/Research_Master.xlsx  → Development_Pilots 시트 | System A 코드/설정; 06_Experiment/Experiment_Run_Master.parquet pilot rows; logs",
-      "detail": "System A 라이브 파일럿 20문항: pass 18 / abstain 3 / error 2. 현행 baseline 구현·자체 self-check(leakage/replay) PASS.",
-      "issues": "error 2/20(Q018·Q019 answer-must-be-non-empty). 원응답 구조 미보존으로 정상 기권 여부 사후확정 불가 → v1.1로 A~D 일괄 재실행 필요.",
+      "result": "System A(현행 Vector) 파일럿 20문항: 정상 18·기권 3·오류 2. 현행질문 baseline 확보. self-check(leakage/replay) PASS.",
+      "issues": "오류 2/20(Q018·Q019 answer-must-be-non-empty). 원응답 구조 미보존 → 재실행 필요.",
       "blocker": "TT28 v1.1 공통 계약 변경으로 A 재실행 필요. 기존 Q018/Q019는 원응답 구조 미보존으로 정상 기권 여부를 사후 확정할 수 없다. 동일 TT21 Q001-Q020 및 동일 모델/파라미터로 A-D 일괄 재실행 후 지표·법률검토 진행."
     },
     {
@@ -539,8 +792,8 @@
       "collab": "설지원·최동욱·정재훈 / rerun pending",
       "inputs": "TT25 Vector DB + TT27~TT28 공통모듈 | 04_Config/RAG_Config_Master.yaml의 common/system 설정 | 03_Code/research_pipeline.py의 공통 API | 02_Database/Aviation_Law_Data.duckdb 및 Milvus/Neo4j의 동결된 검색 corpus",
       "outputs": "[UPDATE] 03_Code/research_pipeline.py  → SystemB 클래스/함수 | [UPDATE] 04_Config/RAG_Config_Master.yaml  → system_B 섹션 | [UPDATE] 06_Experiment/Experiment_Run_Master.parquet  → pilot/system=B rows | [UPDATE] 07_Research_Management/Research_Master.xlsx  → Development_Pilots 시트 | System B 코드/설정; Experiment_Run_Master.parquet pilot rows; logs",
-      "detail": "System B(Naive) 라이브 파일럿 20문항: pass 11 / abstain 6 / error 9(4개 시스템 중 최다). self-check Top-5 temporal mix PAST 80%/CURRENT 20%.",
-      "issues": "error 9/20(4개 시스템 중 최다, version mixing). 9개 공란은 evidence 5건씩 존재했으나 원응답 미보존 → 재실행 필요.",
+      "result": "System B(Naive, 시간필터 無) 파일럿 20문항: 정상 11·기권 6·오류 9. Top-5 시대혼합 PAST 80%로 version mixing 위험 실측.",
+      "issues": "오류 9/20(최다, version mixing). 원응답 미보존 → 재실행 필요.",
       "blocker": "TT28 v1.1 공통 계약 변경으로 B 재실행 필요. 기존 9개 공란 오류는 evidence 5건씩 존재했으나 원응답 구조 미보존. v1.1 재실행에서 정상 기권과 비정상 공란을 구분하고 temporal mixing 지표를 산출한다."
     },
     {
@@ -557,8 +810,8 @@
       "collab": "설지원·최동욱·정재훈 / rerun pending",
       "inputs": "TT14~TT15 시간정보 + TT25 Vector DB + TT27~TT28 | 04_Config/RAG_Config_Master.yaml의 common/system 설정 | 03_Code/research_pipeline.py의 공통 API | 02_Database/Aviation_Law_Data.duckdb 및 Milvus/Neo4j의 동결된 검색 corpus",
       "outputs": "[UPDATE] 03_Code/research_pipeline.py  → Temporal parser/filter + SystemC | [UPDATE] 04_Config/RAG_Config_Master.yaml  → system_C, temporal_policy 섹션 | [UPDATE] 06_Experiment/Experiment_Run_Master.parquet  → pilot/system=C rows | [UPDATE] 07_Research_Management/Research_Master.xlsx  → Development_Pilots 시트 | temporal parser/filter + System C; YAML temporal policy; Parquet pilot rows",
-      "detail": "System C(Temporal-Filtered) 라이브 파일럿 20문항: pass 19 / abstain 3 / error 1. self-check leakage/future-guard PASS.",
-      "issues": "error 1/20(Q019, evidence 4건이나 원응답 미보존) → 재실행 필요.",
+      "result": "System C(Temporal-Filtered) 파일럿 20문항: 정상 19·기권 3·오류 1(4개 중 최저 오류). 시간필터 효과 확인.",
+      "issues": "오류 1/20(Q019). 재실행 필요.",
       "blocker": "TT28 v1.1 공통 계약 변경으로 C 재실행 필요. 기존 Q019는 evidence 4건이지만 원응답 구조 미보존. A-D 동일 조건 재실행 후 D와 비교한다."
     },
     {
@@ -575,9 +828,51 @@
       "collab": "설지원·최동욱·정재훈 / rerun pending",
       "inputs": "TT26 Neo4j Graph + TT28 생성모듈 + TT02 SAT 실행흐름 | 04_Config/RAG_Config_Master.yaml의 common/system 설정 | 03_Code/research_pipeline.py의 공통 API | 02_Database/Aviation_Law_Data.duckdb 및 Milvus/Neo4j의 동결된 검색 corpus",
       "outputs": "[UPDATE] 03_Code/research_pipeline.py  → SAT query parser/retriever + SystemD | [UPDATE] 04_Config/RAG_Config_Master.yaml  → system_D, sat_graph 섹션 | [UPDATE] 06_Experiment/Experiment_Run_Master.parquet  → pilot/system=D rows | [UPDATE] 07_Research_Management/Research_Master.xlsx  → Development_Pilots 시트 | SAT-Graph retriever/System D; graph path trace; Experiment_Run_Master.parquet pilot rows; logs",
-      "detail": "System D(SAT-Graph) 최신 rerun(2026-09-20) 파일럿 20문항: pass 19 / abstain 3 / error 1. graph_scope_empty 8건은 C temporal seed로 fallback(graph_fallback_used 8). 구현 50→검토 단계.",
-      "issues": "graph_scope_empty 8건(시간·별표형 질문 집중) → C temporal seed 유지 fallback으로 처리. TT28 v1.1로 D 재실행 필요(기존 2개 D run 보존).",
-      "blocker": "Graph-empty fallback 수리는 유지되지만 TT28 v1.1 공통 계약 변경으로 D도 다시 실행한다. 기존 두 D run은 보존하고 새 run을 추가한다. 이후 graph_scope_empty 8건, Q016/Q017/Q020, Q019, 정량지표와 법률검토를 완료한다."
+      "result": "System D(SAT-Graph) 최신 rerun 파일럿 20문항: 정상 19·기권 3·오류 1. graph_scope_empty 8건은 C temporal seed로 fallback. 구현 검토 단계.",
+      "issues": "graph_scope_empty 8건(시간·별표형 집중)→C seed fallback. TT28 v1.1로 D 재실행 필요(기존 D run 보존).",
+      "blocker": "Graph-empty fallback 수리는 유지되지만 TT28 v1.1 공통 계약 변경으로 D도 다시 실행한다. 기존 두 D run은 보존하고 새 run을 추가한다. 이후 graph_scope_empty 8건, Q016/Q017/Q020, Q019, 정량지표와 법률검토를 완료한다.",
+      "tables": [
+        {
+          "title": "System A~D 파일럿 20문항 런타임 결과 (최종 성능 아님)",
+          "columns": [
+            "시스템",
+            "정상",
+            "기권",
+            "오류",
+            "비고"
+          ],
+          "rows": [
+            [
+              "A · Current Vector",
+              "18/20",
+              3,
+              2,
+              "현행 baseline"
+            ],
+            [
+              "B · All-Version Naive",
+              "11/20",
+              6,
+              9,
+              "version mixing 위험(최다 오류)"
+            ],
+            [
+              "C · Temporal-Filtered",
+              "19/20",
+              3,
+              1,
+              "시간필터, 최저 오류"
+            ],
+            [
+              "D · SAT-Graph",
+              "19/20",
+              3,
+              1,
+              "graph_scope_empty 8→C seed fallback"
+            ]
+          ]
+        }
+      ]
     },
     {
       "id": "TT33",
@@ -593,7 +888,7 @@
       "collab": "최동욱",
       "inputs": "TT05 법령범위 + TT14~TT19 구축데이터 + TT04 Gold 지침 | 07_Research_Management/Research_Master.xlsx의 Questions/Gold/Metric 관련 시트 | 04_Config/RAG_Config_Master.yaml의 system/experiment 설정 | 07_Research_Management/Research_Master.xlsx의 Legal_Scope/Freeze_Log",
       "outputs": "[CREATE/UPDATE] 07_Research_Management/Research_Master.xlsx  → Questions, Gold, Expert_Validation, Pilot_Holdout 시트 | Research_Master.xlsx QUESTIONS·GOLD_STANDARD·EXPERT_VALIDATION; Holdout 표시; Gold evidence/version/forbidden version",
-      "detail": "미착수. 산출물 예정: 100문항 Questions·Gold·Expert_Validation·Pilot_Holdout(전문가 3인 검증).",
+      "result": "미착수(예정) — 100문항 Gold(정답근거·정답버전·금지버전) 전문가 3인 검증. ※현재 완성된 것은 파일럿용 Gold 20문항(TT21 참조).",
       "issues": "해당 없음",
       "blocker": ""
     },
@@ -611,7 +906,7 @@
       "collab": "최동욱",
       "inputs": "TT04 metric/QA 지침 + TT33 Gold Standard | 07_Research_Management/Research_Master.xlsx의 Questions/Gold/Metric 관련 시트 | 04_Config/RAG_Config_Master.yaml의 system/experiment 설정 | 07_Research_Management/Research_Master.xlsx의 Legal_Scope/Freeze_Log",
       "outputs": "[UPDATE] 07_Research_Management/Research_Master.xlsx  → Metrics_Dictionary, Answer_Rubric, Error_Codebook 시트 | [CREATE/UPDATE] 03_Code/research_pipeline.py  → retrieval/temporal/answer metric 함수 | 03_Code/modules/evaluation.py; retrieval/temporal/generation metric 계산; ERROR_ANALYSIS용 error code 기준",
-      "detail": "미착수. 산출물 예정: modules/evaluation.py(retrieval/temporal/answer metric)·Error_Codebook.",
+      "result": "미착수(예정) — retrieval/temporal/answer metric·오류 codebook을 evaluation.py로 구현.",
       "issues": "해당 없음",
       "blocker": ""
     },
@@ -629,7 +924,7 @@
       "collab": "최동욱",
       "inputs": "TT29~TT32 설정 + TT33 평가질문 | 07_Research_Management/Research_Master.xlsx의 Questions/Gold/Metric 관련 시트 | 04_Config/RAG_Config_Master.yaml의 system/experiment 설정 | 07_Research_Management/Research_Master.xlsx의 Legal_Scope/Freeze_Log",
       "outputs": "[UPDATE] 04_Config/RAG_Config_Master.yaml  → experiment_control 섹션 | [UPDATE] 07_Research_Management/Research_Master.xlsx  → Pilot_Holdout 시트(20/80 stratified split) | QUESTIONS의 Holdout 여부; PILOT_FREEZE 사전 항목; YAML pilot/main/repeat/random_seed 통제값",
-      "detail": "미착수. 산출물 예정: experiment_control(동일 통제)·Pilot 20/Holdout 80 stratified split.",
+      "result": "미착수(예정) — 100문항을 Pilot 20/Holdout 80으로 사전 분리, 동일 통제조건 확정.",
       "issues": "해당 없음",
       "blocker": ""
     },
@@ -647,7 +942,7 @@
       "collab": "정재훈",
       "inputs": "TT29~TT35 시스템·평가·통제자료 | 07_Research_Management/Research_Master.xlsx의 Questions/Gold/Metric 관련 시트 | 04_Config/RAG_Config_Master.yaml의 system/experiment 설정 | 07_Research_Management/Research_Master.xlsx의 Legal_Scope/Freeze_Log",
       "outputs": "[UPDATE] 07_Research_Management/Research_Master.xlsx  → Pilot_Freeze 시트 | [UPDATE] 04_Config/RAG_Config_Master.yaml  → freeze_hashes 섹션 | [UPDATE] 07_Research_Management/Research_Master.xlsx  → Freeze_Log 시트 | 06_Experiment/Experiment_Run_Master.parquet Pilot rows; PILOT_FREEZE·CHANGE_LOG·REPRODUCIBILITY; 99_Logs_Backup/03_Freeze/",
-      "detail": "미착수. 산출물 예정: Pilot 결과로 설정 확정 후 code/config/data/Gold Freeze(freeze_hashes).",
+      "result": "미착수(예정) — 파일럿으로 설정 확정 후 code/config/data/Gold Freeze(본실험 후 튜닝 차단).",
       "issues": "해당 없음",
       "blocker": ""
     },
@@ -665,7 +960,7 @@
       "collab": "",
       "inputs": "TT36 동결 config + TT33 Holdout 80 | 07_Research_Management/Research_Master.xlsx의 Holdout/Gold | 04_Config/RAG_Config_Master.yaml의 freeze된 experiment_control | 06_Experiment/Experiment_Run_Master.parquet 또는 07_Research_Management/Research_Master.xlsx의 선행 결과",
       "outputs": "[UPDATE] 06_Experiment/Experiment_Run_Master.parquet  → run_type=holdout, system=A/B/C/D 모든 실행결과를 단일 파일에 저장 | 06_Experiment/Experiment_Run_Master.parquet의 holdout A/B/C/D rows; 99_Logs_Backup/01_Run_Logs/",
-      "detail": "미착수. 산출물 예정: Hold-out 80문항 A/B/C/D 본실험 → Experiment_Run_Master.parquet(run_type=holdout).",
+      "result": "미착수(예정) — Hold-out 80문항을 A/B/C/D에 실행해 단일 run dataset 저장(★본실험 핵심 성능 여기서 산출).",
       "issues": "해당 없음",
       "blocker": ""
     },
@@ -683,7 +978,7 @@
       "collab": "",
       "inputs": "TT37 전체 run 결과 + TT34 평가도구 + TT33 Gold | 07_Research_Management/Research_Master.xlsx의 Holdout/Gold | 04_Config/RAG_Config_Master.yaml의 freeze된 experiment_control | 06_Experiment/Experiment_Run_Master.parquet 또는 07_Research_Management/Research_Master.xlsx의 선행 결과",
       "outputs": "[UPDATE] 03_Code/research_pipeline.py  → scoring, statistics, error_analysis 함수 | [UPDATE] 07_Research_Management/Research_Master.xlsx  → Blind_Scores, Final_Metrics, Statistics, Errors, Hypotheses 시트 | Research_Master.xlsx FINAL_METRICS·STATISTICS·ERROR_ANALYSIS; 통계/오류분석 코드와 logs",
-      "detail": "미착수. 산출물 예정: Blind scoring·FINAL_METRICS·STATISTICS·Errors·Hypotheses(가설검정).",
+      "result": "미착수(예정) — Blind scoring·통계검정·오류분석으로 최종 결과표·가설검정(FINAL_METRICS/STATISTICS).",
       "issues": "해당 없음",
       "blocker": ""
     },
@@ -701,7 +996,7 @@
       "collab": "",
       "inputs": "TT38 Research_Master의 최종지표·통계·오류분석 | 07_Research_Management/Research_Master.xlsx의 Final_Metrics/Statistics/Errors | 08_Manuscript/Thesis_Manuscript.docx의 현재 원고 | 07_Research_Management/Research_Master.xlsx의 Protocol/Decision_Log",
       "outputs": "[CREATE/UPDATE] 08_Manuscript/Thesis_Manuscript.docx  → 4장 결과해석 + 5장 Discussion/Conclusion 초안부터 같은 파일에서 업데이트 | 08_Manuscript/Thesis_Manuscript.docx 4장 결과·5장 시사점/Discussion",
-      "detail": "미착수. 산출물 예정: 논문 4장 결과해석 + 5장 Discussion/Conclusion.",
+      "result": "미착수(예정) — 결과의 항공법적 의미·한계·시사점 해석(논문 4·5장).",
       "issues": "해당 없음",
       "blocker": ""
     },
@@ -719,7 +1014,7 @@
       "collab": "",
       "inputs": "TT01~TT39에서 확정된 Master 산출물 전체 | 07_Research_Management/Research_Master.xlsx의 Final_Metrics/Statistics/Errors | 08_Manuscript/Thesis_Manuscript.docx의 현재 원고 | 07_Research_Management/Research_Master.xlsx의 Protocol/Decision_Log",
       "outputs": "[UPDATE] 08_Manuscript/Thesis_Manuscript.docx  → 최종 원고 확정 | [CREATE/UPDATE] 07_Research_Management/Research_Master.xlsx  → Reproducibility_Manifest 시트에 최종 파일·DB·config·code hash와 재현절차 기록 | 08_Manuscript/Thesis_Manuscript.docx 최종본; Research_Master.xlsx REPRODUCIBILITY; 99_Logs_Backup/03_Freeze/ 최종 snapshot",
-      "detail": "미착수. 산출물 예정: 최종 원고 + Reproducibility_Manifest(파일·DB·config·code hash).",
+      "result": "미착수(예정) — 원고·코드·config·데이터·결과·DB를 재현 가능한 제출패키지로 정리.",
       "issues": "해당 없음",
       "blocker": ""
     },
@@ -737,8 +1032,8 @@
       "collab": "최동욱(최종원고/승인) · 지도교수(10/4 초안 검토) · 연구진(10/5 미팅/발표) · 항공운항학회 편집위원회",
       "inputs": "TT39 최종 결과/해석 및 TT40 재현성 패키지 | 08_Manuscript/Thesis_Manuscript.docx 최종초안 | 항공운항학회 공식 편집규칙·투고시스템 공지·필수 행정서류 | 참고문헌 원문 DOI/공식 URL",
       "outputs": "[UPDATE] 07_Research_Management/Research_Master.xlsx → TT41_PUBLICATION_CONTROL, CHANGE_LOG | [UPDATE] 08_Manuscript/Thesis_Manuscript.docx → 인용·서지·논리·형식 교정 반영 최종본 | [CREATE/UPDATE] 99_Logs_Backup/ → 투고 전 검증·제출·심사 커뮤니케이션 로그 | 학회 제출 최종본·행정서류·발표자료",
-      "detail": "진행중(50%). PUB-001 인용대조 / PUB-002 논리점검 진행중, PUB-003~006(지도교수 회신·연구진 미팅·편집규칙/행정서류·투고) 대기. 최종 투고 2026-10-12.",
-      "issues": "10/4 최종초안·지도교수 검토 회신·학회 편집규칙/행정서류 확인이 투고 전 완료되어야 함. PUB-003~006 대기.",
+      "result": "진행중(50%) — 투고 준비: 인용대조(PUB-001)·논리점검(PUB-002) 진행, 지도교수 회신·연구진 미팅·편집규칙·행정서류·투고(PUB-003~006) 대기. 최종 투고 2026-10-12.",
+      "issues": "10/4 최종초안·지도교수 회신·편집규칙/행정서류 확인이 투고 전 완료되어야 함(PUB-003~006 대기).",
       "blocker": "10/4 최종초안·지도교수 검토 회신·학회 편집규칙/행정서류 확인이 투고 전 완료되어야 함"
     }
   ]
