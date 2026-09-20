@@ -10,51 +10,95 @@ st.set_page_config(page_title="항공안전법령 RAG 검증 진행 현황", lay
 # Research_Master.xlsx의 TEAM_TASKS_40 시트를 기준으로 만든 스냅샷이라,
 # 마스터가 바뀌면 이 JSON만 새 버전으로 교체하면 됩니다.
 SOURCE = "progress.json"
+STATIC_DIR = "static"
 
 STATUS_COLOR = {"완료": "🟢", "검토중": "🟡", "진행중": "🔵", "미착수": "⚪"}
 
 # ── 논문 정보 ──────────────────────────────────────────────────
 # 제목·저자·요약·주요지표를 여기 한 곳에서 관리합니다.
-# static/ 폴더에 manuscript.pdf, manuscript.hwp 원고가 있어야 다운로드 버튼이 활성화됩니다.
+# 지표는 2026-09-20 기준 Research_Master.xlsx(정본)·research_pipeline.log·
+# progress.json·논문 초안 V0.4에서 확인한 "실측·동결값"만 기재했습니다.
 PAPER = {
     "title_ko": "구조·시간·인식 그래프 RAG를 활용한 "
                 "대한민국 항공안전법령 질의응답 신뢰성 검증 연구",
-    # 공식 영문 제목이 확정되면 아래를 교체하세요 (현재는 국문 기준 초안).
-    "title_en": "Verifying the Reliability of Question Answering on Korea's "
-                "Aviation Safety Legislation Using Structural, Temporal, "
-                "and Cognitive Graph RAG",
+    "title_en": "A Validation Study of Structure-Aware Temporal Graph RAG "
+                "for Reliable Question Answering over Korean Aviation "
+                "Safety Regulations",
     "venue": "한국항공운항학회 투고 예정",
-    # 연구요약(초록) — 확정 초록이 있으면 교체하세요 (현재는 연구설계 기준 초안).
     "summary": (
-        "본 연구는 대한민국 항공안전법령을 대상으로 네 가지 RAG(검색증강생성) "
-        "시스템 — 현행 Vector 기반, 전체버전 Naive, Temporal-Filtered, 그리고 "
-        "구조·시간·인식 그래프(SAT-Graph) — 의 질의응답 신뢰성을 비교·검증한다. "
-        "법령 특유의 개정 이력과 조문 간 참조 구조가 답변의 정확도와 시점 정합성에 "
-        "미치는 영향을 분석하고, 그래프 기반 접근이 환각(hallucination)과 시점 오류를 "
-        "얼마나 줄이는지를 정량적으로 평가한다."
+        "본 연구는 대한민국 고정익 항공운송사업 운항승무원 규정을 대상으로 네 가지 "
+        "RAG 시스템 — 현행 Vector(A), 전체버전 Naive(B), Temporal-Filtered Vector(C), "
+        "구조·시간·인식 그래프 SAT-Graph(D) — 의 질의응답 신뢰성을 동일 문항 반복측정 "
+        "(paired design)으로 비교·검증한다. 평가는 파일럿 20문항으로 설정을 동결한 뒤 "
+        "Hold-out 80문항으로 최종 측정하며, 검색성능·버전정확도·시간정합성·답변정확성·"
+        "인용품질·환각률·거절정확도·지연/비용을 분리해 측정하고 오류를 검색·시간·관계·"
+        "생성·인용 단계로 추적한다. B와 C의 차이로 시간필터의 순효과를, C와 D의 차이로 "
+        "법령구조·관계탐색의 추가효과를 분리 추정한다."
     ),
     "authors": {
         "주저자": "최동욱",
         "공동저자": "설지원, 정재훈, 손상우",
         "교신저자": "이규정 교수",
     },
-    # ▼▼ 주요 중요지표 — 실제 실험 결과값으로 채우세요 ▼▼
-    #   각 항목: {"label": 지표명, "value": 값, "help": 보조설명(선택)}
-    #   값이 하나도 없으면 대시보드에는 "입력 필요" 안내가 표시됩니다.
-    #   예시(형식만 참고 — 실제 수치로 교체):
-    #     {"label": "정답 정확도 (Accuracy)",     "value": "0.00", "help": "SAT-Graph"},
-    #     {"label": "충실도 (Faithfulness)",       "value": "0.00", "help": "SAT-Graph"},
-    #     {"label": "시점 정합성 (Temporal Acc.)", "value": "0.00"},
-    #     {"label": "환각률 (Hallucination)",      "value": "0.0%"},
-    "key_metrics": [],
-    # 4개 시스템 비교표를 넣고 싶으면 아래에 행을 채우세요(선택).
-    #   컬럼: system, accuracy, faithfulness, temporal, hallucination
-    #   예: {"system": "SAT-Graph", "accuracy": "0.00", "faithfulness": "0.00",
-    #        "temporal": "0.00", "hallucination": "0.0%"}
-    "systems_table": [],
-}
+    "as_of": "2026-09-20",
 
-STATIC_DIR = "static"
+    # 본실험(Hold-out 80문항, A/B/C/D 최종 성능비교) 완료 여부.
+    # Research_Master.xlsx의 FINAL_METRICS/STATISTICS/Blind_Scores 시트가
+    # 채워지면 True로 바꾸고 아래 final_* 를 입력하세요.
+    "holdout_done": False,
+    "status_note": (
+        "**본실험(Hold-out 80문항 · A/B/C/D 최종 성능비교)은 아직 실행 전입니다.** "
+        "Research_Master.xlsx의 `FINAL_METRICS`·`STATISTICS`·`Blind_Scores` 시트는 "
+        "현재 비어 있고(Phase 6~8 진행 전), TT33(Gold 100문항)은 전문가 검토 대기 상태입니다. "
+        "따라서 답변정확성·충실도·환각률 등 **시스템 간 최종 비교지표는 아직 산출되지 않았습니다.** "
+        "아래는 그때까지 확보된 **실측·동결값**입니다."
+    ),
+
+    # ① 데이터·코퍼스 구축 (동결, 실측)
+    "metrics_corpus": [
+        {"label": "원문 파일", "value": "99건", "help": "95 XML + 4 PDF (FRZ-TT09-001, cutoff 2026-09-09)"},
+        {"label": "조문 컴포넌트", "value": "239,509", "help": "4 norm · 93 semantic doc version 파싱"},
+        {"label": "버전(Provision Version)", "value": "212,970", "help": "CURRENT 4,770 / EXPIRED 203,831 / FUTURE 1,704 등"},
+        {"label": "최종 검색단위(CONTENT)", "value": "20,957", "help": "법령본문 6,822 + 구조화 운항요건 14,135"},
+        {"label": "개정 액션 / 엣지", "value": "6,058 / 18,174", "help": "TT18 amendment actions / directed edges"},
+        {"label": "법적 관계", "value": "875", "help": "위계·참조·위임·개정·승인의존 관계"},
+    ],
+
+    # ② TT21 청킹 선정 검색성능 (파일럿 20문항, 동결 2026-09-18)
+    #    최종 채택 청킹 = structural_article_paragraph
+    "metrics_tt21": [
+        {"label": "Hit@10", "value": "80.0%"},
+        {"label": "Hit@5", "value": "75.0%"},
+        {"label": "Recall@5", "value": "57.0%", "help": "2위 후보 대비 +10.5%p"},
+        {"label": "MRR@10", "value": "58.3%"},
+        {"label": "nDCG@5", "value": "0.486"},
+        {"label": "청크 수", "value": "15,654", "help": "일반 후보 대비 약 29% 감소"},
+    ],
+
+    # ③ SAT-Graph 지식그래프 규모 (Neo4j 재구축, 2026-09-18 실측)
+    "metrics_graph": [
+        {"label": "그래프 노드", "value": "289,575", "help": "CTV 212,970 · TextUnit 60,092 · Component 10,451 · Action 6,058 · Norm 4"},
+        {"label": "그래프 엣지", "value": "485,907", "help": "HAS_VERSION 212,970 · SUPERSEDES 199,854 · HAS_TEXT 60,092 · CREATES/TERMINATES 각 6,058 · DELEGATES_TO 658 · IMPLEMENTS 217"},
+    ],
+
+    # ④ 파일럿 20문항 시스템별 런타임 상태
+    #    (Development_Pilots, 최신 run 기준) — 최종 성능지표 아님(runtime health)
+    "pilot_rows": [
+        {"시스템": "A · Current Vector", "정상(pass)": "18/20", "판단보류(abstain)": 3, "오류(error)": 2},
+        {"시스템": "B · All-Version Naive", "정상(pass)": "11/20", "판단보류(abstain)": 6, "오류(error)": 9},
+        {"시스템": "C · Temporal-Filtered", "정상(pass)": "19/20", "판단보류(abstain)": 3, "오류(error)": 1},
+        {"시스템": "D · SAT-Graph", "정상(pass)": "19/20", "판단보류(abstain)": 3, "오류(error)": 1},
+    ],
+
+    # ⑤ 본실험 완료 시 채울 최종 비교표 (지금은 비움)
+    #    컬럼 예: {"지표": "답변정확성", "A": "", "B": "", "C": "", "D": ""}
+    "final_table": [],
+
+    "sources": (
+        "Research_Master.xlsx(정본) · research_pipeline.log · progress.json · "
+        "논문 초안 V0.4 (Google Drive, 2026-09-20 기준)"
+    ),
+}
 
 
 def _download_button(filename, label, mime, key):
@@ -62,14 +106,8 @@ def _download_button(filename, label, mime, key):
     path = os.path.join(STATIC_DIR, filename)
     if os.path.exists(path):
         with open(path, "rb") as f:
-            st.download_button(
-                label,
-                data=f.read(),
-                file_name=filename,
-                mime=mime,
-                key=key,
-                use_container_width=True,
-            )
+            st.download_button(label, data=f.read(), file_name=filename,
+                               mime=mime, key=key, use_container_width=True)
     else:
         st.caption(f"⚠️ {filename} 없음 ({path})")
 
@@ -81,7 +119,6 @@ def paper_header():
     if PAPER.get("venue"):
         st.caption(PAPER["venue"])
 
-    # 논문 다운로드 링크
     d1, d2, _ = st.columns([1, 1, 3])
     with d1:
         _download_button("manuscript.pdf", "📄 논문 PDF 다운로드",
@@ -90,11 +127,9 @@ def paper_header():
         _download_button("manuscript.hwp", "📝 논문 HWP 다운로드",
                          "application/x-hwp", key="dl_hwp")
 
-    # 연구요약
     st.subheader("연구요약")
     st.markdown(PAPER["summary"])
 
-    # 저자 정보 (요약 바로 밑)
     a = PAPER["authors"]
     st.markdown(
         f"**주저자** {a['주저자']}　·　"
@@ -104,41 +139,43 @@ def paper_header():
     st.divider()
 
 
+def _metric_cards(items):
+    if not items:
+        return
+    cols = st.columns(len(items))
+    for col, m in zip(cols, items):
+        col.metric(m.get("label", ""), m.get("value", "—"), help=m.get("help"))
+
+
 def key_metrics_panel():
-    """맨 아래: 연구 주요 중요지표."""
+    """맨 아래: 연구 주요 중요지표 (실측·동결값)."""
     st.divider()
     st.subheader("주요 중요지표")
+    st.caption(f"기준 {PAPER['as_of']}  ·  출처: {PAPER['sources']}")
 
-    metrics = PAPER.get("key_metrics") or []
-    table = PAPER.get("systems_table") or []
+    if not PAPER.get("holdout_done"):
+        st.warning(PAPER["status_note"])
 
-    if not metrics and not table:
-        st.info(
-            "지표 값이 아직 입력되지 않았습니다. "
-            "app.py 상단의 `PAPER[\"key_metrics\"]`(핵심 지표) 또는 "
-            "`PAPER[\"systems_table\"]`(4개 시스템 비교표)에 "
-            "실제 실험 결과값을 넣으면 이 자리에 표시됩니다."
-        )
-        return
+    st.markdown("##### ① 데이터·코퍼스 구축 (동결)")
+    _metric_cards(PAPER.get("metrics_corpus"))
 
-    # 핵심 지표 카드
-    if metrics:
-        cols = st.columns(len(metrics))
-        for col, m in zip(cols, metrics):
-            col.metric(m.get("label", ""), m.get("value", "—"),
-                       help=m.get("help"))
+    st.markdown("##### ② 최종 청킹 검색성능 · structural_article_paragraph (TT21 파일럿 20문항, 동결)")
+    _metric_cards(PAPER.get("metrics_tt21"))
 
-    # 4개 시스템 비교표
-    if table:
-        st.markdown("**시스템별 비교**")
-        tdf = pd.DataFrame(table).rename(columns={
-            "system": "시스템",
-            "accuracy": "정확도",
-            "faithfulness": "충실도",
-            "temporal": "시점 정합성",
-            "hallucination": "환각률",
-        })
-        st.dataframe(tdf, use_container_width=True, hide_index=True)
+    st.markdown("##### ③ SAT-Graph 지식그래프 규모 (Neo4j, 실측)")
+    _metric_cards(PAPER.get("metrics_graph"))
+
+    st.markdown("##### ④ 파일럿 20문항 시스템별 런타임 상태")
+    if PAPER.get("pilot_rows"):
+        st.dataframe(pd.DataFrame(PAPER["pilot_rows"]),
+                     use_container_width=True, hide_index=True)
+    st.caption("※ pass/abstain/error는 실행 안정성(runtime health) 점검치이며, "
+               "논문에 보고할 최종 성능지표가 아닙니다. 최종 성능은 Hold-out 80문항 본실험(TT37·TT38)에서 산출됩니다.")
+
+    if PAPER.get("final_table"):
+        st.markdown("##### ⑤ 본실험 최종 비교 (Hold-out 80문항)")
+        st.dataframe(pd.DataFrame(PAPER["final_table"]),
+                     use_container_width=True, hide_index=True)
 
 
 @st.cache_data(ttl=10)          # 원본을 10초에 한 번만 재조회
@@ -229,12 +266,10 @@ def dashboard():
     st.progress(overall / 100)
     st.divider()
 
-    # ── TT29–32 Action Plan 적용 현황 ──────────────────────────
     action_plan_panel(ap)
     if ap:
         st.divider()
 
-    # ── Phase별 요약 ───────────────────────────────────────────
     st.subheader("Phase별 진행률")
     for phase, g in df.groupby("phase", sort=False):
         pct = int(round(g["progress"].mean()))
@@ -243,7 +278,6 @@ def dashboard():
         bar.progress(pct / 100, text=f"{pct}%")
     st.divider()
 
-    # ── Task 상세 (클릭하면 펼쳐짐) ─────────────────────────────
     st.subheader("Task 상세 — 항목을 클릭하면 작업내용이 펼쳐집니다")
     show_done = st.checkbox("완료 항목도 보기", value=False)
     view = df if show_done else df[df["status"] != "완료"]
@@ -253,7 +287,6 @@ def dashboard():
         for _, r in group.iterrows():
             icon = STATUS_COLOR.get(r["status"], "")
             header = f"{icon} {r['id']} · {r['name']}  —  {r['status']} ({int(r['progress'])}%) · {r['owner']}"
-            # 진행중·검토중·차단 항목은 기본으로 펼쳐서 눈에 띄게
             expanded = r["status"] in ("진행중", "검토중") or bool(r.get("blocker"))
             with st.expander(header, expanded=expanded):
                 detail_block(r)
@@ -272,4 +305,4 @@ paper_header()                 # 제목·영문제목·다운로드·요약·저
 st.header("진행 현황")
 dashboard()                    # 기존 진행현황 대시보드
 
-key_metrics_panel()            # 맨 아래: 주요 중요지표
+key_metrics_panel()            # 맨 아래: 주요 중요지표(실측·동결값)
