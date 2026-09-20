@@ -86,13 +86,12 @@ PAPER = {
         {"label": "그래프 엣지", "value": "485,907", "help": "HAS_VERSION 212,970 · SUPERSEDES 199,854 · HAS_TEXT 60,092 · CREATES/TERMINATES 각 6,058 · DELEGATES_TO 658 · IMPLEMENTS 217"},
     ],
 
-    # ④ 파일럿 20문항 시스템별 런타임 상태
-    #    (Development_Pilots, 최신 run 기준) — 최종 성능지표 아님(runtime health)
+    # ④ 파일럿 20문항 시스템별 v1.2 재실행 결과(2026-09-20) — 실행 성공, 정량 채점 전
     "pilot_rows": [
-        {"시스템": "A · Current Vector", "정상(pass)": "18/20", "판단보류(abstain)": 3, "오류(error)": 2},
-        {"시스템": "B · All-Version Naive", "정상(pass)": "11/20", "판단보류(abstain)": 6, "오류(error)": 9},
-        {"시스템": "C · Temporal-Filtered", "정상(pass)": "19/20", "판단보류(abstain)": 3, "오류(error)": 1},
-        {"시스템": "D · SAT-Graph", "정상(pass)": "19/20", "판단보류(abstain)": 3, "오류(error)": 1},
+        {"시스템": "A · Current Vector", "실행성공": "20/20", "답변": 14, "기권": 6, "오류": 0},
+        {"시스템": "B · All-Version Naive", "실행성공": "20/20", "답변": 5, "기권": 15, "오류": 0},
+        {"시스템": "C · Temporal-Filtered", "실행성공": "20/20", "답변": 15, "기권": 5, "오류": 0},
+        {"시스템": "D · SAT-Graph", "실행성공": "20/20", "답변": 15, "기권": 5, "오류": 0},
     ],
 
     # ⑤ 본실험 완료 시 채울 최종 비교표 (지금은 비움)
@@ -170,12 +169,13 @@ def key_metrics_panel():
     st.markdown("##### ③ SAT-Graph 지식그래프 규모 (Neo4j, 실측)")
     _metric_cards(PAPER.get("metrics_graph"))
 
-    st.markdown("##### ④ 파일럿 20문항 시스템별 런타임 상태")
+    st.markdown("##### ④ 파일럿 20문항 시스템별 v1.2 재실행 결과 (2026-09-20)")
     if PAPER.get("pilot_rows"):
         st.dataframe(pd.DataFrame(PAPER["pilot_rows"]),
                      use_container_width=True, hide_index=True)
-    st.caption("※ pass/abstain/error는 실행 안정성(runtime health) 점검치이며, "
-               "논문에 보고할 최종 성능지표가 아닙니다. 최종 성능은 Hold-out 80문항 본실험(TT37·TT38)에서 산출됩니다.")
+    st.caption("※ v1.2 재실행에서 A/B/C/D 모두 20/20 실행 성공(기존 v1.0 오류 전부 해소). "
+               "답변/기권 수는 실행 상태이며, 정확도·검색·환각 등 정량 성능지표는 blind scoring(TT38) 후 산출됩니다. "
+               "최종 성능은 Hold-out 80문항 본실험(TT37·TT38)에서 확정됩니다.")
 
     if PAPER.get("final_table"):
         st.markdown("##### ⑤ 본실험 최종 비교 (Hold-out 80문항)")

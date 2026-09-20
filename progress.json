@@ -1,7 +1,7 @@
 {
-  "as_of": "2026-09-20 11:41",
-  "source_note": "Research_Master.xlsx(정본)+Infra_QA/Development_Pilots/TT21_PILOT_GOLD, research_pipeline.log, RAG_Config_Master.yaml, TT29–TT32 v1.1 재실행 핸드오프(2026-09-20) 기준",
-  "handoff_note": "TT28 공통 생성계약이 v1.1로 변경 → TT29~TT32(A/B/C/D)는 Q001~Q020으로 v1.1 재실행 필요(담당 설지원). 최동욱 PC 확인: tt21-input-check PASS·tt28 offline PASS·chunks_final/embeddings=15,654·TT33 후보 100문항 사전검사 PASS. 실환경 재실행은 접속정보 부재로 미시작. 완료기준: A/B/C/D 각 20=80행, 동일 질문·v1.1 계약, 새 run ID, v1.0 보존, JSONL/Parquet 동기화.",
+  "as_of": "2026-09-20 15:09",
+  "source_note": "Research_Master.xlsx(정본 2026-09-20 14:04)+Experiment_Run_Master.parquet/jsonl(v1.2 재실행 13:38)+Development_Pilots/Infra_QA/TT21_PILOT_GOLD, research_pipeline.log, RAG_Config_Master.yaml 기준",
+  "handoff_note": "TT29~TT32 v1.2 재실행 완료(2026-09-20 14:02 WAT, 설지원 환경): A/B/C/D 각 20문항 = 80행 전부 실행 성공, 기존 v1.0 오류(A2·B9·C1·D2) 전부 해소(오류 0). 답변/기권 A 14/6·B 5/15·C 15/5·D 15/5(기권은 기준일 유효근거 부족 등 정상 fail-safe). 남은 단계(동결 전): 정량 성능지표 blind scoring(TT34/38), C vs D 비교, Q016/Q017/Q020 커버리지·Q019 처리방침, 설지원 법령·도메인 검토. ※ Research_Master 태스크 상태는 아직 검토중(0.8~0.9)이라 공정률은 77% 유지.",
   "action_plan": null,
   "tasks": [
     {
@@ -1119,22 +1119,26 @@
       "collab": "최동욱 (v1.1 코드 검증 완료; live A-D rerun 대기)",
       "inputs": "TT01 시스템비교 원칙 + TT04 평가기준 | 04_Config/RAG_Config_Master.yaml의 common/system 설정 | 03_Code/research_pipeline.py의 공통 API | 02_Database/Aviation_Law_Data.duckdb 및 Milvus/Neo4j의 동결된 검색 corpus",
       "outputs": "[UPDATE] 03_Code/research_pipeline.py  → generate(), logger() 공통 함수 | [UPDATE] 04_Config/RAG_Config_Master.yaml  → generation, prompt, logging 섹션 | [CREATE/UPDATE] 06_Experiment/Experiment_Run_Master.parquet  → 공통 run schema 정의 | 공통 generation/prompt/logger; YAML llm/generation/logging; Parquet run schema",
-      "result": "공통 생성부 v1.1 완성: 단위 7/7·offline·live smoke PASS. 생성모델 gpt-4.1-mini(로컬 파일럿 Qwen3). ★계약이 v1.1로 바뀌어 TT29~32는 v1.1로 재실행 필요.",
+      "result": "공통 생성부가 v1.2까지 진전(prompt TT28-LEGAL-GROUNDED-v1.1). 단위 7/7·offline·live smoke PASS. 생성모델 Qwen3.8-27B(로컬 LiteLLM). 이 v1.2 계약으로 TT29~32 A/B/C/D 재실행 완료(오류 0).",
       "metrics": [
         [
           "단위테스트",
           "7/7 PASS"
         ],
         [
-          "생성모델",
-          "gpt-4.1-mini"
+          "생성 버전",
+          "v1.2"
         ],
         [
-          "계약",
-          "v1.1"
+          "prompt",
+          "TT28-LEGAL-GROUNDED-v1.1"
+        ],
+        [
+          "생성모델",
+          "Qwen3.8-27B (로컬)"
         ]
       ],
-      "issues": "공통계약 v1.1 변경 → A~D 재실행 전 동결 불가. 공란은 abstained=true일 때만 표준 기권문, 그 외 ERROR.",
+      "issues": "v1.2 계약 확정·A~D 재실행 완료. 정량지표 산출·법률검토 후 동결 예정.",
       "blocker": "TT28-GENERATION-v1.1 및 TT28-LEGAL-GROUNDED-v1.1 보강 완료. blank answer는 abstained=true일 때만 표준 기권문으로 정규화하고, 그 외 공란은 계속 ERROR 처리한다. 검증 전 response hash/request/usage와 비내용 payload 진단을 기록한다. 로컬 regression PASS. 공통 계약 변경으로 A-D 재실행 전까지 완료/동결 불가."
     },
     {
@@ -1151,30 +1155,42 @@
       "collab": "설지원·최동욱·정재훈 / rerun pending",
       "inputs": "TT25 Vector DB + TT27 검색모듈 + TT28 생성모듈 | 04_Config/RAG_Config_Master.yaml의 common/system 설정 | 03_Code/research_pipeline.py의 공통 API | 02_Database/Aviation_Law_Data.duckdb 및 Milvus/Neo4j의 동결된 검색 corpus",
       "outputs": "[UPDATE] 03_Code/research_pipeline.py  → SystemA 클래스/함수 | [UPDATE] 04_Config/RAG_Config_Master.yaml  → system_A 섹션 | [UPDATE] 06_Experiment/Experiment_Run_Master.parquet  → pilot/system=A rows | [UPDATE] 07_Research_Management/Research_Master.xlsx  → Development_Pilots 시트 | System A 코드/설정; 06_Experiment/Experiment_Run_Master.parquet pilot rows; logs",
-      "result": "System A(현행 Vector) — v1.0 파일럿 20문항: 정상 18·기권 3·오류 2. ※v1.0 결과(잠정), 설지원 환경에서 v1.1 재실행 대기.",
+      "result": "System A — v1.2 재실행 완료(2026-09-20): 20문항 전부 실행 성공, **오류 0(기존 오류 해소)**. 답변 14 · 기권 6(근거부족/기준일 미충족). 평균 지연 26.6s · 토큰 3,080. 정확도·검색·환각 등 정량 성능지표는 blind scoring(TT38) 전이라 아직 미산출.",
       "metrics": [
         [
           "결과 행",
           "20"
         ],
         [
-          "정상",
-          "18"
+          "실행 성공",
+          "20 (오류 0)"
         ],
         [
-          "기권",
-          "3"
+          "답변(SUPPORTED)",
+          "14"
         ],
         [
-          "오류",
-          "2"
+          "기권(ABSTAINED)",
+          "6"
         ],
         [
-          "계약",
-          "v1.0 (재실행 대기)"
+          "평균 지연",
+          "26.6s"
+        ],
+        [
+          "평균 토큰",
+          "3,080"
+        ],
+        [
+          "생성 버전",
+          "v1.2 / prompt v1.1"
+        ],
+        [
+          "정량지표",
+          "채점 전(미산출)"
         ]
       ],
-      "issues": "v1.0 오류 2/20(Q018·Q019). 원응답 미보존 → v1.1 재실행 필요.",
+      "issues": "v1.0 오류 2건(Q018·Q019) → v1.2 재실행에서 해소(오류 0). 남은 것: 정량 scoring·법령검토·freeze.",
       "blocker": "TT28 v1.1 공통 계약 변경으로 A 재실행 필요. 기존 Q018/Q019는 원응답 구조 미보존으로 정상 기권 여부를 사후 확정할 수 없다. 동일 TT21 Q001-Q020 및 동일 모델/파라미터로 A-D 일괄 재실행 후 지표·법률검토 진행."
     },
     {
@@ -1191,30 +1207,42 @@
       "collab": "설지원·최동욱·정재훈 / rerun pending",
       "inputs": "TT25 Vector DB + TT27~TT28 공통모듈 | 04_Config/RAG_Config_Master.yaml의 common/system 설정 | 03_Code/research_pipeline.py의 공통 API | 02_Database/Aviation_Law_Data.duckdb 및 Milvus/Neo4j의 동결된 검색 corpus",
       "outputs": "[UPDATE] 03_Code/research_pipeline.py  → SystemB 클래스/함수 | [UPDATE] 04_Config/RAG_Config_Master.yaml  → system_B 섹션 | [UPDATE] 06_Experiment/Experiment_Run_Master.parquet  → pilot/system=B rows | [UPDATE] 07_Research_Management/Research_Master.xlsx  → Development_Pilots 시트 | System B 코드/설정; Experiment_Run_Master.parquet pilot rows; logs",
-      "result": "System B(Naive) — v1.0 파일럿 20문항: 정상 11·기권 6·오류 9(version mixing 위험). ※v1.1 재실행 대기.",
+      "result": "System B — v1.2 재실행 완료(2026-09-20): 20문항 전부 실행 성공, **오류 0(기존 오류 해소)**. 답변 5 · 기권 15(근거부족/기준일 미충족). 평균 지연 19.7s · 토큰 2,834. 정확도·검색·환각 등 정량 성능지표는 blind scoring(TT38) 전이라 아직 미산출.",
       "metrics": [
         [
           "결과 행",
           "20"
         ],
         [
-          "정상",
-          "11"
+          "실행 성공",
+          "20 (오류 0)"
         ],
         [
-          "기권",
-          "6"
+          "답변(SUPPORTED)",
+          "5"
         ],
         [
-          "오류",
-          "9"
+          "기권(ABSTAINED)",
+          "15"
         ],
         [
-          "계약",
-          "v1.0 (재실행 대기)"
+          "평균 지연",
+          "19.7s"
+        ],
+        [
+          "평균 토큰",
+          "2,834"
+        ],
+        [
+          "생성 버전",
+          "v1.2 / prompt v1.1"
+        ],
+        [
+          "정량지표",
+          "채점 전(미산출)"
         ]
       ],
-      "issues": "v1.0 오류 9/20(최다, version mixing). 원응답 미보존 → v1.1 재실행 필요.",
+      "issues": "v1.0 오류 9건 → v1.2 재실행에서 해소(오류 0). 기권 15건(naive라 기준일 유효근거 부족으로 최다 기권) — B vs C 시간필터 효과 비교 예정.",
       "blocker": "TT28 v1.1 공통 계약 변경으로 B 재실행 필요. 기존 9개 공란 오류는 evidence 5건씩 존재했으나 원응답 구조 미보존. v1.1 재실행에서 정상 기권과 비정상 공란을 구분하고 temporal mixing 지표를 산출한다."
     },
     {
@@ -1231,30 +1259,42 @@
       "collab": "설지원·최동욱·정재훈 / rerun pending",
       "inputs": "TT14~TT15 시간정보 + TT25 Vector DB + TT27~TT28 | 04_Config/RAG_Config_Master.yaml의 common/system 설정 | 03_Code/research_pipeline.py의 공통 API | 02_Database/Aviation_Law_Data.duckdb 및 Milvus/Neo4j의 동결된 검색 corpus",
       "outputs": "[UPDATE] 03_Code/research_pipeline.py  → Temporal parser/filter + SystemC | [UPDATE] 04_Config/RAG_Config_Master.yaml  → system_C, temporal_policy 섹션 | [UPDATE] 06_Experiment/Experiment_Run_Master.parquet  → pilot/system=C rows | [UPDATE] 07_Research_Management/Research_Master.xlsx  → Development_Pilots 시트 | temporal parser/filter + System C; YAML temporal policy; Parquet pilot rows",
-      "result": "System C(Temporal) — v1.0 파일럿 20문항: 정상 19·기권 3·오류 1(최저 오류). ※v1.1 재실행 대기.",
+      "result": "System C — v1.2 재실행 완료(2026-09-20): 20문항 전부 실행 성공, **오류 0(기존 오류 해소)**. 답변 15 · 기권 5(근거부족/기준일 미충족). 평균 지연 26.3s · 토큰 3,080. 정확도·검색·환각 등 정량 성능지표는 blind scoring(TT38) 전이라 아직 미산출.",
       "metrics": [
         [
           "결과 행",
           "20"
         ],
         [
-          "정상",
-          "19"
+          "실행 성공",
+          "20 (오류 0)"
         ],
         [
-          "기권",
-          "3"
+          "답변(SUPPORTED)",
+          "15"
         ],
         [
-          "오류",
-          "1"
+          "기권(ABSTAINED)",
+          "5"
         ],
         [
-          "계약",
-          "v1.0 (재실행 대기)"
+          "평균 지연",
+          "26.3s"
+        ],
+        [
+          "평균 토큰",
+          "3,080"
+        ],
+        [
+          "생성 버전",
+          "v1.2 / prompt v1.1"
+        ],
+        [
+          "정량지표",
+          "채점 전(미산출)"
         ]
       ],
-      "issues": "v1.0 오류 1/20(Q019). v1.1 재실행 필요.",
+      "issues": "v1.0 오류 1건(Q019) → v1.2 재실행에서 해소(오류 0). 정량 scoring·법령검토 남음.",
       "blocker": "TT28 v1.1 공통 계약 변경으로 C 재실행 필요. 기존 Q019는 evidence 4건이지만 원응답 구조 미보존. A-D 동일 조건 재실행 후 D와 비교한다."
     },
     {
@@ -1271,73 +1311,91 @@
       "collab": "설지원·최동욱·정재훈 / rerun pending",
       "inputs": "TT26 Neo4j Graph + TT28 생성모듈 + TT02 SAT 실행흐름 | 04_Config/RAG_Config_Master.yaml의 common/system 설정 | 03_Code/research_pipeline.py의 공통 API | 02_Database/Aviation_Law_Data.duckdb 및 Milvus/Neo4j의 동결된 검색 corpus",
       "outputs": "[UPDATE] 03_Code/research_pipeline.py  → SAT query parser/retriever + SystemD | [UPDATE] 04_Config/RAG_Config_Master.yaml  → system_D, sat_graph 섹션 | [UPDATE] 06_Experiment/Experiment_Run_Master.parquet  → pilot/system=D rows | [UPDATE] 07_Research_Management/Research_Master.xlsx  → Development_Pilots 시트 | SAT-Graph retriever/System D; graph path trace; Experiment_Run_Master.parquet pilot rows; logs",
-      "result": "System D(SAT-Graph) — v1.0 파일럿 20문항: 정상 19·기권 3·오류 1, graph_scope_empty 8(C seed fallback). ※v1.1 재실행 대기.",
+      "result": "System D — v1.2 재실행 완료(2026-09-20): 20문항 전부 실행 성공, **오류 0(기존 오류 해소)**. 답변 15 · 기권 5(근거부족/기준일 미충족). 평균 지연 26.8s · 토큰 3,127. 정확도·검색·환각 등 정량 성능지표는 blind scoring(TT38) 전이라 아직 미산출.",
       "metrics": [
         [
           "결과 행",
           "20"
         ],
         [
-          "정상",
-          "19"
+          "실행 성공",
+          "20 (오류 0)"
         ],
         [
-          "기권",
-          "3"
+          "답변(SUPPORTED)",
+          "15"
         ],
         [
-          "오류",
-          "1"
+          "기권(ABSTAINED)",
+          "5"
         ],
         [
-          "graph_scope_empty",
-          "8"
+          "평균 지연",
+          "26.8s"
         ],
         [
-          "계약",
-          "v1.0 (재실행 대기)"
+          "평균 토큰",
+          "3,127"
+        ],
+        [
+          "생성 버전",
+          "v1.2 / prompt v1.1"
+        ],
+        [
+          "정량지표",
+          "채점 전(미산출)"
         ]
       ],
-      "issues": "v1.0 graph_scope_empty 8건→C seed fallback. v1.1 재실행 필요(기존 v1.0 run 보존). Q016/Q017/Q020 커버리지·Q019 처리방침 후속.",
+      "issues": "v1.0 오류 2건 → v1.2 재실행에서 해소(오류 0). graph-empty fallback 정상 동작(C seed 유지). 남은 것: C vs D 정량비교·Q016/Q017/Q020 커버리지·Q019 처리방침·법령검토.",
       "blocker": "Graph-empty fallback 수리는 유지되지만 TT28 v1.1 공통 계약 변경으로 D도 다시 실행한다. 기존 두 D run은 보존하고 새 run을 추가한다. 이후 graph_scope_empty 8건, Q016/Q017/Q020, Q019, 정량지표와 법률검토를 완료한다.",
       "tables": [
         {
-          "title": "System A~D 파일럿 20문항 결과 (v1.0 · 런타임, 최종 성능 아님)",
+          "title": "System A~D v1.2 재실행 결과 (2026-09-20 · 실행 성공, 정량 채점 전)",
           "columns": [
             "시스템",
-            "정상",
+            "실행 성공",
+            "답변",
             "기권",
             "오류",
-            "비고"
+            "평균지연",
+            "평균토큰"
           ],
           "rows": [
             [
               "A · Current Vector",
-              "18/20",
-              3,
-              2,
-              "현행 baseline"
+              "20/20",
+              14,
+              6,
+              0,
+              "26.6s",
+              "3,080"
             ],
             [
               "B · All-Version Naive",
-              "11/20",
-              6,
-              9,
-              "version mixing(최다 오류)"
+              "20/20",
+              5,
+              15,
+              0,
+              "19.7s",
+              "2,834"
             ],
             [
               "C · Temporal-Filtered",
-              "19/20",
-              3,
-              1,
-              "시간필터, 최저 오류"
+              "20/20",
+              15,
+              5,
+              0,
+              "26.3s",
+              "3,080"
             ],
             [
               "D · SAT-Graph",
-              "19/20",
-              3,
-              1,
-              "graph_scope_empty 8→C seed fallback"
+              "20/20",
+              15,
+              5,
+              0,
+              "26.8s",
+              "3,127"
             ]
           ]
         }
