@@ -1,5 +1,6 @@
 {
   "as_of": "2026-09-19 22:48",
+  "project_due": "2026년 10월 4일(일)",
   "manuscript": {
     "title": "구조·시간·인식 그래프 RAG를 활용한 대한민국 항공안전법령 질의응답 신뢰성 검증 연구",
     "lead_author": "최동욱",
@@ -9,13 +10,12 @@
     "summary": "대한민국 항공안전법령(법률·시행령·시행규칙·별표·운항기술기준)은 계층·상호참조·개정에 따른 시간적 유효성이 얽혀 있어, 의미 유사도만으로 검색하는 일반 RAG로는 질문 시점에 유효한 조문을 정확히 찾기 어렵다. 본 연구는 이를 검증하기 위해 동일한 법령 코퍼스·임베딩(BGE-M3)·생성 LLM을 통제한 상태에서 네 가지 검색 방식 — ①현행법만 보는 기본 RAG(A), ②전체 버전을 섞는 Naive RAG(B), ③질문 시점의 유효 버전만 거르는 Temporal-Filtered RAG(C), ④시간·구조·개정관계를 그래프로 활용하는 SAT-Graph RAG(D) — 를 비교한다. B–C 비교로 '시간 정보'의 효과를, C–D 비교로 '법령 구조 정보'의 추가 효과를 분리 측정하여, 어떤 규제 복잡성에서 어떤 검색 방식이 답변의 정확성과 시간정합성을 높이는지를 규명한다.",
     "pdf_path": "static/manuscript.pdf",
     "pdf_label": "보완본 V0.5",
-    "pdf_updated": "2026-09-19 22:01",
+    "pdf_updated": "2026-09-19",
     "pdf_download_name": "항공안전법령_RAG_신뢰성검증_보완본_V0.5.pdf",
     "hwp_path": "static/manuscript.hwp",
-    "hwp_label": "초안 V0.4",
-    "hwp_updated": "2026-09-19 21:42",
-    "hwp_download_name": "항공안전법령_RAG_신뢰성검증_초안_V0.4.hwp",
-    "note": "PDF는 보완본 V0.5, HWP는 초안 V0.4 기준입니다(HWP V0.5는 아직 없음)."
+    "hwp_label": "보완본 V0.5",
+    "hwp_updated": "2026-09-19",
+    "hwp_download_name": "항공안전법령_RAG_신뢰성검증_보완본_V0.5.hwp"
   },
   "tasks": [
     {
@@ -352,7 +352,102 @@
       "collab": "",
       "blocker": "",
       "outputs": "chunks_final / YAML chunking.final / Development_Pilots",
-      "detail": "FRZ-TT21-001 동결(2026-09-18). A100에서 Q001~Q020으로 8개 후보 동일조건 비교. structural_article_paragraph 1위: chunks=15,654, Recall@5=0.5700, MRR@10=0.5833, Hit@10=0.8000. Gold Q001~Q020 20/20 승인. 후속 TT23~25는 chunks_final만 사용."
+      "detail": "FRZ-TT21-001 동결(2026-09-18). A100에서 Q001~Q020으로 8개 후보 동일조건 비교. structural_article_paragraph 1위: chunks=15,654, Recall@5=0.5700, MRR@10=0.5833, Hit@10=0.8000. Gold Q001~Q020 20/20 승인. 후속 TT23~25는 chunks_final만 사용.",
+      "table": {
+        "caption": "Pilot 20문항 · BAAI/bge-m3(fp16) · Top-K 1/3/5/10 기준. 경계보존 = 원 Text Unit이 chunk로 쪼개지지 않은 비율. ★ = 채택(1위). 수행: 정재훈",
+        "columns": [
+          "후보",
+          "순위",
+          "Chunk수",
+          "토큰중앙값",
+          "경계보존",
+          "Hit@5",
+          "MRR@10",
+          "인코딩(초)"
+        ],
+        "rows": [
+          [
+            "★ Structural article–paragraph",
+            1,
+            15654,
+            74,
+            0.9934,
+            0.75,
+            0.5833,
+            48.9
+          ],
+          [
+            "Fixed character 2,000",
+            2,
+            22146,
+            35,
+            1.0,
+            0.7,
+            0.5046,
+            67.9
+          ],
+          [
+            "Structural component",
+            3,
+            22146,
+            35,
+            1.0,
+            0.7,
+            0.5046,
+            67.2
+          ],
+          [
+            "Fixed 512 token",
+            4,
+            22155,
+            35,
+            0.9996,
+            0.7,
+            0.5046,
+            66.9
+          ],
+          [
+            "Fixed 512 + overlap 50",
+            5,
+            22155,
+            35,
+            0.9996,
+            0.7,
+            0.5046,
+            68.0
+          ],
+          [
+            "Recursive paragraph–sentence",
+            6,
+            22155,
+            35,
+            0.9996,
+            0.7,
+            0.5046,
+            67.9
+          ],
+          [
+            "Appendix 36 technical",
+            7,
+            12541,
+            74,
+            1.0,
+            0.4,
+            0.3125,
+            39.0
+          ],
+          [
+            "Appendix 18 row",
+            8,
+            1594,
+            51,
+            1.0,
+            0.05,
+            0.0306,
+            4.9
+          ]
+        ]
+      }
     },
     {
       "id": "TT22",
@@ -535,8 +630,8 @@
       "phase": "Phase 6 · 평가문제와 정답",
       "name": "평가질문 100개와 Gold Standard",
       "owner": "정재훈",
-      "status": "미착수",
-      "progress": 0,
+      "status": "진행중",
+      "progress": 30,
       "due": "2026-09-23",
       "goal": "실험이 쉬운 질문만 고르지 않도록 100문항을 유형별로 균형화하고 각 질문에 정답근거·정답버전·금지버전을 전문가 검증으로 확정한다.",
       "pred": "TT05, TT14, TT19, TT04",
@@ -544,7 +639,7 @@
       "collab": "최동욱",
       "blocker": "",
       "outputs": "Questions, Gold, Expert_Validation, Pilot_Holdout",
-      "detail": "미착수. Pilot 20/Holdout 80 사전분리, Question ID 고정, Gold에 evidence·정답버전·금지버전 포함."
+      "detail": "평가질문 후보 Q021~Q120을 작성해 전문가 검토 진행 중. 항공안전기술원 안주현 선임연구원 주도하에 항공안전 전문가 검토를 받고 있으며, 9월 23일까지 검토응답을 회신받을 예정. 회신 반영 후 Gold Standard(정답근거·정답버전·금지버전)를 확정한다."
     },
     {
       "id": "TT34",

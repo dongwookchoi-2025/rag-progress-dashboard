@@ -20,7 +20,7 @@ def load_data():
         data = json.load(f)
     df = pd.DataFrame(data["tasks"])
     df["progress"] = pd.to_numeric(df["progress"], errors="coerce").fillna(0).astype(int)
-    return data.get("as_of", ""), data.get("manuscript"), df
+    return data.get("as_of", ""), data.get("project_due", ""), data.get("manuscript"), df
 
 
 @st.cache_data(ttl=10)
@@ -87,10 +87,18 @@ def detail_block(r):
     st.caption(f"담당 {r['owner']}  ·  작업종료 {r['due']}  ·  진행률 {int(r['progress'])}%")
     st.progress(int(r["progress"]) / 100)
 
+    tbl = r.get("table")
+    if isinstance(tbl, dict):
+        st.markdown("**청킹 후보 비교 결과**")
+        tdf = pd.DataFrame(tbl["rows"], columns=tbl["columns"])
+        st.dataframe(tdf, use_container_width=True, hide_index=True)
+        if tbl.get("caption"):
+            st.caption(tbl["caption"])
+
 
 @st.fragment(run_every="10s")   # 이 블록만 10초마다 자동 갱신
 def dashboard():
-    as_of, manuscript, df = load_data()
+    as_of, project_due, manuscript, df = load_data()
 
     total = len(df)
     done = (df["status"] == "완료").sum()
@@ -118,6 +126,8 @@ def dashboard():
     c4.metric("미착수", todo)
     c5.metric("전체 공정률", f"{overall}%")
     st.progress(overall / 100)
+    if project_due:
+        st.markdown(f"**작업종료 예정일: {project_due}**")
     st.divider()
 
     # ── 최신 원고 (PDF 뷰어 + 다운로드) ────────────────────────
