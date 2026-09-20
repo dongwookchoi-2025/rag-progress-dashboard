@@ -20,54 +20,7 @@ def load_data():
         data = json.load(f)
     df = pd.DataFrame(data["tasks"])
     df["progress"] = pd.to_numeric(df["progress"], errors="coerce").fillna(0).astype(int)
-    return data.get("as_of", ""), data.get("project_due", ""), data.get("manuscript"), df
-
-
-@st.cache_data(ttl=10)
-def read_bytes(path):
-    if path and os.path.exists(path):
-        with open(path, "rb") as f:
-            return f.read()
-    return None
-
-
-def manuscript_section(m):
-    if not m:
-        return
-    st.subheader("📄 최신 원고")
-    st.markdown(f"**{m['title']}**")
-    st.markdown(
-        f"- **주저자**: {m.get('lead_author','')}\n"
-        f"- **공동저자**: {m.get('co_authors','')}\n"
-        f"- **교신저자**: {m.get('corresponding_author','')}\n"
-        f"- **투고학회(예정)**: {m.get('target_journal','')}"
-    )
-    if m.get("summary"):
-        st.markdown(f"**연구내용 요약**: {m['summary']}")
-    if m.get("note"):
-        st.caption("⚠️ " + m["note"])
-
-    # 다운로드 버튼 (저장소에 담긴 파일 바이트를 그대로 내려줌 — 원본 그대로)
-    pdf_bytes = read_bytes(m.get("pdf_path"))
-    hwp_bytes = read_bytes(m.get("hwp_path"))
-    c1, c2 = st.columns(2)
-    if pdf_bytes:
-        c1.download_button(
-            f"⬇️ PDF 다운로드 · {m.get('pdf_label','')} ({m.get('pdf_updated','')})",
-            data=pdf_bytes, file_name=m.get("pdf_download_name", "manuscript.pdf"),
-            mime="application/pdf", use_container_width=True,
-        )
-    else:
-        c1.info("PDF 파일이 static 폴더에 없습니다.")
-    if hwp_bytes:
-        c2.download_button(
-            f"⬇️ HWP 다운로드 · {m.get('hwp_label','')} ({m.get('hwp_updated','')})",
-            data=hwp_bytes, file_name=m.get("hwp_download_name", "manuscript.hwp"),
-            mime="application/x-hwp", use_container_width=True,
-        )
-    else:
-        c2.info("HWP 파일이 static 폴더에 없습니다.")
-    st.divider()
+    return data.get("as_of", ""), data.get("action_plan"), df
 
 
 def detail_block(r):
@@ -84,33 +37,42 @@ def detail_block(r):
     with c2:
         st.markdown(f"**후속 Task**  {r.get('succ') or '—'}")
         st.markdown(f"**협업/검토**  {r.get('collab') or '—'}")
-    st.caption(f"담당 {r['owner']}  ·  작업종료 {r['due']}  ·  진행률 {int(r['progress'])}%")
+    st.caption(f"담당 {r['owner']}  ·  마감 {r['due']}  ·  진행률 {int(r['progress'])}%")
     st.progress(int(r["progress"]) / 100)
 
-    res = r.get("results")
-    if isinstance(res, dict):
-        st.markdown(f"**구축 결과 (Live Pilot · 잠정)** — {res.get('system','')}")
-        m1, m2, m3 = st.columns(3)
-        m1.metric("Coverage (pass)", res.get("pass", "—"))
-        m2.metric("Abstain", res.get("abstain", "—"))
-        m3.metric("Error", res.get("error", "—"))
-        if res.get("note"):
-            st.caption(res["note"])
-        if res.get("basis"):
-            st.caption("기준: " + res["basis"])
 
-    tbl = r.get("table")
-    if isinstance(tbl, dict):
-        st.markdown("**청킹 후보 비교 결과**")
-        tdf = pd.DataFrame(tbl["rows"], columns=tbl["columns"])
-        st.dataframe(tdf, use_container_width=True, hide_index=True)
-        if tbl.get("caption"):
-            st.caption(tbl["caption"])
+AP_STATUS_ICON = {"완료": "✅", "부분적": "🟡", "미착수": "⬜"}
+
+
+def action_plan_panel(ap):
+    """TT29–32 Action Plan 적용 현황 요약 패널 (progress.json 의 action_plan 블록을 렌더링)."""
+    if not ap:
+        return
+    fs = ap.get("freeze_status", "")
+    badge = {"PROVISIONAL": "🟠 PROVISIONAL · freeze 보류",
+             "FROZEN": "🟢 FROZEN"}.get(fs, fs)
+    st.subheader(f"{ap.get('title', 'Action Plan 적용 현황')}  —  {badge}")
+    aptasks = ap.get("tasks", [])
+    done_n = sum(1 for t in aptasks if t.get("status") == "완료")
+    st.caption(
+        f"Task {done_n}/{len(aptasks)} 완료  ·  "
+        f"Acceptance checklist {ap.get('checklist_done', '?')}/{ap.get('checklist_total', '?')} 충족  ·  "
+        f"기준 {ap.get('as_of', '')}"
+    )
+    if ap.get("freeze_note"):
+        st.info(ap["freeze_note"])
+    for t in aptasks:
+        ic = AP_STATUS_ICON.get(t.get("status"), "")
+        st.markdown(f"{ic}  **{t.get('id', '')}** · {t.get('name', '')} — {t.get('status', '')}")
+        if t.get("note"):
+            st.caption(f"　└ {t['note']}")
+    if ap.get("ref_docs"):
+        st.caption(f"기준 문서: {ap['ref_docs']}")
 
 
 @st.fragment(run_every="10s")   # 이 블록만 10초마다 자동 갱신
 def dashboard():
-    as_of, project_due, manuscript, df = load_data()
+    as_of, ap, df = load_data()
 
     total = len(df)
     done = (df["status"] == "완료").sum()
@@ -138,12 +100,12 @@ def dashboard():
     c4.metric("미착수", todo)
     c5.metric("전체 공정률", f"{overall}%")
     st.progress(overall / 100)
-    if project_due:
-        st.markdown(f"**작업종료 예정일: {project_due}**")
     st.divider()
 
-    # ── 최신 원고 (PDF 뷰어 + 다운로드) ────────────────────────
-    manuscript_section(manuscript)
+    # ── TT29–32 Action Plan 적용 현황 ──────────────────────────
+    action_plan_panel(ap)
+    if ap:
+        st.divider()
 
     # ── Phase별 요약 ───────────────────────────────────────────
     st.subheader("Phase별 진행률")
