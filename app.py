@@ -2,7 +2,6 @@ import os
 import json
 import pandas as pd
 import streamlit as st
-import streamlit.components.v1 as components
 
 st.set_page_config(page_title="항공안전법령 RAG 검증 진행 현황", layout="wide")
 
@@ -37,10 +36,18 @@ def manuscript_section(m):
         return
     st.subheader("📄 최신 원고")
     st.markdown(f"**{m['title']}**")
+    st.markdown(
+        f"- **주저자**: {m.get('lead_author','')}\n"
+        f"- **공동저자**: {m.get('co_authors','')}\n"
+        f"- **교신저자**: {m.get('corresponding_author','')}\n"
+        f"- **투고학회(예정)**: {m.get('target_journal','')}"
+    )
+    if m.get("summary"):
+        st.markdown(f"**연구내용 요약**: {m['summary']}")
     if m.get("note"):
         st.caption("⚠️ " + m["note"])
 
-    # 다운로드 버튼 (저장소에 담긴 파일 바이트를 그대로 내려줌 — 항상 동작)
+    # 다운로드 버튼 (저장소에 담긴 파일 바이트를 그대로 내려줌 — 원본 그대로)
     pdf_bytes = read_bytes(m.get("pdf_path"))
     hwp_bytes = read_bytes(m.get("hwp_path"))
     c1, c2 = st.columns(2)
@@ -60,15 +67,6 @@ def manuscript_section(m):
         )
     else:
         c2.info("HWP 파일이 static 폴더에 없습니다.")
-
-    # 인라인 PDF 뷰어 (Streamlit 정적 서빙 경로를 iframe으로 표시)
-    if pdf_bytes and m.get("pdf_url"):
-        components.html(
-            f'<iframe src="/{m["pdf_url"]}" width="100%" height="820" '
-            f'style="border:1px solid #ccc;border-radius:6px;"></iframe>',
-            height=840,
-        )
-        st.caption("PDF가 안 보이면 위의 ⬇️ PDF 다운로드 버튼으로 열어보세요.")
     st.divider()
 
 
@@ -86,7 +84,7 @@ def detail_block(r):
     with c2:
         st.markdown(f"**후속 Task**  {r.get('succ') or '—'}")
         st.markdown(f"**협업/검토**  {r.get('collab') or '—'}")
-    st.caption(f"담당 {r['owner']}  ·  마감 {r['due']}  ·  진행률 {int(r['progress'])}%")
+    st.caption(f"담당 {r['owner']}  ·  작업종료 {r['due']}  ·  진행률 {int(r['progress'])}%")
     st.progress(int(r["progress"]) / 100)
 
 
