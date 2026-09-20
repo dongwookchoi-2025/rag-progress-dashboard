@@ -575,7 +575,15 @@
       "collab": "손상우·정재훈·최동욱",
       "blocker": "freeze 보류: Task1(Gold 소스 고정)·Task2(config 지정)·Task3(입력검증 게이트)·Task5(Q018/Q019 empty-answer 진단) 미완",
       "outputs": "SystemA / YAML system_A / Experiment_Run_Master.parquet pilot rows",
-      "detail": "PROVISIONAL — freeze 보류. Live pilot 실행은 완료(PASS 18/20·abstain 3, ERROR 2/20: Q018/Q019 answer-non-empty 검증 실패). Coverage/Abstain/Error는 runtime health 지표일 뿐 최종 성능지표 아님. A 자체 재실행은 공통 코드/설정 변경 시에만 필요."
+      "detail": "PROVISIONAL — freeze 보류. Live pilot 실행은 완료(PASS 18/20·abstain 3, ERROR 2/20: Q018/Q019 answer-non-empty 검증 실패). Coverage/Abstain/Error는 runtime health 지표일 뿐 최종 성능지표 아님. A 자체 재실행은 공통 코드/설정 변경 시에만 필요.",
+      "results": {
+        "system": "A · 현재유효버전 단일 vector RAG (baseline)",
+        "pass": "18/20",
+        "abstain": 3,
+        "error": 2,
+        "basis": "TT21 승인 Gold 20문항 · Qwen3(LiteLLM) · Freeze=N (설지원 법률/도메인 검토 전 잠정치)",
+        "note": "설계상 가장 단순한데도 baseline치고 견조. 단순 조회형 문항 비중이 커 시간필터가 굳이 필요 없는 경우가 많다는 뜻. Error 2건(Q018/Q019)은 인프라 장애가 아니라 'answer must be non-empty' 생성 검증 실패."
+      }
     },
     {
       "id": "TT30",
@@ -591,7 +599,15 @@
       "collab": "손상우·정재훈·최동욱",
       "blocker": "freeze 보류(TT29와 동일 사유)",
       "outputs": "SystemB / YAML system_B / Experiment_Run_Master.parquet pilot rows",
-      "detail": "PROVISIONAL — freeze 보류. Live pilot 완료(PASS 11/20·abstain 6, ERROR 9/20 — temporal filtering 부재로 다버전 근거 혼재, 4개 시스템 중 최고 error율). B vs C 비교로 temporal filtering 효과 확인은 유효."
+      "detail": "PROVISIONAL — freeze 보류. Live pilot 완료(PASS 11/20·abstain 6, ERROR 9/20 — temporal filtering 부재로 다버전 근거 혼재, 4개 시스템 중 최고 error율). B vs C 비교로 temporal filtering 효과 확인은 유효.",
+      "results": {
+        "system": "B · 전버전 naive vector RAG (temporal filtering 無)",
+        "pass": "11/20",
+        "abstain": 6,
+        "error": 9,
+        "basis": "TT21 승인 Gold 20문항 · Qwen3(LiteLLM) · Freeze=N (설지원 법률/도메인 검토 전 잠정치)",
+        "note": "4개 시스템 중 최저(pass 55%·error 45%). temporal filtering이 없어 구법·신법·개정 전후 조문을 섞어 검색 → 상충 근거로 일관된 답 생성 실패가 대거 발생. '시간필터를 안 하면 무슨 일이 생기는가'를 보여주는 대조군 역할."
+      }
     },
     {
       "id": "TT31",
@@ -607,7 +623,15 @@
       "collab": "최동욱·정재훈",
       "blocker": "freeze 보류(TT29와 동일 사유)",
       "outputs": "SystemC + Temporal filter / YAML system_C, temporal_policy",
-      "detail": "PROVISIONAL — freeze 보류. Live pilot 완료(PASS 19/20·abstain 3, ERROR 1/20: Q019 — 4개 시스템 중 최고 성능). C는 D의 SAT-Graph 확장 기준선(seed evidence) 역할이므로 D 수정 후 비교 재검증 필요."
+      "detail": "PROVISIONAL — freeze 보류. Live pilot 완료(PASS 19/20·abstain 3, ERROR 1/20: Q019 — 4개 시스템 중 최고 성능). C는 D의 SAT-Graph 확장 기준선(seed evidence) 역할이므로 D 수정 후 비교 재검증 필요.",
+      "results": {
+        "system": "C · 전버전 vector RAG + as_of_date temporal filtering",
+        "pass": "19/20",
+        "abstain": 3,
+        "error": 1,
+        "basis": "TT21 승인 Gold 20문항 · Qwen3(LiteLLM) · Freeze=N (설지원 법률/도메인 검토 전 잠정치)",
+        "note": "4개 시스템 중 최고(pass 95%, error는 Q019 1건). B와 동일 검색에 시점 필터만 추가로 pass 11→19, error 9→1 극적 개선. B vs C 비교가 temporal filtering 효과를 가장 선명하게 입증(거의 2배 차이)."
+      }
     },
     {
       "id": "TT32",
@@ -623,7 +647,15 @@
       "collab": "최동욱·정재훈",
       "blocker": "구현 결함: 그래프 scope가 비면 System C seed evidence까지 버리고 abstain(Q006/Q009/Q011/Q016~Q020 8건). Q002/Q013 empty-answer 미진단",
       "outputs": "SystemD + SAT query parser/retriever / YAML system_D, sat_graph",
-      "detail": "재검토·수정 필요. 현재 run_system_d()는 graph_scope_empty일 때 evidence=[]로 처리해 LLM 호출 없이 결정론적 abstain. 요구 흐름은 'System C temporal-vector seed → SAT-Graph 확장 → union → rerank → generation'이며, 확장이 비어도 'C seed evidence 보존 + graph_scope_empty=True + graph_fallback_used=True'로 처리해야 함. 수정 후 TT32만 Q001~Q020 재실행(A/B/C는 재실행 불요)."
+      "detail": "재검토·수정 필요. 현재 run_system_d()는 graph_scope_empty일 때 evidence=[]로 처리해 LLM 호출 없이 결정론적 abstain. 요구 흐름은 'System C temporal-vector seed → SAT-Graph 확장 → union → rerank → generation'이며, 확장이 비어도 'C seed evidence 보존 + graph_scope_empty=True + graph_fallback_used=True'로 처리해야 함. 수정 후 TT32만 Q001~Q020 재실행(A/B/C는 재실행 불요).",
+      "results": {
+        "system": "D · C + SAT-Graph 구조검색(Neo4j)",
+        "pass": "18/20",
+        "abstain": 14,
+        "error": 2,
+        "basis": "TT21 승인 Gold 20문항 · Qwen3(LiteLLM) · Freeze=N (설지원 법률/도메인 검토 전 잠정치)",
+        "note": "abstain이 3→14로 급증한 게 가장 큰 이상신호. 14건 중 8건(Q006·Q009·Q011·Q016~Q020)이 graph_scope_empty=True — SAT-Graph 스코프 확장이 후보를 아예 반환 못해 LLM 호출 없이 결정론적 abstain 처리됨(시간·별표 유형에 집중). Error 2건은 Q002/Q013 non-empty 검증 실패. C→D 구조효과는 이 스코핑 갭 때문에 아직 공정하게 측정되지 않았고, 그래프 스코프 보강 후 재측정 필요."
+      }
     },
     {
       "id": "TT33",

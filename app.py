@@ -87,6 +87,18 @@ def detail_block(r):
     st.caption(f"담당 {r['owner']}  ·  작업종료 {r['due']}  ·  진행률 {int(r['progress'])}%")
     st.progress(int(r["progress"]) / 100)
 
+    res = r.get("results")
+    if isinstance(res, dict):
+        st.markdown(f"**구축 결과 (Live Pilot · 잠정)** — {res.get('system','')}")
+        m1, m2, m3 = st.columns(3)
+        m1.metric("Coverage (pass)", res.get("pass", "—"))
+        m2.metric("Abstain", res.get("abstain", "—"))
+        m3.metric("Error", res.get("error", "—"))
+        if res.get("note"):
+            st.caption(res["note"])
+        if res.get("basis"):
+            st.caption("기준: " + res["basis"])
+
     tbl = r.get("table")
     if isinstance(tbl, dict):
         st.markdown("**청킹 후보 비교 결과**")
