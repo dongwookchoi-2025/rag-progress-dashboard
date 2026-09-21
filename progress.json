@@ -1,7 +1,7 @@
 {
-  "as_of": "2026-09-21 07:04",
-  "source_note": "Research_Master.xlsx(정본 2026-09-21 05:59, CHG092·CTL-003/004)+Experiment_Run_Master.parquet(v1.2)+검증보고/검토표(설지원 2026-09-21)+논문 V0.5 기준",
-  "handoff_note": "✅ TT29~TT32 동결 완료(2026-09-21, CHANGE_LOG CHG092 · CTL-003/004). v1.2 재실행(80행, 오류 0)으로 v1.0 오류 전부 해소, TT21 Gold Q001~Q020 법령·도메인 검토 완료(20/20 APPROVED). 정량 성능지표(정확도·검색·환각 등)와 시스템 간 최종 비교는 본실험(TT37·TT38)에서 산출·확정. TT41(투고 준비): 선행연구 40여 편 수집, 논문 V0.5 초안, 인용대조·논리점검 진행 중.",
+  "as_of": "2026-09-21 07:47",
+  "source_note": "Research_Master.xlsx(정본 2026-09-21 06:40, CHG092/CHG093·CTL-002~004)+Experiment_Run_Master.parquet(v1.2)+검증보고/검토표(설지원)+논문 V0.5 기준",
+  "handoff_note": "✅ TT28 완료(v1.2 공통 생성부 동결, CHG093) · TT29~TT32 동결 완료(CHG092, Gold 20/20 APPROVED). 🔄 TT33: 홀드아웃 100문항(Q021~Q120)을 항공안전기술원 전문가 3인이 검토 중(완료 목표 2026-09-23) → 최종 80문항 선정 후 본실험(TT37·TT38). 정량 성능지표(정확도·검색·환각 등)는 본실험에서 산출. TT41(투고 준비): 선행연구 40여 편·논문 V0.5·인용/논리 점검 진행 중.",
   "action_plan": null,
   "tasks": [
     {
@@ -1110,8 +1110,8 @@
       "phase": "Phase 5 · RAG 4개 만들기",
       "name": "공통 Prompt·LLM 답변·실행로그 만들기",
       "owner": "최동욱",
-      "status": "검토중",
-      "progress": 90,
+      "status": "완료",
+      "progress": 100,
       "due": "2026-09-11",
       "goal": "A/B/C/D 모두 같은 Prompt·LLM·출력형식·logging을 사용하도록 생성부를 공통화해 retrieval architecture만 비교하게 만듭니다.",
       "pred": "TT01, TT04",
@@ -1119,7 +1119,7 @@
       "collab": "최동욱 (v1.1 코드 검증 완료; live A-D rerun 대기)",
       "inputs": "TT01 시스템비교 원칙 + TT04 평가기준 | 04_Config/RAG_Config_Master.yaml의 common/system 설정 | 03_Code/research_pipeline.py의 공통 API | 02_Database/Aviation_Law_Data.duckdb 및 Milvus/Neo4j의 동결된 검색 corpus",
       "outputs": "[UPDATE] 03_Code/research_pipeline.py  → generate(), logger() 공통 함수 | [UPDATE] 04_Config/RAG_Config_Master.yaml  → generation, prompt, logging 섹션 | [CREATE/UPDATE] 06_Experiment/Experiment_Run_Master.parquet  → 공통 run schema 정의 | 공통 generation/prompt/logger; YAML llm/generation/logging; Parquet run schema",
-      "result": "공통 생성부가 v1.2까지 진전(prompt TT28-LEGAL-GROUNDED-v1.1). 단위 7/7·offline·live smoke PASS. 생성모델 Qwen3.8-27B(로컬 LiteLLM). 이 v1.2 계약으로 TT29~32 A/B/C/D 재실행 완료(오류 0).",
+      "result": "공통 생성부(Prompt/LLM/출력형식/logging) v1.2 완성·동결. 단위 7/7·offline·live smoke PASS, 생성모델 Qwen3.8-27B. 이 v1.2 공통계약으로 A~D 재실행 완료 → 2026-09-21 완료 처리(CHG093).",
       "metrics": [
         [
           "단위테스트",
@@ -1127,7 +1127,7 @@
         ],
         [
           "생성 버전",
-          "v1.2"
+          "v1.2 (동결)"
         ],
         [
           "prompt",
@@ -1138,8 +1138,8 @@
           "Qwen3.8-27B (로컬)"
         ]
       ],
-      "issues": "v1.2 계약 확정·A~D 재실행 완료. 정량지표 산출·법률검토 후 동결 예정.",
-      "blocker": "TT28-GENERATION-v1.1 및 TT28-LEGAL-GROUNDED-v1.1 보강 완료. blank answer는 abstained=true일 때만 표준 기권문으로 정규화하고, 그 외 공란은 계속 ERROR 처리한다. 검증 전 response hash/request/usage와 비내용 payload 진단을 기록한다. 로컬 regression PASS. 공통 계약 변경으로 A-D 재실행 전까지 완료/동결 불가."
+      "issues": "무결성/스모크 검사 통과 — 오류 0. v1.2 공통계약 확정으로 완료.",
+      "blocker": ""
     },
     {
       "id": "TT29",
@@ -1195,7 +1195,7 @@
         ]
       ],
       "issues": "v1.0 오류 → v1.2 재실행에서 전부 해소(오류 0), 2026-09-21 동결 완료(CHG092). 정량 성능지표·시스템 간 비교는 본실험(TT37·TT38)에서 확정.",
-      "blocker": "TT28 v1.1 공통 계약 변경으로 A 재실행 필요. 기존 Q018/Q019는 원응답 구조 미보존으로 정상 기권 여부를 사후 확정할 수 없다. 동일 TT21 Q001-Q020 및 동일 모델/파라미터로 A-D 일괄 재실행 후 지표·법률검토 진행."
+      "blocker": ""
     },
     {
       "id": "TT30",
@@ -1251,7 +1251,7 @@
         ]
       ],
       "issues": "v1.0 오류 → v1.2 재실행에서 전부 해소(오류 0), 2026-09-21 동결 완료(CHG092). 정량 성능지표·시스템 간 비교는 본실험(TT37·TT38)에서 확정.",
-      "blocker": "TT28 v1.1 공통 계약 변경으로 B 재실행 필요. 기존 9개 공란 오류는 evidence 5건씩 존재했으나 원응답 구조 미보존. v1.1 재실행에서 정상 기권과 비정상 공란을 구분하고 temporal mixing 지표를 산출한다."
+      "blocker": ""
     },
     {
       "id": "TT31",
@@ -1307,7 +1307,7 @@
         ]
       ],
       "issues": "v1.0 오류 → v1.2 재실행에서 전부 해소(오류 0), 2026-09-21 동결 완료(CHG092). 정량 성능지표·시스템 간 비교는 본실험(TT37·TT38)에서 확정.",
-      "blocker": "TT28 v1.1 공통 계약 변경으로 C 재실행 필요. 기존 Q019는 evidence 4건이지만 원응답 구조 미보존. A-D 동일 조건 재실행 후 D와 비교한다."
+      "blocker": ""
     },
     {
       "id": "TT32",
@@ -1363,7 +1363,7 @@
         ]
       ],
       "issues": "v1.0 오류 → v1.2 재실행에서 전부 해소(오류 0), 2026-09-21 동결 완료(CHG092). 정량 성능지표·시스템 간 비교는 본실험(TT37·TT38)에서 확정.",
-      "blocker": "Graph-empty fallback 수리는 유지되지만 TT28 v1.1 공통 계약 변경으로 D도 다시 실행한다. 기존 두 D run은 보존하고 새 run을 추가한다. 이후 graph_scope_empty 8건, Q016/Q017/Q020, Q019, 정량지표와 법률검토를 완료한다.",
+      "blocker": "",
       "tables": [
         {
           "title": "System A~D v1.2 재실행 결과 (2026-09-20 · 실행 성공, 정량 채점 전)",
@@ -1422,8 +1422,8 @@
       "phase": "Phase 6 · 평가문제와 정답 만들기",
       "name": "평가질문 100개와 Gold Standard 만들기",
       "owner": "정재훈",
-      "status": "미착수",
-      "progress": 0,
+      "status": "진행중",
+      "progress": 50,
       "due": "2026-09-16",
       "goal": "실험이 쉬운 질문만 고르지 않도록 100문항을 유형별로 균형화하고 각 질문에 정답근거·정답버전·금지버전을 전문가 검증으로 확정합니다.",
       "pred": "TT05, TT14, TT19, TT04",
@@ -1431,22 +1431,30 @@
       "collab": "최동욱",
       "inputs": "TT05 법령범위 + TT14~TT19 구축데이터 + TT04 Gold 지침 | 07_Research_Management/Research_Master.xlsx의 Questions/Gold/Metric 관련 시트 | 04_Config/RAG_Config_Master.yaml의 system/experiment 설정 | 07_Research_Management/Research_Master.xlsx의 Legal_Scope/Freeze_Log",
       "outputs": "[CREATE/UPDATE] 07_Research_Management/Research_Master.xlsx  → Questions, Gold, Expert_Validation, Pilot_Holdout 시트 | Research_Master.xlsx QUESTIONS·GOLD_STANDARD·EXPERT_VALIDATION; Holdout 표시; Gold evidence/version/forbidden version",
-      "result": "미착수(예정) — 본 Gold 100문항 전문가 3인 검증. 현재 완성분은 파일럿 Gold 20문항(TT21). 후보 100문항 사전검사 PASS.",
+      "result": "홀드아웃 100문항 후보(Q021~Q120)에 대해 항공안전기술원 항공안전전문가 3인이 적정성 검토 중(완료 목표 2026-09-23). 각 문항 정답근거·정답버전·금지버전을 전문가 검증으로 확정 예정. ※파일럿 Gold 20문항(Q001~Q020)은 이미 확정(TT21).",
       "metrics": [
         [
-          "본 Gold",
-          "100문항 (검토 대기)"
+          "진행률",
+          "50%"
+        ],
+        [
+          "후보 문항",
+          "100 (Q021~Q120)"
+        ],
+        [
+          "검토위원",
+          "항공안전기술원 3인"
+        ],
+        [
+          "완료 목표",
+          "2026-09-23"
         ],
         [
           "파일럿 Gold",
-          "20 (완성)"
-        ],
-        [
-          "후보 사전검사",
-          "PASS"
+          "20 확정 (Q001~Q020)"
         ]
       ],
-      "issues": "해당 없음",
+      "issues": "후보 100문항 중 34개 중복/시점범위 플래그는 전문가 disposition 필요. 검토 후 최종 80문항 선정·Gold/version evidence hash 동결 예정.",
       "blocker": ""
     },
     {
