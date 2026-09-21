@@ -170,13 +170,12 @@ def key_metrics_panel():
     st.markdown("##### ③ SAT-Graph 지식그래프 규모 (Neo4j, 실측)")
     _metric_cards(PAPER.get("metrics_graph"))
 
-    st.markdown("##### ④ 파일럿 20문항 시스템별 v1.2 재실행 결과 (2026-09-20 · 동결)")
+    st.markdown("##### ④ 파일럿 20문항 시스템별 v1.2 재실행 결과 (동결 완료 2026-09-21)")
     if PAPER.get("pilot_rows"):
         st.dataframe(pd.DataFrame(PAPER["pilot_rows"]),
                      use_container_width=True, hide_index=True)
-    st.caption("※ v1.2 재실행에서 A/B/C/D 모두 20/20 실행 성공(기존 v1.0 오류 전부 해소), 2026-09-20 사용자 override로 동결(FROZEN). "
-               "답변/기권 수는 실행 상태이며, 정확도·검색·환각 등 정량 성능지표는 아직 미채점입니다. "
-               "최종 성능은 Hold-out 80문항 본실험(TT37·TT38)에서 확정됩니다.")
+    st.caption("※ v1.2 재실행에서 A/B/C/D 모두 20/20 실행 성공(기존 v1.0 오류 전부 해소), 2026-09-21 동결 완료(CHG092, Gold 법령·도메인 검토 20/20 APPROVED). "
+               "답변/기권 수는 실행 상태이며, 정확도·검색·환각 등 정량 성능지표는 Hold-out 80문항 본실험(TT37·TT38)에서 산출·확정됩니다.")
 
     if PAPER.get("final_table"):
         st.markdown("##### ⑤ 본실험 최종 비교 (Hold-out 80문항)")
@@ -347,7 +346,7 @@ def dashboard():
     st.divider()
 
     st.subheader("Task 상세 — 항목을 클릭하면 작업내용이 펼쳐집니다")
-    show_done = st.checkbox("완료 항목도 보기", value=False)
+    show_done = st.checkbox("완료 항목도 보기", value=True)
     view = df if show_done else df[df["status"] != "완료"]
 
     for phase, group in view.groupby("phase", sort=False):
