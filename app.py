@@ -47,14 +47,34 @@ PAPER = {
     },
     # 연구질문(RQ)과 현재까지 확보된 결과(잠정) — 최종 정량비교는 본실험(TT37·TT38)에서 확정
     "rqs": [
-        {"RQ": "RQ1. 법령의 구조적·시간적 특성이 일반 Vector RAG의 검색·질의응답 성능에 미치는 영향은?",
-         "현재까지 결과(잠정)": "데이터에서 시간·구조 복잡성 대량 확인(버전 212,970·개정행위 6,058·법적관계 875). 파일럿에서 시점형 질문(Q017–Q020)은 단순 검색으로 Gold 미검색 → 구조·시간정보 반영 필요성 시사. 정량 영향은 본실험서 확정."},
-        {"RQ": "RQ2. 시간필터를 적용한 C가 전체버전 혼합 B보다 retrieval accuracy·시간정합성을 높이는가?",
-         "현재까지 결과(잠정)": "파일럿 런타임: B는 기준일 유효근거 부족으로 기권 15/20(과거·미시행 버전 혼재 위험), C는 정상답변 15/20·기권 5. 시간필터의 방향성 확인. 정량 수치는 본실험서."},
-        {"RQ": "RQ3. SAT-Graph(D)가 Temporal-Filtered(C) 대비 검색·근거완전성·답변성능을 높이는가?",
-         "현재까지 결과(잠정)": "파일럿: D는 graph_scope_empty 8건을 C temporal seed로 fallback, 답변수는 C와 동일(15/20). 현재까지 뚜렷한 추가효과 미확인 — 정량 비교는 본실험서."},
-        {"RQ": "RQ4. 질문의 계층·규정간·승인의존·시간 복잡성이 커질수록 시간·구조 인식 검색의 상대효과가 커지는가?",
-         "현재까지 결과(잠정)": "TT21·파일럿: 위임·별표·과거시점 등 복합질문에서 단순검색 한계 관찰(Q014 상위법 Top-10 미검색, Q017–Q020 시점 Gold 미검색). 가설 방향 시사, 정량 검증은 본실험서."},
+        {"id": "RQ1",
+         "title": "법령의 구조·시간 특성이 Vector RAG 성능에 미치는 영향",
+         "badge": "🟡 잠정 근거 확보 · 정량검증 대기",
+         "question": "대한민국 항공안전법령의 구조적·시간적 특성은 일반 Vector RAG의 법령 검색 및 질의응답 성능에 어떠한 영향을 미치는가?",
+         "result": "데이터 구축에서 법령의 시간·구조 복잡성이 대량 확인됨(버전 212,970 · 개정행위 6,058 · 법적관계 875). 파일럿에서 시점형 질문(Q017–Q020)은 단순 검색으로 Gold 근거 미검색 → 구조·시간 정보 반영의 필요성이 시사됨.",
+         "source": "데이터 구축(TT11–19) · TT21 파일럿",
+         "level": 45},
+        {"id": "RQ2",
+         "title": "시간필터(C) vs 전체버전 혼합(B)",
+         "badge": "🟡 방향성 확인 · 정량검증 대기",
+         "question": "Temporal Filtering을 적용한 System C는 모든 버전을 혼합해 검색하는 System B에 비해 retrieval accuracy와 temporal consistency를 향상시키는가?",
+         "result": "파일럿(v1.2, 동결) 런타임에서 B는 기준일에 유효한 근거 부족으로 기권 15/20(과거·미시행 버전 혼재 위험 노출), C는 정상 답변 15/20·기권 5. 시간필터가 유리한 방향성이 관찰됨. retrieval accuracy·시간정합성 수치는 본실험서 확정.",
+         "source": "파일럿 20문항 v1.2 (2026-09-21 동결)",
+         "level": 55},
+        {"id": "RQ3",
+         "title": "SAT-Graph(D) vs Temporal-Filtered(C) 추가효과",
+         "badge": "⚪ 추가효과 미확인 · 정량검증 대기",
+         "question": "Structure-Aware Temporal Graph RAG인 System D는 Temporal-Filtered Vector RAG인 System C에 비해 retrieval accuracy, evidence completeness 및 generated-answer performance를 향상시키는가?",
+         "result": "파일럿에서 D는 graph_scope_empty 8건을 C의 temporal seed로 fallback 처리했고, 답변 수는 C와 동일(15/20). 현재까지 C 대비 뚜렷한 추가효과는 확인되지 않음 — 정량 비교(검색·근거완전성·답변품질)는 본실험서.",
+         "source": "파일럿 20문항 v1.2",
+         "level": 40},
+        {"id": "RQ4",
+         "title": "질문 복잡도↑일수록 시간·구조 검색의 상대효과↑?",
+         "badge": "🟡 방향성 시사 · 정량검증 대기",
+         "question": "질문이 요구하는 계층적·규정 간·승인 의존·시간적 복잡성이 증가할수록 temporal/structure-aware retrieval의 상대적 효과가 증가하는가?",
+         "result": "TT21·파일럿에서 위임·별표·과거시점 등 복합질문에서 단순 검색의 한계가 관찰됨(Q014 상위법 Top-10 미검색, Q017–Q020 시점 Gold 미검색). 가설의 방향성은 시사되나 정량 검증은 본실험서.",
+         "source": "TT21 청킹 파일럿 · 파일럿 20문항",
+         "level": 45},
     ],
     "as_of": "2026-09-20",
 
@@ -153,13 +173,18 @@ def paper_header():
         f"**교신저자** {a['교신저자']}"
     )
 
-    # 연구질문(RQ)과 현재까지 결과
+    # 연구질문(RQ)과 현재까지 결과 — 클릭해서 펼치는 박스
     if PAPER.get("rqs"):
         st.markdown("#### 연구질문(RQ)과 현재까지 결과")
-        st.dataframe(pd.DataFrame(PAPER["rqs"]),
-                     use_container_width=True, hide_index=True)
-        st.caption("※ '현재까지 결과'는 데이터 구축·TT21 청킹·파일럿 20문항(v1.2, 동결) 기준의 잠정 관찰이며, "
-                   "RQ에 대한 정량 답변(정확도·검색·시간정합성·환각 등)은 Hold-out 80문항 본실험(TT37·TT38)에서 확정됩니다.")
+        st.caption("각 RQ를 클릭하면 전체 질문과 현재까지의 결과·진행 상태가 펼쳐집니다. "
+                   "정량 답변(정확도·검색·시간정합성·환각 등)은 Hold-out 80문항 본실험(TT37·TT38)에서 확정됩니다.")
+        for q in PAPER["rqs"]:
+            with st.expander(f"{q['id']} · {q['title']}　—　{q['badge']}", expanded=False):
+                st.markdown(f"**연구질문**  {q['question']}")
+                st.info(f"📌 **현재까지 결과(잠정)**　{q['result']}")
+                lv = int(q.get("level", 0))
+                st.markdown(f"**진행 상태**  {q['badge']}")
+                st.progress(lv / 100, text=f"RQ 답변 준비도 {lv}% · 근거: {q.get('source','')} · 정량 확정: 본실험(TT37·TT38)")
     st.divider()
 
 
