@@ -1,7 +1,7 @@
 {
-  "as_of": "2026-09-20 15:09",
-  "source_note": "Research_Master.xlsx(정본 2026-09-20 14:04)+Experiment_Run_Master.parquet/jsonl(v1.2 재실행 13:38)+Development_Pilots/Infra_QA/TT21_PILOT_GOLD, research_pipeline.log, RAG_Config_Master.yaml 기준",
-  "handoff_note": "TT29~TT32 v1.2 재실행 완료(2026-09-20 14:02 WAT, 설지원 환경): A/B/C/D 각 20문항 = 80행 전부 실행 성공, 기존 v1.0 오류(A2·B9·C1·D2) 전부 해소(오류 0). 답변/기권 A 14/6·B 5/15·C 15/5·D 15/5(기권은 기준일 유효근거 부족 등 정상 fail-safe). 남은 단계(동결 전): 정량 성능지표 blind scoring(TT34/38), C vs D 비교, Q016/Q017/Q020 커버리지·Q019 처리방침, 설지원 법령·도메인 검토. ※ Research_Master 태스크 상태는 아직 검토중(0.8~0.9)이라 공정률은 77% 유지.",
+  "as_of": "2026-09-21 06:36",
+  "source_note": "Research_Master.xlsx(정본 2026-09-20 14:13, CHANGE_LOG CHG090/091·TT29_TT33_CONTROL)+Experiment_Run_Master.parquet(v1.2)+논문 V0.5 초안+선행연구 폴더 기준",
+  "handoff_note": "TT29~TT32: v1.2 재실행(2026-09-20, A/B/C/D 각 20문항=80행, 오류 0)으로 기존 v1.0 오류 전부 해소 → TT29_TT33_CONTROL CTL-003/004에서 **2026-09-20 사용자 override로 동결(FROZEN)** 처리(완료). 단, 정량 성능지표(정확도·검색·환각 등)와 법령·도메인 전문가 검토는 아직 미완료이며 본실험(TT37·TT38)에서 산출·검증 예정. TT41(투고 준비): 선행연구 40여 편 수집, 논문 V0.5 초안, 인용대조·논리점검 진행 중.",
   "action_plan": null,
   "tasks": [
     {
@@ -1146,8 +1146,8 @@
       "phase": "Phase 5 · RAG 4개 만들기",
       "name": "System A: 현행법만 보는 기본 RAG 만들기",
       "owner": "설지원",
-      "status": "검토중",
-      "progress": 80,
+      "status": "완료",
+      "progress": 100,
       "due": "2026-09-12",
       "goal": "현재 유효한 법령만 검색하는 가장 단순한 Current Vector RAG를 구현해 “현행 질문” 기준 baseline을 만듭니다.",
       "pred": "TT25, TT27, TT28",
@@ -1155,7 +1155,7 @@
       "collab": "설지원·최동욱·정재훈 / rerun pending",
       "inputs": "TT25 Vector DB + TT27 검색모듈 + TT28 생성모듈 | 04_Config/RAG_Config_Master.yaml의 common/system 설정 | 03_Code/research_pipeline.py의 공통 API | 02_Database/Aviation_Law_Data.duckdb 및 Milvus/Neo4j의 동결된 검색 corpus",
       "outputs": "[UPDATE] 03_Code/research_pipeline.py  → SystemA 클래스/함수 | [UPDATE] 04_Config/RAG_Config_Master.yaml  → system_A 섹션 | [UPDATE] 06_Experiment/Experiment_Run_Master.parquet  → pilot/system=A rows | [UPDATE] 07_Research_Management/Research_Master.xlsx  → Development_Pilots 시트 | System A 코드/설정; 06_Experiment/Experiment_Run_Master.parquet pilot rows; logs",
-      "result": "System A — v1.2 재실행 완료(2026-09-20): 20문항 전부 실행 성공, **오류 0(기존 오류 해소)**. 답변 14 · 기권 6(근거부족/기준일 미충족). 평균 지연 26.6s · 토큰 3,080. 정확도·검색·환각 등 정량 성능지표는 blind scoring(TT38) 전이라 아직 미산출.",
+      "result": "System A — v1.2 재실행 완료(2026-09-20): 20문항 전부 실행 성공, **오류 0(기존 오류 해소)**. 답변 14 · 기권 6(근거부족/기준일 미충족). 평균 지연 26.6s · 토큰 3,080. 정확도·검색·환각 등 정량 성능지표는 blind scoring(TT38) 전이라 아직 미산출. ✅ 2026-09-20 사용자 override로 동결(FROZEN) — 정량지표·법령/도메인 검토는 본실험(TT37·TT38)에서 수행.",
       "metrics": [
         [
           "결과 행",
@@ -1186,11 +1186,15 @@
           "v1.2 / prompt v1.1"
         ],
         [
+          "동결",
+          "FROZEN (사용자 override 2026-09-20)"
+        ],
+        [
           "정량지표",
-          "채점 전(미산출)"
+          "본실험서 채점"
         ]
       ],
-      "issues": "v1.0 오류 2건(Q018·Q019) → v1.2 재실행에서 해소(오류 0). 남은 것: 정량 scoring·법령검토·freeze.",
+      "issues": "v1.0 오류 2건(Q018·Q019) → v1.2 재실행에서 해소(오류 0). 동결 후 남은 것: 정량 scoring·법령검토·freeze.",
       "blocker": "TT28 v1.1 공통 계약 변경으로 A 재실행 필요. 기존 Q018/Q019는 원응답 구조 미보존으로 정상 기권 여부를 사후 확정할 수 없다. 동일 TT21 Q001-Q020 및 동일 모델/파라미터로 A-D 일괄 재실행 후 지표·법률검토 진행."
     },
     {
@@ -1198,8 +1202,8 @@
       "phase": "Phase 5 · RAG 4개 만들기",
       "name": "System B: 모든 버전을 섞어 보는 Naive RAG 만들기",
       "owner": "설지원",
-      "status": "검토중",
-      "progress": 80,
+      "status": "완료",
+      "progress": 100,
       "due": "2026-09-13",
       "goal": "모든 버전을 섞되 시간필터를 끈 Naive RAG를 만들어 version mixing과 최신버전 편향이 실제로 얼마나 생기는지 비교기준을 만듭니다.",
       "pred": "TT25, TT27, TT28",
@@ -1207,7 +1211,7 @@
       "collab": "설지원·최동욱·정재훈 / rerun pending",
       "inputs": "TT25 Vector DB + TT27~TT28 공통모듈 | 04_Config/RAG_Config_Master.yaml의 common/system 설정 | 03_Code/research_pipeline.py의 공통 API | 02_Database/Aviation_Law_Data.duckdb 및 Milvus/Neo4j의 동결된 검색 corpus",
       "outputs": "[UPDATE] 03_Code/research_pipeline.py  → SystemB 클래스/함수 | [UPDATE] 04_Config/RAG_Config_Master.yaml  → system_B 섹션 | [UPDATE] 06_Experiment/Experiment_Run_Master.parquet  → pilot/system=B rows | [UPDATE] 07_Research_Management/Research_Master.xlsx  → Development_Pilots 시트 | System B 코드/설정; Experiment_Run_Master.parquet pilot rows; logs",
-      "result": "System B — v1.2 재실행 완료(2026-09-20): 20문항 전부 실행 성공, **오류 0(기존 오류 해소)**. 답변 5 · 기권 15(근거부족/기준일 미충족). 평균 지연 19.7s · 토큰 2,834. 정확도·검색·환각 등 정량 성능지표는 blind scoring(TT38) 전이라 아직 미산출.",
+      "result": "System B — v1.2 재실행 완료(2026-09-20): 20문항 전부 실행 성공, **오류 0(기존 오류 해소)**. 답변 5 · 기권 15(근거부족/기준일 미충족). 평균 지연 19.7s · 토큰 2,834. 정확도·검색·환각 등 정량 성능지표는 blind scoring(TT38) 전이라 아직 미산출. ✅ 2026-09-20 사용자 override로 동결(FROZEN) — 정량지표·법령/도메인 검토는 본실험(TT37·TT38)에서 수행.",
       "metrics": [
         [
           "결과 행",
@@ -1238,8 +1242,12 @@
           "v1.2 / prompt v1.1"
         ],
         [
+          "동결",
+          "FROZEN (사용자 override 2026-09-20)"
+        ],
+        [
           "정량지표",
-          "채점 전(미산출)"
+          "본실험서 채점"
         ]
       ],
       "issues": "v1.0 오류 9건 → v1.2 재실행에서 해소(오류 0). 기권 15건(naive라 기준일 유효근거 부족으로 최다 기권) — B vs C 시간필터 효과 비교 예정.",
@@ -1250,8 +1258,8 @@
       "phase": "Phase 5 · RAG 4개 만들기",
       "name": "System C: 질문시점에 맞는 버전만 검색하는 RAG",
       "owner": "설지원",
-      "status": "검토중",
-      "progress": 80,
+      "status": "완료",
+      "progress": 100,
       "due": "2026-09-14",
       "goal": "질문시점을 읽고 그 날짜에 유효한 버전만 Vector 검색하는 Temporal-Filtered RAG를 만들어 “시간필터만의 효과”를 측정합니다.",
       "pred": "TT14, TT15, TT25, TT27, TT28",
@@ -1259,7 +1267,7 @@
       "collab": "설지원·최동욱·정재훈 / rerun pending",
       "inputs": "TT14~TT15 시간정보 + TT25 Vector DB + TT27~TT28 | 04_Config/RAG_Config_Master.yaml의 common/system 설정 | 03_Code/research_pipeline.py의 공통 API | 02_Database/Aviation_Law_Data.duckdb 및 Milvus/Neo4j의 동결된 검색 corpus",
       "outputs": "[UPDATE] 03_Code/research_pipeline.py  → Temporal parser/filter + SystemC | [UPDATE] 04_Config/RAG_Config_Master.yaml  → system_C, temporal_policy 섹션 | [UPDATE] 06_Experiment/Experiment_Run_Master.parquet  → pilot/system=C rows | [UPDATE] 07_Research_Management/Research_Master.xlsx  → Development_Pilots 시트 | temporal parser/filter + System C; YAML temporal policy; Parquet pilot rows",
-      "result": "System C — v1.2 재실행 완료(2026-09-20): 20문항 전부 실행 성공, **오류 0(기존 오류 해소)**. 답변 15 · 기권 5(근거부족/기준일 미충족). 평균 지연 26.3s · 토큰 3,080. 정확도·검색·환각 등 정량 성능지표는 blind scoring(TT38) 전이라 아직 미산출.",
+      "result": "System C — v1.2 재실행 완료(2026-09-20): 20문항 전부 실행 성공, **오류 0(기존 오류 해소)**. 답변 15 · 기권 5(근거부족/기준일 미충족). 평균 지연 26.3s · 토큰 3,080. 정확도·검색·환각 등 정량 성능지표는 blind scoring(TT38) 전이라 아직 미산출. ✅ 2026-09-20 사용자 override로 동결(FROZEN) — 정량지표·법령/도메인 검토는 본실험(TT37·TT38)에서 수행.",
       "metrics": [
         [
           "결과 행",
@@ -1290,11 +1298,15 @@
           "v1.2 / prompt v1.1"
         ],
         [
+          "동결",
+          "FROZEN (사용자 override 2026-09-20)"
+        ],
+        [
           "정량지표",
-          "채점 전(미산출)"
+          "본실험서 채점"
         ]
       ],
-      "issues": "v1.0 오류 1건(Q019) → v1.2 재실행에서 해소(오류 0). 정량 scoring·법령검토 남음.",
+      "issues": "v1.0 오류 1건(Q019) → v1.2 재실행에서 해소(오류 0). 정량 scoring·법령검토 남음(본실험 단계).",
       "blocker": "TT28 v1.1 공통 계약 변경으로 C 재실행 필요. 기존 Q019는 evidence 4건이지만 원응답 구조 미보존. A-D 동일 조건 재실행 후 D와 비교한다."
     },
     {
@@ -1302,8 +1314,8 @@
       "phase": "Phase 5 · RAG 4개 만들기",
       "name": "System D: SAT-Graph RAG 만들기",
       "owner": "설지원",
-      "status": "검토중",
-      "progress": 80,
+      "status": "완료",
+      "progress": 100,
       "due": "2026-09-15",
       "goal": "시간·Actor·Topic·법령 hierarchy를 Graph에서 먼저 좁힌 뒤 정확한 CTV/Text Unit을 검색하는 SAT-Graph RAG를 구현합니다.",
       "pred": "TT26, TT28, TT02",
@@ -1311,7 +1323,7 @@
       "collab": "설지원·최동욱·정재훈 / rerun pending",
       "inputs": "TT26 Neo4j Graph + TT28 생성모듈 + TT02 SAT 실행흐름 | 04_Config/RAG_Config_Master.yaml의 common/system 설정 | 03_Code/research_pipeline.py의 공통 API | 02_Database/Aviation_Law_Data.duckdb 및 Milvus/Neo4j의 동결된 검색 corpus",
       "outputs": "[UPDATE] 03_Code/research_pipeline.py  → SAT query parser/retriever + SystemD | [UPDATE] 04_Config/RAG_Config_Master.yaml  → system_D, sat_graph 섹션 | [UPDATE] 06_Experiment/Experiment_Run_Master.parquet  → pilot/system=D rows | [UPDATE] 07_Research_Management/Research_Master.xlsx  → Development_Pilots 시트 | SAT-Graph retriever/System D; graph path trace; Experiment_Run_Master.parquet pilot rows; logs",
-      "result": "System D — v1.2 재실행 완료(2026-09-20): 20문항 전부 실행 성공, **오류 0(기존 오류 해소)**. 답변 15 · 기권 5(근거부족/기준일 미충족). 평균 지연 26.8s · 토큰 3,127. 정확도·검색·환각 등 정량 성능지표는 blind scoring(TT38) 전이라 아직 미산출.",
+      "result": "System D — v1.2 재실행 완료(2026-09-20): 20문항 전부 실행 성공, **오류 0(기존 오류 해소)**. 답변 15 · 기권 5(근거부족/기준일 미충족). 평균 지연 26.8s · 토큰 3,127. 정확도·검색·환각 등 정량 성능지표는 blind scoring(TT38) 전이라 아직 미산출. ✅ 2026-09-20 사용자 override로 동결(FROZEN) — 정량지표·법령/도메인 검토는 본실험(TT37·TT38)에서 수행.",
       "metrics": [
         [
           "결과 행",
@@ -1342,11 +1354,15 @@
           "v1.2 / prompt v1.1"
         ],
         [
+          "동결",
+          "FROZEN (사용자 override 2026-09-20)"
+        ],
+        [
           "정량지표",
-          "채점 전(미산출)"
+          "본실험서 채점"
         ]
       ],
-      "issues": "v1.0 오류 2건 → v1.2 재실행에서 해소(오류 0). graph-empty fallback 정상 동작(C seed 유지). 남은 것: C vs D 정량비교·Q016/Q017/Q020 커버리지·Q019 처리방침·법령검토.",
+      "issues": "v1.0 오류 2건 → v1.2 재실행에서 해소(오류 0). graph-empty fallback 정상 동작(C seed 유지). 동결 후 남은 것: C vs D 정량비교·Q016/Q017/Q020 커버리지·Q019 처리방침·법령검토.",
       "blocker": "Graph-empty fallback 수리는 유지되지만 TT28 v1.1 공통 계약 변경으로 D도 다시 실행한다. 기존 두 D run은 보존하고 새 run을 추가한다. 이후 graph_scope_empty 8건, Q016/Q017/Q020, Q019, 정량지표와 법률검토를 완료한다.",
       "tables": [
         {
@@ -1615,23 +1631,32 @@
       "collab": "최동욱(최종원고/승인) · 지도교수(10/4 초안 검토) · 연구진(10/5 미팅/발표) · 항공운항학회 편집위원회",
       "inputs": "TT39 최종 결과/해석 및 TT40 재현성 패키지 | 08_Manuscript/Thesis_Manuscript.docx 최종초안 | 항공운항학회 공식 편집규칙·투고시스템 공지·필수 행정서류 | 참고문헌 원문 DOI/공식 URL",
       "outputs": "[UPDATE] 07_Research_Management/Research_Master.xlsx → TT41_PUBLICATION_CONTROL, CHANGE_LOG | [UPDATE] 08_Manuscript/Thesis_Manuscript.docx → 인용·서지·논리·형식 교정 반영 최종본 | [CREATE/UPDATE] 99_Logs_Backup/ → 투고 전 검증·제출·심사 커뮤니케이션 로그 | 학회 제출 최종본·행정서류·발표자료",
-      "result": "진행중(50%) — 투고 준비: 인용대조·논리점검 진행, 지도교수 회신·편집규칙·행정서류·투고 대기(PUB-001~006). 투고 2026-10-12.",
+      "result": "진행중(50%) — 투고 준비. 선행연구 40여 편(국내외 법률·항공 RAG 문헌) 수집 완료로 인용 재검토(PUB-001)·논리점검(PUB-002) 진행 중. 논문 최신 초안 V0.5(2026-09-20). PUB-003~006(지도교수 회신·연구진 미팅·편집규칙·행정서류·투고) 대기. 최종 투고 2026-10-12.",
       "metrics": [
         [
           "진행률",
           "50%"
         ],
         [
+          "선행연구 수집",
+          "약 40편"
+        ],
+        [
           "통제항목",
-          "PUB-001~006 (6)"
+          "PUB-001~006 (진행 2·대기 4)"
+        ],
+        [
+          "최신 초안",
+          "V0.5 (2026-09-20)"
         ],
         [
           "투고",
           "2026-10-12"
         ]
       ],
-      "issues": "10/4 최종초안·지도교수 회신·편집규칙/행정서류 확인이 투고 전 완료 필요(PUB-003~006 대기).",
+      "issues": "PUB-001 인용대조·PUB-002 논리점검 진행 중. PUB-003~006(최종초안·지도교수 회신·편집규칙/행정서류·투고) 대기. 결과 수치는 TT36~38 동결 확정 후에만 본문 반영.",
       "blocker": "10/4 최종초안·지도교수 검토 회신·학회 편집규칙/행정서류 확인이 투고 전 완료되어야 함"
     }
-  ]
+  ],
+  "latest_draft": "V0.5 (2026-09-20)"
 }
