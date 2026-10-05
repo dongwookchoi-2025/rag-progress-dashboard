@@ -1,0 +1,203 @@
+{
+  "project_due": "2026년 10월 4일(일)",
+  "manuscript": {
+    "title": "구조·시간·인식 그래프 RAG를 활용한 대한민국 항공안전법령 질의응답 신뢰성 검증 연구",
+    "lead_author": "최동욱",
+    "co_authors": "설지원, 정재훈, 손상우",
+    "corresponding_author": "이규정 교수",
+    "target_journal": "한국항공운항학회",
+    "summary": "대한민국 항공안전법령(법률·시행령·시행규칙·별표·운항기술기준)은 계층·상호참조·개정에 따른 시간적 유효성이 얽혀 있어, 의미 유사도만으로 검색하는 일반 RAG로는 질문 시점에 유효한 조문을 정확히 찾기 어렵다. 본 연구는 이를 검증하기 위해 동일한 법령 코퍼스·임베딩(BGE-M3)·생성 LLM을 통제한 상태에서 네 가지 검색 방식 — ①현행법만 보는 기본 RAG(A), ②전체 버전을 섞는 Naive RAG(B), ③질문 시점의 유효 버전만 거르는 Temporal-Filtered RAG(C), ④시간·구조·개정관계를 그래프로 활용하는 SAT-Graph RAG(D) — 를 비교한다. B–C 비교로 '시간 정보'의 효과를, C–D 비교로 '법령 구조 정보'의 추가 효과를 분리 측정하여, 어떤 규제 복잡성에서 어떤 검색 방식이 답변의 정확성과 시간정합성을 높이는지를 규명한다.",
+    "pdf_path": "static/manuscript.pdf",
+    "pdf_label": "보완본 V0.5",
+    "pdf_updated": "2026-09-19",
+    "pdf_download_name": "항공안전법령_RAG_신뢰성검증_보완본_V0.5.pdf",
+    "hwp_path": "static/manuscript.hwp",
+    "hwp_label": "보완본 V0.5",
+    "hwp_updated": "2026-09-19",
+    "hwp_download_name": "항공안전법령_RAG_신뢰성검증_보완본_V0.5.hwp"
+  },
+  "results": {
+    "TT29": {
+      "system": "A · 현재유효버전 단일 vector RAG (baseline)",
+      "run_id": "TT29-A-LIVE-PILOT-20260920T130251506747Z",
+      "version": "v1.2",
+      "pass": "20/20",
+      "abstain": 6,
+      "error": 0,
+      "basis": "TT21 승인 Gold Q001–Q020 · TT28-GENERATION-v1.2 · Qwen3(LiteLLM) · CLOSED/FROZEN 개발파일럿 인수기준 (CHG092, 2026-09-21). 최종 시스템 성능은 TT33 holdout 80문항 실험(TT37~TT38) 후 산출.",
+      "note": "v1.2 최종 0 errors. PASS 20/20(abstain=6). avg_total_tokens≈3079.6. v1.0(09-19) 대비 error 2→0 개선(empty-answer 계약 v1.2 수정). 설계상 가장 단순하지만 현행법 단일 필터가 단순 조회형 문항에는 견조. Freeze=Y (CLOSED 개발파일럿 인수기준)."
+    },
+    "TT30": {
+      "system": "B · 전버전 naive vector RAG (temporal filtering 無)",
+      "run_id": "TT30-B-LIVE-PILOT-20260920T130251506747Z",
+      "version": "v1.2",
+      "pass": "20/20",
+      "abstain": 15,
+      "error": 0,
+      "basis": "TT21 승인 Gold Q001–Q020 · TT28-GENERATION-v1.2 · Qwen3(LiteLLM) · CLOSED/FROZEN 개발파일럿 인수기준 (CHG092, 2026-09-21). 최종 시스템 성능은 TT33 holdout 80문항 실험(TT37~TT38) 후 산출.",
+      "note": "v1.2 최종 0 errors. PASS 20/20(abstain=15). avg_total_tokens≈2833.9. abstain이 가장 많음(temporal filtering 없어 충돌 근거 → 기권). B vs C 비교가 temporal filtering 효과를 선명하게 보여주는 대조군. Freeze=Y (CLOSED 개발파일럿 인수기준)."
+    },
+    "TT31": {
+      "system": "C · 전버전 vector RAG + as_of_date temporal filtering",
+      "run_id": "TT31-C-LIVE-PILOT-20260920T130251506747Z",
+      "version": "v1.2",
+      "pass": "20/20",
+      "abstain": 5,
+      "error": 0,
+      "basis": "TT21 승인 Gold Q001–Q020 · TT28-GENERATION-v1.2 · Qwen3(LiteLLM) · CLOSED/FROZEN 개발파일럿 인수기준 (CHG092, 2026-09-21). 최종 시스템 성능은 TT33 holdout 80문항 실험(TT37~TT38) 후 산출.",
+      "note": "v1.2 최종 0 errors. PASS 20/20(abstain=5). avg_total_tokens≈3079.8. B와 동일 검색에 시점 필터만 추가, abstain B 15 → C 5로 개선. C–D 비교가 SAT-Graph 구조 정보의 추가 효과를 측정. Freeze=Y (CLOSED 개발파일럿 인수기준)."
+    },
+    "TT32": {
+      "system": "D · C + SAT-Graph 구조검색(Neo4j) — graph-empty fallback 수정본",
+      "run_id": "TT32-D-LIVE-PILOT-20260920T130251506747Z",
+      "version": "v1.2",
+      "pass": "20/20",
+      "abstain": 5,
+      "error": 0,
+      "basis": "TT21 승인 Gold Q001–Q020 · TT28-GENERATION-v1.2 · Qwen3(LiteLLM) · CLOSED/FROZEN 개발파일럿 인수기준 (CHG092, 2026-09-21). 최종 시스템 성능은 TT33 holdout 80문항 실험(TT37~TT38) 후 산출.",
+      "note": "v1.2 최종 0 errors. PASS 20/20(abstain=5). avg_total_tokens≈3127.0. graph_scope_empty=8건 중 C seed evidence 보존(graph_fallback_used=True). C와 동등한 수준으로 수렴. Holdout 본실험(TT37~38)에서 C–D 차이 검증 예정. Freeze=Y (CLOSED 개발파일럿 인수기준)."
+    }
+  },
+  "tables": {
+    "TT21": {
+      "caption": "Pilot 20문항 · BAAI/bge-m3(fp16) · Top-K 1/3/5/10 기준. 경계보존 = 원 Text Unit이 chunk로 쪼개지지 않은 비율. ★ = 채택(1위). 수행: 정재훈",
+      "columns": [
+        "후보",
+        "순위",
+        "Chunk수",
+        "토큰중앙값",
+        "경계보존",
+        "Hit@5",
+        "MRR@10",
+        "인코딩(초)"
+      ],
+      "rows": [
+        [
+          "★ Structural article–paragraph",
+          1,
+          15654,
+          74,
+          0.9934,
+          0.75,
+          0.5833,
+          48.9
+        ],
+        [
+          "Fixed character 2,000",
+          2,
+          22146,
+          35,
+          1.0,
+          0.7,
+          0.5046,
+          67.9
+        ],
+        [
+          "Structural component",
+          3,
+          22146,
+          35,
+          1.0,
+          0.7,
+          0.5046,
+          67.2
+        ],
+        [
+          "Fixed 512 token",
+          4,
+          22155,
+          35,
+          0.9996,
+          0.7,
+          0.5046,
+          66.9
+        ],
+        [
+          "Fixed 512 + overlap 50",
+          5,
+          22155,
+          35,
+          0.9996,
+          0.7,
+          0.5046,
+          68.0
+        ],
+        [
+          "Recursive paragraph–sentence",
+          6,
+          22155,
+          35,
+          0.9996,
+          0.7,
+          0.5046,
+          67.9
+        ],
+        [
+          "Appendix 36 technical",
+          7,
+          12541,
+          74,
+          1.0,
+          0.4,
+          0.3125,
+          39.0
+        ],
+        [
+          "Appendix 18 row",
+          8,
+          1594,
+          51,
+          1.0,
+          0.05,
+          0.0306,
+          4.9
+        ]
+      ]
+    }
+  },
+  "action_plan": {
+    "title": "TT29~32 개발파일럿 종결 현황 (CHG092, 2026-09-21)",
+    "status": "CLOSED / FROZEN — 개발파일럿 인수기준 종결",
+    "summary": "TT29~TT32 v1.2 재실행(80문항 0 errors) 완료 후 2026-09-21 최동욱 확인에 의해 개발파일럿 인수기준으로 CLOSED/FROZEN. 최종 시스템 성능 평가는 TT33 holdout 80문항(TT37~TT38) 후 산출.",
+    "tasks": [
+      [
+        "Task 1",
+        "TT21 승인 Gold와 Master 동기화 + 구버전 SUPERSEDED 마킹",
+        "✅ 완료(CHG081)"
+      ],
+      [
+        "Task 2",
+        "RAG_Config_Master.yaml 승인 소스(evaluation) 블록 추가",
+        "✅ 완료(CHG084)"
+      ],
+      [
+        "Task 3",
+        "Run 전 입력검증 게이트(INPUT_VALIDATION_FAIL)",
+        "✅ 완료(CHG085·CHG086)"
+      ],
+      [
+        "Task 4",
+        "TT28 empty-answer 계약 v1.2 수정 + A/B/C/D 전체 재실행",
+        "✅ 완료(CHG089·CHG090)"
+      ],
+      [
+        "Task 5",
+        "empty-answer 근본원인 진단(v1.1 잔여 결함 해소)",
+        "✅ 완료(CHG090)"
+      ],
+      [
+        "Task 6",
+        "System D graph-empty 시 C seed 보존 + TT32 재실행",
+        "✅ 완료(CHG088, 09-20)"
+      ]
+    ],
+    "checklist": "TT29~TT32 개발파일럿 v1.2 PASS(80/80, 0 errors). CLOSED/FROZEN. 최종 성능 평가는 TT33 holdout 80문항 본실험(TT37~38)에서 수행.",
+    "next": [
+      "TT33: ✅ 완료 — 전문가 1인 검토·80문항 holdout 선정·Gold 동결 완료 (전문가 3인 목표 중 1인 참여 → 논문 한계점 기술)",
+      "TT34~TT35: 평가도구 구현 + Pilot/Holdout 분리 설정 동결",
+      "TT36: Pilot 20문항 실행·실험설정 Freeze",
+      "TT37~TT38: 4개 시스템 Holdout 80문항 본실험 → 최종 성능 지표 산출",
+      "TT40~TT41: 논문 완성 및 항공운항학회 2026-10-12 투고"
+    ]
+  }
+}
