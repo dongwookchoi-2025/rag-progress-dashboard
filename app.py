@@ -5,336 +5,155 @@ import streamlit as st
 
 st.set_page_config(page_title="항공안전법령 RAG 검증 진행 현황", layout="wide")
 
-# ── 데이터 소스 ────────────────────────────────────────────────
-# 상세 진행 데이터는 progress.json 하나에 들어 있습니다. 이 파일은
-# Research_Master.xlsx의 TEAM_TASKS_40 시트를 기준으로 만든 스냅샷이라,
-# 마스터가 바뀌면 이 JSON만 새 버전으로 교체하면 됩니다.
-SOURCE = "progress.json"
-STATIC_DIR = "static"
+# ══════════════════════════════════════════════════════════════
+#  데이터 소스
+#  · 태스크 표: 전용 구글시트를 "웹에 게시(CSV)"한 URL을 아래에 붙여넣으세요.
+#    (구글시트 → 파일 → 공유 → 웹에 게시 → 전체문서/CSV → 게시 → URL 복사)
+#    원우들이 그 시트를 고치면 대시보드가 자동으로 따라갑니다.
+#    URL을 비워두면 저장소에 있는 task_grid.csv(백업본)를 읽습니다.
+#  · 보강 항목(논문·저자·요약·TT21 표·TT29~32 결과): extras.json (저장소).
+# ══════════════════════════════════════════════════════════════
+SHEET_CSV_URL = ""          # 예: "https://docs.google.com/spreadsheets/d/e/....../pub?gid=0&single=true&output=csv"
+LOCAL_GRID = "task_grid.csv"
+EXTRAS = "extras.json"
 
 STATUS_COLOR = {"완료": "🟢", "검토중": "🟡", "진행중": "🔵", "미착수": "⚪"}
 
-# ── 논문 정보 ──────────────────────────────────────────────────
-# 제목·저자·요약·주요지표를 여기 한 곳에서 관리합니다.
-# 지표는 2026-09-20 기준 Research_Master.xlsx(정본)·research_pipeline.log·
-# progress.json·논문 초안 V0.4에서 확인한 "실측·동결값"만 기재했습니다.
-PAPER = {
-    "title_ko": "구조·시간·인식 그래프 RAG를 활용한 "
-                "대한민국 항공안전법령 질의응답 신뢰성 검증 연구",
-    "title_en": "A Validation Study of Structure-Aware Temporal Graph RAG "
-                "for Reliable Question Answering over Korean Aviation "
-                "Safety Regulations",
-    "venue": "한국항공운항학회 투고 예정",
-    # 대시보드 요약 정보
-    "submit_venue": "한국항공운항학회 (26년 12월 발행)",
-    "expected_end": "2026년 10월 4일",
-    "advisor_meeting": "2026년 10월 5일 21시 (한국시간)",
-    "meeting_link": "https://teams.live.com/meet/9349506101230?p=0DiRlJMahcZsydxd0d",
-    "summary": (
-        "본 연구는 대한민국 고정익 항공운송사업 운항승무원 규정을 대상으로 네 가지 "
-        "RAG 시스템 — 현행 Vector(A), 전체버전 Naive(B), Temporal-Filtered Vector(C), "
-        "구조·시간·인식 그래프 SAT-Graph(D) — 의 질의응답 신뢰성을 동일 문항 반복측정 "
-        "(paired design)으로 비교·검증한다. 평가는 파일럿 20문항으로 설정을 동결한 뒤 "
-        "Hold-out 80문항으로 최종 측정하며, 검색성능·버전정확도·시간정합성·답변정확성·"
-        "인용품질·환각률·거절정확도·지연/비용을 분리해 측정하고 오류를 검색·시간·관계·"
-        "생성·인용 단계로 추적한다. B와 C의 차이로 시간필터의 순효과를, C와 D의 차이로 "
-        "법령구조·관계탐색의 추가효과를 분리 추정한다."
-    ),
-    "authors": {
-        "주저자": "최동욱",
-        "공동저자": "설지원, 정재훈, 손상우",
-        "교신저자": "이규정 교수",
-    },
-    # 연구질문(RQ)과 현재까지 확보된 결과(잠정) — 최종 정량비교는 본실험(TT37·TT38)에서 확정
-    "rqs": [
-        {"id": "RQ1",
-         "title": "법령의 구조·시간 특성이 Vector RAG 성능에 미치는 영향",
-         "badge": "🟡 잠정 근거 확보 · 정량검증 대기",
-         "question": "대한민국 항공안전법령의 구조적·시간적 특성은 일반 Vector RAG의 법령 검색 및 질의응답 성능에 어떠한 영향을 미치는가?",
-         "result": "데이터 구축에서 법령의 시간·구조 복잡성이 대량 확인됨(버전 212,970 · 개정행위 6,058 · 법적관계 875). 파일럿에서 시점형 질문(Q017–Q020)은 단순 검색으로 Gold 근거 미검색 → 구조·시간 정보 반영의 필요성이 시사됨.",
-         "source": "데이터 구축(TT11–19) · TT21 파일럿",
-         "level": 45},
-        {"id": "RQ2",
-         "title": "시간필터(C) vs 전체버전 혼합(B)",
-         "badge": "🟡 방향성 확인 · 정량검증 대기",
-         "question": "Temporal Filtering을 적용한 System C는 모든 버전을 혼합해 검색하는 System B에 비해 retrieval accuracy와 temporal consistency를 향상시키는가?",
-         "result": "파일럿(v1.2, 동결) 런타임에서 B는 기준일에 유효한 근거 부족으로 기권 15/20(과거·미시행 버전 혼재 위험 노출), C는 정상 답변 15/20·기권 5. 시간필터가 유리한 방향성이 관찰됨. retrieval accuracy·시간정합성 수치는 본실험서 확정.",
-         "source": "파일럿 20문항 v1.2 (2026-09-21 동결)",
-         "level": 55},
-        {"id": "RQ3",
-         "title": "SAT-Graph(D) vs Temporal-Filtered(C) 추가효과",
-         "badge": "⚪ 추가효과 미확인 · 정량검증 대기",
-         "question": "Structure-Aware Temporal Graph RAG인 System D는 Temporal-Filtered Vector RAG인 System C에 비해 retrieval accuracy, evidence completeness 및 generated-answer performance를 향상시키는가?",
-         "result": "파일럿에서 D는 graph_scope_empty 8건을 C의 temporal seed로 fallback 처리했고, 답변 수는 C와 동일(15/20). 현재까지 C 대비 뚜렷한 추가효과는 확인되지 않음 — 정량 비교(검색·근거완전성·답변품질)는 본실험서.",
-         "source": "파일럿 20문항 v1.2",
-         "level": 40},
-        {"id": "RQ4",
-         "title": "질문 복잡도↑일수록 시간·구조 검색의 상대효과↑?",
-         "badge": "🟡 방향성 시사 · 정량검증 대기",
-         "question": "질문이 요구하는 계층적·규정 간·승인 의존·시간적 복잡성이 증가할수록 temporal/structure-aware retrieval의 상대적 효과가 증가하는가?",
-         "result": "TT21·파일럿에서 위임·별표·과거시점 등 복합질문에서 단순 검색의 한계가 관찰됨(Q014 상위법 Top-10 미검색, Q017–Q020 시점 Gold 미검색). 가설의 방향성은 시사되나 정량 검증은 본실험서.",
-         "source": "TT21 청킹 파일럿 · 파일럿 20문항",
-         "level": 45},
-    ],
-    "as_of": "2026-09-20",
 
-    # 본실험(Hold-out 80문항, A/B/C/D 최종 성능비교) 완료 여부.
-    # Research_Master.xlsx의 FINAL_METRICS/STATISTICS/Blind_Scores 시트가
-    # 채워지면 True로 바꾸고 아래 final_* 를 입력하세요.
-    "holdout_done": False,
-    "status_note": (
-        "**본실험(Hold-out 80문항 · A/B/C/D 최종 성능비교)은 아직 실행 전입니다.** "
-        "Research_Master.xlsx의 `FINAL_METRICS`·`STATISTICS`·`Blind_Scores` 시트는 "
-        "현재 비어 있고(Phase 6~8 진행 전), TT33(Gold 100문항)은 전문가 검토 대기 상태입니다. "
-        "따라서 답변정확성·충실도·환각률 등 **시스템 간 최종 비교지표는 아직 산출되지 않았습니다.** "
-        "아래는 그때까지 확보된 **실측·동결값**입니다."
-    ),
-
-    # ① 데이터·코퍼스 구축 (동결, 실측)
-    "metrics_corpus": [
-        {"label": "원문 파일", "value": "99건", "help": "95 XML + 4 PDF (FRZ-TT09-001, cutoff 2026-09-09)"},
-        {"label": "조문 컴포넌트", "value": "239,509", "help": "4 norm · 93 semantic doc version 파싱"},
-        {"label": "버전(Provision Version)", "value": "212,970", "help": "CURRENT 4,770 / EXPIRED 203,831 / FUTURE 1,704 등"},
-        {"label": "최종 검색단위(CONTENT)", "value": "20,957", "help": "법령본문 6,822 + 구조화 운항요건 14,135"},
-        {"label": "개정 액션 / 엣지", "value": "6,058 / 18,174", "help": "TT18 amendment actions / directed edges"},
-        {"label": "법적 관계", "value": "875", "help": "위계·참조·위임·개정·승인의존 관계"},
-    ],
-
-    # ② TT21 청킹 선정 검색성능 (파일럿 20문항, 동결 2026-09-18)
-    #    최종 채택 청킹 = structural_article_paragraph
-    "metrics_tt21": [
-        {"label": "Hit@10", "value": "80.0%"},
-        {"label": "Hit@5", "value": "75.0%"},
-        {"label": "Recall@5", "value": "57.0%", "help": "2위 후보 대비 +10.5%p"},
-        {"label": "MRR@10", "value": "58.3%"},
-        {"label": "nDCG@5", "value": "0.486"},
-        {"label": "청크 수", "value": "15,654", "help": "일반 후보 대비 약 29% 감소"},
-    ],
-
-    # ③ SAT-Graph 지식그래프 규모 (Neo4j 재구축, 2026-09-18 실측)
-    "metrics_graph": [
-        {"label": "그래프 노드", "value": "289,575", "help": "CTV 212,970 · TextUnit 60,092 · Component 10,451 · Action 6,058 · Norm 4"},
-        {"label": "그래프 엣지", "value": "485,907", "help": "HAS_VERSION 212,970 · SUPERSEDES 199,854 · HAS_TEXT 60,092 · CREATES/TERMINATES 각 6,058 · DELEGATES_TO 658 · IMPLEMENTS 217"},
-    ],
-
-    # ④ 파일럿 20문항 시스템별 v1.2 재실행 결과(2026-09-20) — 실행 성공, 정량 채점 전
-    "pilot_rows": [
-        {"시스템": "A · Current Vector", "실행성공": "20/20", "답변": 14, "기권": 6, "오류": 0},
-        {"시스템": "B · All-Version Naive", "실행성공": "20/20", "답변": 5, "기권": 15, "오류": 0},
-        {"시스템": "C · Temporal-Filtered", "실행성공": "20/20", "답변": 15, "기권": 5, "오류": 0},
-        {"시스템": "D · SAT-Graph", "실행성공": "20/20", "답변": 15, "기권": 5, "오류": 0},
-    ],
-
-    # ⑤ 본실험 완료 시 채울 최종 비교표 (지금은 비움)
-    #    컬럼 예: {"지표": "답변정확성", "A": "", "B": "", "C": "", "D": ""}
-    "final_table": [],
-
-    "sources": (
-        "Research_Master.xlsx(정본) · research_pipeline.log · progress.json · "
-        "논문 초안 V0.4 (Google Drive, 2026-09-20 기준)"
-    ),
-}
-
-
-def _download_button(filename, label, mime, key):
-    """static/ 폴더의 원고 파일을 다운로드 버튼으로 노출."""
-    path = os.path.join(STATIC_DIR, filename)
-    if os.path.exists(path):
-        with open(path, "rb") as f:
-            st.download_button(label, data=f.read(), file_name=filename,
-                               mime=mime, key=key, use_container_width=True)
-    else:
-        st.caption(f"⚠️ {filename} 없음 ({path})")
-
-
-def paper_header():
-    """상단: 정식 제목 · 영문 제목 · 다운로드 · 연구요약 · 저자."""
-    st.title(PAPER["title_ko"])
-    st.markdown(f"*{PAPER['title_en']}*")
-    if PAPER.get("venue"):
-        st.caption(PAPER["venue"])
-    st.caption("📄 최신 논문 초안: V0.5 (2026-09-20)")
-
-    d1, d2, _ = st.columns([1, 1, 3])
-    with d1:
-        _download_button("manuscript.pdf", "📄 논문 PDF 다운로드",
-                         "application/pdf", key="dl_pdf")
-    with d2:
-        _download_button("manuscript.hwp", "📝 논문 HWP 다운로드",
-                         "application/x-hwp", key="dl_hwp")
-
-    st.subheader("연구요약")
-    st.markdown(PAPER["summary"])
-
-    a = PAPER["authors"]
-    st.markdown(
-        f"**주저자** {a['주저자']}　·　"
-        f"**공동저자** {a['공동저자']}　·　"
-        f"**교신저자** {a['교신저자']}"
-    )
-
-    # 연구질문(RQ)과 현재까지 결과 — 클릭해서 펼치는 박스
-    if PAPER.get("rqs"):
-        st.markdown("#### 연구질문(RQ)과 현재까지 결과")
-        st.caption("각 RQ를 클릭하면 전체 질문과 현재까지의 결과·진행 상태가 펼쳐집니다. "
-                   "정량 답변(정확도·검색·시간정합성·환각 등)은 Hold-out 80문항 본실험(TT37·TT38)에서 확정됩니다.")
-        for q in PAPER["rqs"]:
-            with st.expander(f"{q['id']} · {q['title']}　—　{q['badge']}", expanded=False):
-                st.markdown(f"**연구질문**  {q['question']}")
-                st.info(f"📌 **현재까지 결과(잠정)**　{q['result']}")
-                lv = int(q.get("level", 0))
-                st.markdown(f"**진행 상태**  {q['badge']}")
-                st.progress(lv / 100, text=f"RQ 답변 준비도 {lv}% · 근거: {q.get('source','')} · 정량 확정: 본실험(TT37·TT38)")
-    st.divider()
-
-
-def _metric_cards(items):
-    if not items:
-        return
-    cols = st.columns(len(items))
-    for col, m in zip(cols, items):
-        col.metric(m.get("label", ""), m.get("value", "—"), help=m.get("help"))
-
-
-def key_metrics_panel():
-    """맨 아래: 연구 주요 중요지표 (실측·동결값)."""
-    st.divider()
-    st.subheader("주요 중요지표")
-    st.caption(f"기준 {PAPER['as_of']}  ·  출처: {PAPER['sources']}")
-
-    if not PAPER.get("holdout_done"):
-        st.warning(PAPER["status_note"])
-
-    st.markdown("##### ① 데이터·코퍼스 구축 (동결)")
-    _metric_cards(PAPER.get("metrics_corpus"))
-
-    st.markdown("##### ② 최종 청킹 검색성능 · structural_article_paragraph (TT21 파일럿 20문항, 동결)")
-    _metric_cards(PAPER.get("metrics_tt21"))
-
-    st.markdown("##### ③ SAT-Graph 지식그래프 규모 (Neo4j, 실측)")
-    _metric_cards(PAPER.get("metrics_graph"))
-
-    st.markdown("##### ④ 파일럿 20문항 시스템별 v1.2 재실행 결과 (동결 완료 2026-09-21)")
-    if PAPER.get("pilot_rows"):
-        st.dataframe(pd.DataFrame(PAPER["pilot_rows"]),
-                     use_container_width=True, hide_index=True)
-    st.caption("※ v1.2 재실행에서 A/B/C/D 모두 20/20 실행 성공(기존 v1.0 오류 전부 해소), 2026-09-21 동결 완료(CHG092, Gold 법령·도메인 검토 20/20 APPROVED). "
-               "답변/기권 수는 실행 상태이며, 정확도·검색·환각 등 정량 성능지표는 Hold-out 80문항 본실험(TT37·TT38)에서 산출·확정됩니다.")
-
-    if PAPER.get("final_table"):
-        st.markdown("##### ⑤ 본실험 최종 비교 (Hold-out 80문항)")
-        st.dataframe(pd.DataFrame(PAPER["final_table"]),
-                     use_container_width=True, hide_index=True)
-
-
-@st.cache_data(ttl=10)          # 원본을 10초에 한 번만 재조회
+@st.cache_data(ttl=120)     # 구글시트를 2분에 한 번 재조회
 def load_data():
-    with open(SOURCE, encoding="utf-8") as f:
-        data = json.load(f)
-    df = pd.DataFrame(data["tasks"])
+    # 1) 태스크 표 — 구글시트 URL 우선, 실패하면 로컬 백업본
+    source_label = "구글시트(실시간)"
+    src = SHEET_CSV_URL.strip()
+    try:
+        if not src:
+            raise ValueError("no url")
+        df = pd.read_csv(src, dtype=str)
+    except Exception:
+        df = pd.read_csv(LOCAL_GRID, dtype=str)
+        source_label = "로컬 백업본(task_grid.csv)"
+    df = df.fillna("")
     df["progress"] = pd.to_numeric(df["progress"], errors="coerce").fillna(0).astype(int)
-    return data.get("as_of", ""), data.get("action_plan"), df, data.get("handoff_note", "")
+
+    # 2) 보강 항목 병합
+    extras = {}
+    if os.path.exists(EXTRAS):
+        with open(EXTRAS, encoding="utf-8") as f:
+            extras = json.load(f)
+    df["results"] = df["id"].map(extras.get("results", {}))
+    df["table"] = df["id"].map(extras.get("tables", {}))
+
+    return source_label, extras.get("project_due", ""), extras.get("manuscript"), extras.get("action_plan"), df
 
 
-def _issue_is_clean(txt):
-    """오류가 없는(또는 해당 없는) 이슈 문구인지 판정."""
-    t = (txt or "").strip()
-    return (not t) or ("오류 0" in t) or t.startswith("해당 없음") or t.startswith("차단오류 없음")
+@st.cache_data(ttl=120)
+def read_bytes(path):
+    if path and os.path.exists(path):
+        with open(path, "rb") as f:
+            return f.read()
+    return None
+
+
+def manuscript_section(m):
+    if not m:
+        return
+    st.subheader("📄 최신 원고")
+    st.markdown(f"**{m['title']}**")
+    st.markdown(
+        f"- **주저자**: {m.get('lead_author','')}\n"
+        f"- **공동저자**: {m.get('co_authors','')}\n"
+        f"- **교신저자**: {m.get('corresponding_author','')}\n"
+        f"- **투고학회(예정)**: {m.get('target_journal','')}"
+    )
+    if m.get("summary"):
+        st.markdown(f"**연구내용 요약**: {m['summary']}")
+    if m.get("note"):
+        st.caption("⚠️ " + m["note"])
+
+    pdf_bytes = read_bytes(m.get("pdf_path"))
+    hwp_bytes = read_bytes(m.get("hwp_path"))
+    c1, c2 = st.columns(2)
+    if pdf_bytes:
+        c1.download_button(
+            f"⬇️ PDF 다운로드 · {m.get('pdf_label','')} ({m.get('pdf_updated','')})",
+            data=pdf_bytes, file_name=m.get("pdf_download_name", "manuscript.pdf"),
+            mime="application/pdf", use_container_width=True,
+        )
+    else:
+        c1.info("PDF 파일이 static 폴더에 없습니다.")
+    if hwp_bytes:
+        c2.download_button(
+            f"⬇️ HWP 다운로드 · {m.get('hwp_label','')} ({m.get('hwp_updated','')})",
+            data=hwp_bytes, file_name=m.get("hwp_download_name", "manuscript.hwp"),
+            mime="application/x-hwp", use_container_width=True,
+        )
+    else:
+        c2.info("HWP 파일이 static 폴더에 없습니다.")
+    st.divider()
 
 
 def detail_block(r):
-    """펼쳤을 때 보이는 상세 작업내용 — 연구결과 요약·산출물·오류/이슈를 함께 표시."""
-    # 연구결과 요약 (무엇이 나왔나) — 가장 위에 강조
-    if r.get("result"):
-        st.info(f"📊 **연구결과 요약**　{r['result']}")
-
-    # 핵심 수치 표 (지표 · 값)
-    metrics = r.get("metrics")
-    if isinstance(metrics, list) and metrics:
-        st.markdown("**핵심 수치**")
-        st.dataframe(pd.DataFrame(metrics, columns=["지표", "값"]),
-                     use_container_width=True, hide_index=True)
-
     st.markdown(f"**핵심목표**  {r['goal']}")
     if r.get("detail"):
-        st.markdown(f"**작업내용**  {r['detail']}")
-
-    # 결과 표(청킹 비교 등) — 일부 TT에만 존재하므로 리스트일 때만 렌더
-    tables = r.get("tables")
-    if isinstance(tables, list):
-        for tb in tables:
-            st.markdown(f"**{tb.get('title','')}**")
-            st.dataframe(pd.DataFrame(tb.get("rows", []), columns=tb.get("columns")),
-                         use_container_width=True, hide_index=True)
-
-    # 파일럿 Gold 질문 등
-    questions = r.get("questions")
-    if isinstance(questions, list) and questions:
-        st.markdown(f"**파일럿 Gold 질문 ({len(questions)}문항)**")
-        st.dataframe(pd.DataFrame(questions),
-                     use_container_width=True, hide_index=True)
-
-    # 산출물
-    if r.get("outputs"):
-        st.markdown(f"**산출물**  {r['outputs']}")
-    if r.get("inputs"):
-        st.caption(f"주요 입력: {r['inputs']}")
-
-    # 오류 / 이슈
-    issue = r.get("issues", "")
-    if _issue_is_clean(issue):
-        st.caption(f"✅ 오류/이슈: {issue or '무결성/QA 검사 통과 — 오류 0'}")
-    else:
-        st.warning(f"**⚠️ 오류/이슈**  {issue}")
-
-    # 현재 차단/보류 사유 — 완료 항목에는 표시하지 않음(과거 사유가 남아 있어도 숨김)
-    if r.get("blocker") and r.get("status") != "완료":
-        st.error(f"**⛔ 차단/보류 사유**  {r['blocker']}")
-
+        st.markdown(f"**작업내용 / 인계 노트**  {r['detail']}")
+    if r.get("blocker"):
+        st.warning(f"**차단/보류 사유**  {r['blocker']}")
     c1, c2 = st.columns(2)
     with c1:
         st.markdown(f"**선행 Task**  {r.get('pred') or '—'}")
+        st.markdown(f"**산출물**  {r.get('outputs') or '—'}")
     with c2:
         st.markdown(f"**후속 Task**  {r.get('succ') or '—'}")
-    if r.get("collab"):
-        st.caption(f"협업/검토: {r['collab']}")
-
-    st.caption(f"담당 {r['owner']}  ·  마감 {r['due']}  ·  진행률 {int(r['progress'])}%")
+        st.markdown(f"**협업/검토**  {r.get('collab') or '—'}")
+    st.caption(f"담당 {r['owner']}  ·  작업종료 {r['due']}  ·  진행률 {int(r['progress'])}%")
     st.progress(int(r["progress"]) / 100)
 
+    res = r.get("results")
+    if isinstance(res, dict):
+        ver = res.get("version", "")
+        frozen = "✅ CLOSED/FROZEN" if "FROZEN" in res.get("basis", "") else "⚠️ 잠정"
+        st.markdown(f"**개발파일럿 결과 {ver} {frozen}** — {res.get('system','')}")
+        m1, m2, m3 = st.columns(3)
+        m1.metric("Coverage (pass)", res.get("pass", "—"))
+        m2.metric("Abstain", res.get("abstain", "—"))
+        m3.metric("Error", res.get("error", "—"))
+        if res.get("note"):
+            st.caption(res["note"])
+        if res.get("basis"):
+            st.caption("🔒 " + res["basis"])
 
-AP_STATUS_ICON = {"완료": "✅", "부분적": "🟡", "미착수": "⬜"}
+    tbl = r.get("table")
+    if isinstance(tbl, dict):
+        st.markdown("**청킹 후보 비교 결과**")
+        tdf = pd.DataFrame(tbl["rows"], columns=tbl["columns"])
+        st.dataframe(tdf, use_container_width=True, hide_index=True)
+        if tbl.get("caption"):
+            st.caption(tbl["caption"])
 
 
-def action_plan_panel(ap):
-    """TT29–32 Action Plan 적용 현황 요약 패널 (progress.json 의 action_plan 블록을 렌더링)."""
+def action_plan_section(ap):
     if not ap:
         return
-    fs = ap.get("freeze_status", "")
-    badge = {"PROVISIONAL": "🟠 PROVISIONAL · freeze 보류",
-             "FROZEN": "🟢 FROZEN"}.get(fs, fs)
-    st.subheader(f"{ap.get('title', 'Action Plan 적용 현황')}  —  {badge}")
-    aptasks = ap.get("tasks", [])
-    done_n = sum(1 for t in aptasks if t.get("status") == "완료")
-    st.caption(
-        f"Task {done_n}/{len(aptasks)} 완료  ·  "
-        f"Acceptance checklist {ap.get('checklist_done', '?')}/{ap.get('checklist_total', '?')} 충족  ·  "
-        f"기준 {ap.get('as_of', '')}"
-    )
-    if ap.get("freeze_note"):
-        st.info(ap["freeze_note"])
-    for t in aptasks:
-        ic = AP_STATUS_ICON.get(t.get("status"), "")
-        st.markdown(f"{ic}  **{t.get('id', '')}** · {t.get('name', '')} — {t.get('status', '')}")
-        if t.get("note"):
-            st.caption(f"　└ {t['note']}")
-    if ap.get("ref_docs"):
-        st.caption(f"기준 문서: {ap['ref_docs']}")
+    status = ap.get("status", "")
+    color = "🟢" if "FROZEN" in status else "🟡"
+    with st.expander(f"{color} **TT29~32 개발파일럿 종결 현황** — {status}", expanded=False):
+        st.markdown(ap.get("summary", ""))
+        rows = ap.get("tasks", [])
+        if rows:
+            tdf = pd.DataFrame(rows, columns=["Task", "내용", "상태"])
+            st.dataframe(tdf, use_container_width=True, hide_index=True)
+        if ap.get("checklist"):
+            st.caption(ap["checklist"])
+        nxt = ap.get("next", [])
+        if nxt:
+            st.markdown("**다음 단계**")
+            for n in nxt:
+                st.markdown(f"- {n}")
 
 
-@st.fragment(run_every="10s")   # 이 블록만 10초마다 자동 갱신
+@st.fragment(run_every="30s")   # 이 블록만 30초마다 자동 갱신
 def dashboard():
-    as_of, ap, df, handoff = load_data()
+    source_label, project_due, manuscript, action_plan, df = load_data()
 
     total = len(df)
     done = (df["status"] == "완료").sum()
@@ -343,14 +162,8 @@ def dashboard():
     overall = int(round(df["progress"].mean())) if total else 0
 
     head_l, head_r = st.columns([4, 1])
-    mtime_txt = ""
-    if os.path.exists(SOURCE):
-        mtime = pd.Timestamp(os.path.getmtime(SOURCE), unit="s", tz="Africa/Lagos")
-        mtime_txt = f"  ·  파일 최종수정 {mtime:%Y-%m-%d %H:%M}"
-    now_wat = pd.Timestamp.now(tz="Africa/Lagos")
     head_l.caption(
-        f"데이터 기준 {as_of}{mtime_txt}  ·  원본: Research_Master.xlsx TEAM_TASKS_40"
-        f"  ·  화면 갱신 {now_wat:%H:%M:%S} (WAT/나이지리아, KST=+8h)"
+        f"데이터 출처: {source_label}  ·  화면 갱신 {pd.Timestamp.now(tz='Africa/Lagos'):%Y-%m-%d %H:%M:%S}"
     )
     if head_r.button("🔄 지금 새로고침", use_container_width=True):
         st.cache_data.clear()
@@ -363,23 +176,12 @@ def dashboard():
     c4.metric("미착수", todo)
     c5.metric("전체 공정률", f"{overall}%")
     st.progress(overall / 100)
-
-    # 전체 공정률 아래 요약 정보
-    st.markdown(
-        f"**투고예정학회:** {PAPER['submit_venue']}  \n"
-        f"**예상 작업종료일:** {PAPER['expected_end']}  \n"
-        f"**지도교수님과 논문초안 리뷰 미팅:** {PAPER['advisor_meeting']}  \n"
-        f"**미팅링크:** {PAPER['meeting_link']}"
-    )
-    st.caption("⏰ 모든 업데이트/갱신 시간은 나이지리아(WAT) 기준입니다. 한국시간(KST)은 +8시간 하세요.")
-
-    if handoff:
-        st.warning(f"🔄 **재실행 대기 (핸드오프 2026-09-20)**　{handoff}")
+    if project_due:
+        st.markdown(f"**작업종료 예정일: {project_due}**")
     st.divider()
 
-    action_plan_panel(ap)
-    if ap:
-        st.divider()
+    manuscript_section(manuscript)
+    action_plan_section(action_plan)
 
     st.subheader("Phase별 진행률")
     for phase, g in df.groupby("phase", sort=False):
@@ -390,7 +192,7 @@ def dashboard():
     st.divider()
 
     st.subheader("Task 상세 — 항목을 클릭하면 작업내용이 펼쳐집니다")
-    show_done = st.checkbox("완료 항목도 보기", value=True)
+    show_done = st.checkbox("완료 항목도 보기", value=False)
     view = df if show_done else df[df["status"] != "완료"]
 
     for phase, group in view.groupby("phase", sort=False):
@@ -410,10 +212,5 @@ def dashboard():
         )
 
 
-# ── 페이지 구성 ────────────────────────────────────────────────
-paper_header()                 # 제목·영문제목·다운로드·요약·저자
-
-st.header("진행 현황")
-dashboard()                    # 기존 진행현황 대시보드
-
-key_metrics_panel()            # 맨 아래: 주요 중요지표(실측·동결값)
+st.title("항공안전법령 RAG 검증 — 진행 현황")
+dashboard()
