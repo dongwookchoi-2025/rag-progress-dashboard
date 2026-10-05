@@ -199,5 +199,71 @@
       "TT37~TT38: 4개 시스템 Holdout 80문항 본실험 → 최종 성능 지표 산출",
       "TT40~TT41: 논문 완성 및 항공운항학회 2026-10-12 투고"
     ]
-  }
+  },
+  "research_questions": [
+    {
+      "id": "RQ1",
+      "question": "현행 법령만 검색하는 기본 RAG(A)와 모든 버전을 섞어 검색하는 Naive RAG(B)의 답변 정확도는 유의미하게 다른가?",
+      "linked_comparison": "A vs B",
+      "linked_tasks": [
+        "TT29",
+        "TT30",
+        "TT37",
+        "TT38"
+      ],
+      "expected_direction": "A > B",
+      "rationale": "B는 시간 필터 없이 구·현행·미래 버전 chunk가 혼재하므로 LLM이 충돌 근거를 받아 기권(abstain)하거나 잘못된 버전을 인용할 가능성이 높다. 파일럿(v1.2) 에서 이미 B abstain 15 vs A abstain 6으로 격차가 확인됨.",
+      "answer_timing": "TT38 최종 점수·통계 산출 후 (Holdout 80문항 기준, 목표 2026-10 중순)",
+      "current_signal": "파일럿 v1.2 B abstain 15 / A abstain 6 — B 열위 방향 일치",
+      "status": "본실험 대기(TT37~TT38 미착수)"
+    },
+    {
+      "id": "RQ2",
+      "question": "질문 시점(as_of_date) 기반 시간 필터를 추가한 Temporal-Filtered RAG(C)는 Naive RAG(B)보다 답변 정확도와 시간정합성이 유의미하게 높은가?",
+      "linked_comparison": "B vs C",
+      "linked_tasks": [
+        "TT30",
+        "TT31",
+        "TT37",
+        "TT38"
+      ],
+      "expected_direction": "C > B",
+      "rationale": "C는 질문 시점에 유효한 버전만 검색하므로 '구법 답변' 오류가 차단된다. 파일럿에서 B abstain 15 → C abstain 5로 크게 감소, 시간필터만으로 abstain이 66% 개선됨. Holdout 80문항에서도 같은 방향이 유지될 것으로 예상.",
+      "answer_timing": "TT38 최종 점수·통계 산출 후",
+      "current_signal": "파일럿 v1.2 C abstain 5 / B abstain 15 — C 우위 방향 일치",
+      "status": "본실험 대기(TT37~TT38 미착수)"
+    },
+    {
+      "id": "RQ3",
+      "question": "SAT-Graph 구조 검색을 추가한 System D는 Temporal-Filtered RAG(C)보다 답변 정확도와 법령 구조 추적 성능이 유의미하게 높은가?",
+      "linked_comparison": "C vs D",
+      "linked_tasks": [
+        "TT31",
+        "TT32",
+        "TT37",
+        "TT38"
+      ],
+      "expected_direction": "D ≥ C (소폭 우위 또는 동등, 유형별 차별화)",
+      "rationale": "파일럿 v1.2에서 C abstain 5 / D abstain 5로 전체 abstain은 동등. 그러나 D는 graph_fallback_used=8건에서도 C seed를 보존해 error=0을 달성. Holdout에서는 위임관계·상하위 연결·별표 참조 문항에서 D 우위가 드러날 가능성이 있으나, 단순 조회형 문항에서는 C와 차이가 없을 수 있음.",
+      "answer_timing": "TT38 최종 점수·통계 산출 후 (C–D 유형별 분해 분석 포함)",
+      "current_signal": "파일럿 v1.2 C vs D 동등 (abstain 5 vs 5, error 0 vs 0) — 본실험에서 유형별 분리 필요",
+      "status": "본실험 대기(TT37~TT38 미착수)"
+    },
+    {
+      "id": "RQ4",
+      "question": "네 가지 RAG 방식(A/B/C/D) 중 한국 항공안전법령 QA에 가장 적합한 방식은 무엇이며, 그 이유는 무엇인가?",
+      "linked_comparison": "A vs B vs C vs D 종합",
+      "linked_tasks": [
+        "TT37",
+        "TT38",
+        "TT39",
+        "TT40"
+      ],
+      "expected_direction": "C 또는 D 권고 (질문 유형에 따라 조건부)",
+      "rationale": "현재 파일럿 신호: A(abstain 6) < C=D(abstain 5)로 C·D가 미세 우위. B(abstain 15)는 temporal filtering 부재로 탈락 예상. 단순 현행법 조회는 A, 시점 기반은 C, 위임·구조 추적은 D가 적합할 것으로 예상. 최종 권고는 TT38 통계검정·오류분석·TT39 Discussion 집필 후 확정.",
+      "answer_timing": "TT39 Discussion 작성 후 (목표 2026-10 후반)",
+      "current_signal": "파일럿 신호 기반 잠정 방향: C 또는 D 권고 예상 — 본실험 확인 필요",
+      "status": "Discussion 집필 대기(TT39 미착수)"
+    }
+  ]
 }

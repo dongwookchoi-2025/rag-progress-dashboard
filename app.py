@@ -190,7 +190,7 @@ def action_plan_section(ap):
 
 @st.fragment(run_every="30s")   # 이 블록만 30초마다 자동 갱신
 def dashboard():
-    source_label, project_due, manuscript, action_plan, df = load_data()
+    source_label, project_due, manuscript, action_plan, research_questions, df = load_data()
 
     total = len(df)
     done = (df["status"] == "완료").sum()
@@ -218,6 +218,7 @@ def dashboard():
     st.divider()
 
     manuscript_section(manuscript)
+    rq_section(research_questions)
     action_plan_section(action_plan)
 
     st.subheader("Phase별 진행률")
