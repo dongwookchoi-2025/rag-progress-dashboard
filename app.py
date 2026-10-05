@@ -43,7 +43,7 @@ def load_data():
     df["results"] = df["id"].map(extras.get("results", {}))
     df["table"] = df["id"].map(extras.get("tables", {}))
 
-    return source_label, extras.get("project_due", ""), extras.get("manuscript"), extras.get("action_plan"), df
+    return source_label, extras.get("project_due", ""), extras.get("manuscript"), extras.get("action_plan"), extras.get("research_questions", []), df
 
 
 @st.cache_data(ttl=120)
@@ -129,6 +129,43 @@ def detail_block(r):
         st.dataframe(tdf, use_container_width=True, hide_index=True)
         if tbl.get("caption"):
             st.caption(tbl["caption"])
+
+
+RQ_STATUS_COLOR = {
+    "본실험 대기": "🟡",
+    "Discussion 집필 대기": "⚪",
+    "확정": "🟢",
+}
+
+def rq_section(rqs):
+    if not rqs:
+        return
+    st.subheader("🔬 연구 질문(RQ) 및 예상 답변")
+    for rq in rqs:
+        sid = rq.get("id", "")
+        status = rq.get("status", "")
+        # 상태 색 아이콘 (앞부분 매칭)
+        icon = "🟡"
+        for k, v in RQ_STATUS_COLOR.items():
+            if status.startswith(k):
+                icon = v
+                break
+        header = f"{icon} **{sid}** — {rq.get('linked_comparison','')}  ·  _{status}_"
+        with st.expander(header, expanded=False):
+            st.markdown(f"**연구 질문**")
+            st.markdown(f"> {rq.get('question','')}")
+            col1, col2 = st.columns([1, 1])
+            with col1:
+                st.markdown(f"**예상 답변 방향**  {rq.get('expected_direction','—')}")
+                st.markdown(f"**예상 답변 시기**  {rq.get('answer_timing','—')}")
+                st.markdown(f"**연계 Task**  {', '.join(rq.get('linked_tasks', []))}")
+            with col2:
+                st.markdown(f"**현재 파일럿 신호**")
+                signal = rq.get("current_signal", "—")
+                st.info(signal)
+            if rq.get("rationale"):
+                st.markdown(f"**예상 근거**  {rq['rationale']}")
+    st.divider()
 
 
 def action_plan_section(ap):
