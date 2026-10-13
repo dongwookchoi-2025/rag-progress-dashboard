@@ -3,7 +3,7 @@
 긴 handoff 노트는 요지를 보존하되 반복되는 해시 문자열 등은 축약했다."""
 import json
 
-AS_OF = "2026-10-05 09:00"
+AS_OF = "2026-10-13 10:00"
 
 tasks = [
  {"id":"TT01","phase":"Phase 1 · 연구방향과 범위","name":"연구 범위와 전체 실험규칙 확정","owner":"최동욱","status":"완료","progress":100,"due":"2026-08-15",
@@ -210,17 +210,26 @@ tasks = [
   "outputs":"Metrics_Dictionary, Answer_Rubric, Error_Codebook / modules/evaluation.py",
   "detail":"미착수."},
 
- {"id":"TT35","phase":"Phase 6 · 평가문제와 정답","name":"실험조건 통제·Pilot/Holdout 분리","owner":"정재훈","status":"미착수","progress":0,"due":"2026-09-18",
+ {"id":"TT35","phase":"Phase 6 · 평가문제와 정답","name":"실험조건 통제·Pilot/Holdout 분리","owner":"정재훈","status":"완료","progress":100,"due":"2026-09-18",
   "goal":"embedding·corpus·Top-K·LLM·decoding·prompt를 같게 통제하고 100문항을 Pilot 20/Holdout 80으로 사전 분리한다.",
   "pred":"TT29, TT32, TT33","succ":"TT36","collab":"최동욱","blocker":"",
-  "outputs":"YAML experiment_control / Pilot_Holdout(20/80 stratified split)",
-  "detail":"미착수."},
+  "outputs":"YAML experiment_control / Pilot_Holdout(20/80 stratified split) / 최종 Gold ZIP SHA256 e2ba416c",
+  "detail":"기술적 CLOSED 2026-10-12 17:07:36 KST. 연구책임자 종료승인(감사로그 20261008). "
+           "Gold 214행·원자근거 338개 확정. Pilot Q001–Q020 / Hold-out Q021–Q100 분리 동결. "
+           "최종 Gold ZIP SHA256: e2ba416c21064b04dab63f5fe15b5387dd9afa981ad64108ef2a47137804152b. "
+           "잔여 기술 검증 위험 수용(PI 행정적 종료 유지). "
+           "TT36 Pilot 실행에 Pilot20만 사용; Hold-out80은 TT37 GO 전까지 접근 금지."},
 
- {"id":"TT36","phase":"Phase 7 · 실험하고 비교하기","name":"Pilot 20문항 실행·설정 Freeze","owner":"최동욱","status":"미착수","progress":0,"due":"2026-09-19",
+ {"id":"TT36","phase":"Phase 7 · 실험하고 비교하기","name":"Pilot 20문항 실행·설정 Freeze","owner":"최동욱","status":"진행중","progress":20,"due":"2026-09-19",
   "goal":"Pilot 20으로 허용된 설정선택을 끝낸 뒤 code/config/data/Gold를 Freeze하여 본실험 결과를 본 후 튜닝하는 것을 차단한다.",
-  "pred":"TT29, TT35","succ":"TT37","collab":"정재훈","blocker":"",
+  "pred":"TT29, TT35","succ":"TT37","collab":"정재훈","blocker":"공통 LLM provider/model/revision 및 reranker 결정 PENDING; 서버 최신 해시 readback 미완료",
   "outputs":"Pilot_Freeze / YAML freeze_hashes / Freeze_Log",
-  "detail":"미착수."},
+  "detail":"2026-10-12 연구책임자 TT36 착수 승인(START_AUTHORIZED). "
+           "담당: 최동욱(주담당·Freeze 승인), 정재훈(QA), 설지원(A/B/C/D 운영환경). "
+           "착수 직후 게이트: 시스템 A/B/C/D·Python코드·Milvus 15,966벡터·Neo4j 연결 및 해시 확인; "
+           "각 시스템이 Q001–Q020만 사용, Main enabled=false 검증; "
+           "reranker 불일치(TT35 YAML prohibited_features vs common_conditions) 해소 후 실행. "
+           "2026-10-13 현재: 설정 사전점검 READ_ONLY_CONFIG_REVIEW / PILOT_NOT_EXECUTED / FREEZE_PENDING."},
 
  {"id":"TT37","phase":"Phase 7 · 실험하고 비교하기","name":"4개 시스템 Holdout 80문항 본실험","owner":"설지원","status":"미착수","progress":0,"due":"2026-09-20",
   "goal":"동일 Holdout 80을 A/B/C/D에 실행하고 모든 retrieval evidence·version·answer·latency·trace를 단일 run dataset에 저장한다.",
@@ -246,20 +255,20 @@ tasks = [
   "outputs":"Thesis_Manuscript.docx 최종본 / Reproducibility_Manifest",
   "detail":"서론·이론적 배경 작성 완료(CHG094, 2026-09-21). 한글·영문 혼용 수정과 실험 결과 섹션 집필이 남아있음."},
 
- {"id":"TT41","phase":"Phase 8 · 논문 작성하고 정리","name":"논문 선행연구 재검토·논리적 타당성 보완 및 최종 투고","owner":"손상우","status":"진행중","progress":50,"due":"2026-10-12",
-  "goal":"2026-10-12 항공운항학회 최종 투고 전 인용·논리·형식·행정·커뮤니케이션을 폐쇄한다.",
+ {"id":"TT41","phase":"Phase 8 · 논문 작성하고 정리","name":"논문 선행연구 재검토·논리적 타당성 보완 및 최종 투고","owner":"손상우","status":"진행중","progress":75,"due":"2026-10-31",
+  "goal":"2026-10-31 항공운항학회 최종 투고(기한 연장). 인용·논리·형식·행정·커뮤니케이션 폐쇄.",
   "pred":"TT40","succ":"연구 종료","collab":"최동욱, 지도교수",
-  "blocker":"PUB-002 논리 타당성 점검(기한 10/4) 완료 여부 확인 필요. PUB-003 지도교수 메일 발송·회신(기한 10/4) 진행 중. PUB-004 연구진 미팅 오늘(10/5) 예정.",
+  "blocker":"투고 기한 2026-10-31로 연장 확정. PUB-002~PUB-006 완료 여부 진행 중.",
   "outputs":"인용대조표 / 논리점검표 / 최종본 PDF·DOCX / 투고 접수증",
   "detail":(
       "6개 게이트(PUB-001~PUB-006) 운영. "
       "PUB-001 ✅ 완료(CHG084·CHG085, 2026-10-03): 참고문헌 28건 1:1 대조 누락 0건, "
-      "링크 확인 25건, 미확보 3건(Kim 2023·항공안전기술원 2021·Yoo 2026) → 10/6 이후 보완 예정. "
-      "PUB-002 논리 타당성 점검(기한 10/4) — 서론→이론배경→연구설계 점검 진행 중. "
-      "PUB-003 지도교수 메일 발송·회신(기한 10/4) — 발송 진행 중. "
-      "PUB-004 연구진 미팅 오늘(기한 10/5) — 미팅 진행 예정. "
-      "PUB-005 학회 편집규칙 확인(기한 10/11) — 미착수. "
-      "PUB-006 최종 투고(기한 10/12) — 미착수."
+      "링크 확인 25건, 미확보 3건(Kim 2023·항공안전기술원 2021·Yoo 2026). "
+      "PUB-002 논리 타당성 점검(기한 10/4) — 완료 여부 미확인. "
+      "PUB-003 지도교수 메일 발송·회신(기한 10/4) — 완료 여부 미확인. "
+      "PUB-004 연구진 미팅(기한 10/5) — 완료 여부 미확인. "
+      "PUB-005 학회 편집규칙 확인(기한 10/11) — 완료 여부 미확인. "
+      "PUB-006 최종 투고(기한 연장: 10/31) — 진행 중."
   )},
 ]
 
@@ -432,14 +441,15 @@ action_plan = {
                  "최종 성능 평가는 TT33 holdout 80문항 본실험(TT37~38)에서 수행.",
     "next": [
         "TT33: ✅ 완료 — 전문가 1인 검토·80문항 holdout 선정·Gold 동결 완료 (전문가 3인 목표 중 1인 참여 → 논문 한계점 기술)",
-        "TT34~TT35: 평가도구 구현 + Pilot/Holdout 분리 설정 동결",
-        "TT36: Pilot 20문항 실행·실험설정 Freeze",
+        "TT34: ✅ 완료 — 평가도구 구현 FROZEN_TT34_v1.0.1",
+        "TT35: ✅ 완료(기술적 CLOSED 2026-10-12) — Pilot/Holdout 분리·Gold ZIP 동결 완료",
+        "TT36: 🔵 진행중 — Pilot 20문항 실행 착수승인(2026-10-12), 설정 사전점검 중",
         "TT37~TT38: 4개 시스템 Holdout 80문항 본실험 → 최종 성능 지표 산출",
-        "TT40~TT41: 논문 완성 및 항공운항학회 2026-10-12 투고",
+        "TT41: 투고 기한 2026-10-31로 연장 확정 — PUB-002~PUB-006 진행 중 (손상우)",
     ],
 }
 
-PROJECT_DUE = "2026년 10월 4일(일)"   # 전체 작업종료 예정일
+PROJECT_DUE = "2026년 10월 31일(토) — 투고 기한 연장 확정"
 
 # ── 연구 질문(RQ) 및 예상 답변 ────────────────────────────────
 research_questions = [
@@ -455,8 +465,8 @@ research_questions = [
             "파일럿(v1.2) 에서 이미 B abstain 15 vs A abstain 6으로 격차가 확인됨."
         ),
         "answer_timing": "TT38 최종 점수·통계 산출 후 (Holdout 80문항 기준, 목표 2026-10 중순)",
-        "current_signal": "파일럿 v1.2 B abstain 15 / A abstain 6 — B 열위 방향 일치",
-        "status": "본실험 대기(TT37~TT38 미착수)",
+        "current_signal": "파일럿 v1.2 B abstain 15 / A abstain 6 — B 열위 방향 일치. TT35 완료·TT36 착수(2026-10-12) — Pilot20 실행 직전",
+        "status": "TT36 Pilot20 실행 중(Freeze 준비)",
     },
     {
         "id": "RQ2",
@@ -471,8 +481,8 @@ research_questions = [
             "Holdout 80문항에서도 같은 방향이 유지될 것으로 예상."
         ),
         "answer_timing": "TT38 최종 점수·통계 산출 후",
-        "current_signal": "파일럿 v1.2 C abstain 5 / B abstain 15 — C 우위 방향 일치",
-        "status": "본실험 대기(TT37~TT38 미착수)",
+        "current_signal": "파일럿 v1.2 C abstain 5 / B abstain 15 — C 우위 방향 일치. TT35 완료·TT36 착수(2026-10-12) — Pilot20 실행 직전",
+        "status": "TT36 Pilot20 실행 중(Freeze 준비)",
     },
     {
         "id": "RQ3",
@@ -487,8 +497,8 @@ research_questions = [
             "단순 조회형 문항에서는 C와 차이가 없을 수 있음."
         ),
         "answer_timing": "TT38 최종 점수·통계 산출 후 (C–D 유형별 분해 분석 포함)",
-        "current_signal": "파일럿 v1.2 C vs D 동등 (abstain 5 vs 5, error 0 vs 0) — 본실험에서 유형별 분리 필요",
-        "status": "본실험 대기(TT37~TT38 미착수)",
+        "current_signal": "파일럿 v1.2 C vs D 동등 (abstain 5 vs 5, error 0 vs 0) — 본실험에서 유형별 분리 필요. TT35 완료·TT36 착수(2026-10-12) — Pilot20 실행 직전",
+        "status": "TT36 Pilot20 실행 중(Freeze 준비)",
     },
     {
         "id": "RQ4",
@@ -503,8 +513,8 @@ research_questions = [
             "최종 권고는 TT38 통계검정·오류분석·TT39 Discussion 집필 후 확정."
         ),
         "answer_timing": "TT39 Discussion 작성 후 (목표 2026-10 후반)",
-        "current_signal": "파일럿 신호 기반 잠정 방향: C 또는 D 권고 예상 — 본실험 확인 필요",
-        "status": "Discussion 집필 대기(TT39 미착수)",
+        "current_signal": "파일럿 신호 기반 잠정 방향: C 또는 D 권고 예상 — TT35 완료·TT36 착수(2026-10-12) Pilot20 실행 직전, 본실험(TT37~39) 대기 중",
+        "status": "TT36 Pilot20 실행 중(Freeze 준비)",
     },
 ]
 
