@@ -220,24 +220,30 @@ tasks = [
            "잔여 기술 검증 위험 수용(PI 행정적 종료 유지). "
            "TT36 Pilot 실행에 Pilot20만 사용; Hold-out80은 TT37 GO 전까지 접근 금지."},
 
- {"id":"TT36","phase":"Phase 7 · 실험하고 비교하기","name":"Pilot 20문항 실행·설정 Freeze","owner":"최동욱","status":"진행중","progress":40,"due":"2026-09-19",
+ {"id":"TT36","phase":"Phase 7 · 실험하고 비교하기","name":"Pilot 20문항 실행·설정 Freeze","owner":"최동욱","status":"진행중","progress":55,"due":"2026-09-19",
   "goal":"Pilot 20으로 허용된 설정선택을 끝낸 뒤 code/config/data/Gold를 Freeze하여 본실험 결과를 본 후 튜닝하는 것을 차단한다.",
-  "pred":"TT29, TT35","succ":"TT37","collab":"정재훈","blocker":"LLM 답변 생성 미실행(NO_LLM) — Retrieval 전용 진단 완료; System D Graph Fallback 9문항 원인 확인(GRAPH_SCOPE_EMPTY 7건·FILTERED_ANN_EMPTY 2건); LLM 핀·Freeze 미완료",
+  "pred":"TT29, TT35","succ":"TT37","collab":"정재훈","blocker":"System D GRAPH_SCOPE_EMPTY 7문항(Neo4j 미연결 엔티티) 처리방침 PI 결정 필요; Provisional LLM 실행 완료됐으나 미Freeze — config 핀 및 Freeze 승인 대기",
   "outputs":"Pilot_Freeze / YAML freeze_hashes / Freeze_Log",
   "detail":"2026-10-12 연구책임자 TT36 착수 승인(START_AUTHORIZED). "
            "담당: 최동욱(주담당·Freeze 승인), 정재훈(QA), 설지원(A/B/C/D 운영환경). "
            "Milvus 실측: total_rows=15,966·indexed_rows=15,966(AUTOINDEX·IP·Finished). "
            "DuckDB chunks_final 15,654행·Parquet 468행. "
-           "2026-10-14 19:19 TT36_PilotABCD_Retrieval COMPLETE: "
-           "DIAGNOSTIC_ROWS=80·ERRORS=0·SYSTEM_COUNTS A/B/C/D 각 20. "
-           "NOT_FINAL_METRICS; NO_LLM; FREEZE_NOT_EXECUTED — Retrieval 전용 진단, LLM 미실행. "
-           "System D Graph Fallback 9문항: "
-           "GRAPH_SCOPE_EMPTY(Q006·Q009·Q011·Q017·Q018·Q019·Q020 — 7건), "
-           "FILTERED_ANN_EMPTY(Q005 scope=97/scope_ann=0·Q012 scope=3/scope_ann=0 — 2건). "
-           "2026-10-14 20:14 D_RootCause_DeepProbe COMPLETE: CASES=9·BASELINE_UNCHANGED=True. "
-           "SOURCE_HASHES_UNCHANGED=True. TT37 main.enabled=false 확인. "
-           "active_config SHA256: d17c88bc. "
-           "다음 단계: LLM model/revision 핀 완료 → Pilot A/B/C/D LLM 답변 생성 → Freeze."},
+           "★ 2026-10-14 01:40~02:12 Provisional Pilot LLM 실행 완료(NOT FROZEN): "
+           "A(pass=19/error=1/abstained=5)·B(pass=20/abstained=15)·C(pass=20/abstained=5)·D(pass=19/error=1/abstained=6). "
+           "총 80문항 생성. ISOLATED_RUN_DIR: runs/TT36-PROV-PILOT-20261013T164013572543Z. "
+           "2026-10-14 17:37 Top50 전수검사: ORIGINAL_TOP5_MATCH=68/80·RETRIEVED_ROWS=3338/4000; "
+           "System B만 MISMATCH 12건(K50_PREFIX_MISMATCH — 필터 없는 전버전 검색으로 랭킹 불안정). "
+           "System B k5=20/20 MATCH, k10이상=8/20 MATCH(12건 K50_PREFIX_MISMATCH). "
+           "2026-10-14 18:34 Gold9 Crosswalk: Gold TU 9건 중 직접청크 Milvus인덱스=2건(INDEXED), "
+           "나머지 7건은 embed/same_doc_literal 경로. "
+           "2026-10-14 19:19 Retrieval diagnostic COMPLETE: DIAGNOSTIC_ROWS=80·ERRORS=0. "
+           "2026-10-14 20:07 D Scope Filter Probe: "
+           "GRAPH_SCOPE_EMPTY — Q006(자격)·Q009(기장·부기장·운항승무원·자격)·Q011(terms=[])·"
+           "Q017(제148조)·Q018(제144조)·Q019(제36조)·Q020(제63조); "
+           "FILTERED_ANN_EMPTY — Q005(scope=97/query=47/scoped_search=0)·Q012(scope=3/query=1/scoped_search=0). "
+           "2026-10-14 20:14 D_RootCause COMPLETE: CASES=9·BASELINE_UNCHANGED=True. "
+           "SOURCE_HASHES_UNCHANGED=True. TT37 main.enabled=false. active_config SHA256: d17c88bc. "
+           "다음 단계: D Fallback 처리방침 결정 → config 핀 → Freeze 승인 → 공식 Pilot 실행."},
 
  {"id":"TT37","phase":"Phase 7 · 실험하고 비교하기","name":"4개 시스템 Holdout 80문항 본실험","owner":"설지원","status":"미착수","progress":0,"due":"2026-09-20",
   "goal":"동일 Holdout 80을 A/B/C/D에 실행하고 모든 retrieval evidence·version·answer·latency·trace를 단일 run dataset에 저장한다.",
