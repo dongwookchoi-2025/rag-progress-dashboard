@@ -3,7 +3,7 @@
 긴 handoff 노트는 요지를 보존하되 반복되는 해시 문자열 등은 축약했다."""
 import json
 
-AS_OF = "2026-10-13 10:00"
+AS_OF = "2026-10-14 20:30"
 
 tasks = [
  {"id":"TT01","phase":"Phase 1 · 연구방향과 범위","name":"연구 범위와 전체 실험규칙 확정","owner":"최동욱","status":"완료","progress":100,"due":"2026-08-15",
@@ -220,18 +220,24 @@ tasks = [
            "잔여 기술 검증 위험 수용(PI 행정적 종료 유지). "
            "TT36 Pilot 실행에 Pilot20만 사용; Hold-out80은 TT37 GO 전까지 접근 금지."},
 
- {"id":"TT36","phase":"Phase 7 · 실험하고 비교하기","name":"Pilot 20문항 실행·설정 Freeze","owner":"최동욱","status":"진행중","progress":20,"due":"2026-09-19",
+ {"id":"TT36","phase":"Phase 7 · 실험하고 비교하기","name":"Pilot 20문항 실행·설정 Freeze","owner":"최동욱","status":"진행중","progress":40,"due":"2026-09-19",
   "goal":"Pilot 20으로 허용된 설정선택을 끝낸 뒤 code/config/data/Gold를 Freeze하여 본실험 결과를 본 후 튜닝하는 것을 차단한다.",
-  "pred":"TT29, TT35","succ":"TT37","collab":"정재훈","blocker":"공통 LLM model/revision PENDING_TT36_PILOT_FREEZE(PI 핀 필요); reranker 정책 PI 결정 PENDING(BAAI/bge-reranker-v2-m3 다운로드 완료); A/B/C/D 모든 시스템 rerank 적용 불가 상태(legacy contract — PI 결정 후 해소)",
+  "pred":"TT29, TT35","succ":"TT37","collab":"정재훈","blocker":"LLM 답변 생성 미실행(NO_LLM) — Retrieval 전용 진단 완료; System D Graph Fallback 9문항 원인 확인(GRAPH_SCOPE_EMPTY 7건·FILTERED_ANN_EMPTY 2건); LLM 핀·Freeze 미완료",
   "outputs":"Pilot_Freeze / YAML freeze_hashes / Freeze_Log",
   "detail":"2026-10-12 연구책임자 TT36 착수 승인(START_AUTHORIZED). "
            "담당: 최동욱(주담당·Freeze 승인), 정재훈(QA), 설지원(A/B/C/D 운영환경). "
-           "착수 직후 게이트: 시스템 A/B/C/D·Python코드·DuckDB chunks_final 15,654행·Parquet 468행·Neo4j 연결 및 해시 확인; "
-           "각 시스템이 Q001–Q020만 사용, Main enabled=false 검증; "
-           "reranker 정책(BAAI/bge-reranker-v2-m3 다운로드 완료) PI 결정 PENDING. "
-           "2026-10-13 Preflight 결과: CONTROL_APPLIED_ONLY_PILOT_NOT_EXECUTED. "
-           "BLOCK: 공통 LLM model/revision PENDING_TT36_PILOT_FREEZE — 핀 완료 후 Pilot 실행 가능. "
-           "TT37 main.enabled=false 확인. active_config SHA256: d17c88bc."},
+           "Milvus 실측: total_rows=15,966·indexed_rows=15,966(AUTOINDEX·IP·Finished). "
+           "DuckDB chunks_final 15,654행·Parquet 468행. "
+           "2026-10-14 19:19 TT36_PilotABCD_Retrieval COMPLETE: "
+           "DIAGNOSTIC_ROWS=80·ERRORS=0·SYSTEM_COUNTS A/B/C/D 각 20. "
+           "NOT_FINAL_METRICS; NO_LLM; FREEZE_NOT_EXECUTED — Retrieval 전용 진단, LLM 미실행. "
+           "System D Graph Fallback 9문항: "
+           "GRAPH_SCOPE_EMPTY(Q006·Q009·Q011·Q017·Q018·Q019·Q020 — 7건), "
+           "FILTERED_ANN_EMPTY(Q005 scope=97/scope_ann=0·Q012 scope=3/scope_ann=0 — 2건). "
+           "2026-10-14 20:14 D_RootCause_DeepProbe COMPLETE: CASES=9·BASELINE_UNCHANGED=True. "
+           "SOURCE_HASHES_UNCHANGED=True. TT37 main.enabled=false 확인. "
+           "active_config SHA256: d17c88bc. "
+           "다음 단계: LLM model/revision 핀 완료 → Pilot A/B/C/D LLM 답변 생성 → Freeze."},
 
  {"id":"TT37","phase":"Phase 7 · 실험하고 비교하기","name":"4개 시스템 Holdout 80문항 본실험","owner":"설지원","status":"미착수","progress":0,"due":"2026-09-20",
   "goal":"동일 Holdout 80을 A/B/C/D에 실행하고 모든 retrieval evidence·version·answer·latency·trace를 단일 run dataset에 저장한다.",
@@ -445,7 +451,7 @@ action_plan = {
         "TT33: ✅ 완료 — 전문가 1인 검토·80문항 holdout 선정·Gold 동결 완료 (전문가 3인 목표 중 1인 참여 → 논문 한계점 기술)",
         "TT34: ✅ 완료 — 평가도구 구현 FROZEN_TT34_v1.0.1",
         "TT35: ✅ 완료(기술적 CLOSED 2026-10-12) — Pilot/Holdout 분리·Gold ZIP 동결 완료",
-        "TT36: 🔵 진행중 — Pilot 20문항 실행 착수승인(2026-10-12), 설정 사전점검 중",
+        "TT36: 🔵 진행중 — Pilot 20문항 실행 착수승인(2026-10-12), BLOCKED: LLM model/revision 핀 필요",
         "TT37~TT38: 4개 시스템 Holdout 80문항 본실험 → 최종 성능 지표 산출",
         "TT41: 투고 기한 2026-10-31로 연장 확정 — PUB-002~PUB-006 진행 중 (손상우)",
     ],
