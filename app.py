@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import os
 import json
 import pandas as pd
@@ -18,6 +19,53 @@ LOCAL_GRID = "task_grid.csv"
 EXTRAS = "extras.json"
 
 STATUS_COLOR = {"완료": "🟢", "검토중": "🟡", "진행중": "🔵", "미착수": "⚪"}
+
+# ── TT36 Pilot 성능 지표 (Google Drive TT36_Pilot_ABCD_Review_Metrics_20261014.json) ──
+TT36_METRICS = {
+    "A": {
+        5:  {"hit_rate": 0.70, "micro_recall": 0.375,  "mrr": 0.4667, "ndcg": 0.3587, "valid": 81,  "future": 19,  "expired": 0},
+        10: {"hit_rate": 0.75, "micro_recall": 0.5208, "mrr": 0.475,  "ndcg": 0.4081, "valid": 158, "future": 42,  "expired": 0},
+        20: {"hit_rate": 0.75, "micro_recall": 0.5417, "mrr": 0.475,  "ndcg": 0.4161, "valid": 315, "future": 78,  "expired": 0},
+    },
+    "B": {
+        5:  {"hit_rate": 0.20, "micro_recall": 0.0833, "mrr": 0.135,  "ndcg": 0.0975, "valid": 10,  "future": 13,  "expired": 77},
+        10: {"hit_rate": 0.30, "micro_recall": 0.125,  "mrr": 0.1471, "ndcg": 0.1145, "valid": 14,  "future": 21,  "expired": 165},
+        20: {"hit_rate": 0.40, "micro_recall": 0.1667, "mrr": 0.1543, "ndcg": 0.1302, "valid": 19,  "future": 41,  "expired": 340},
+    },
+    "C": {
+        5:  {"hit_rate": 0.70, "micro_recall": 0.3958, "mrr": 0.4917, "ndcg": 0.3822, "valid": 100, "future": 0,   "expired": 0},
+        10: {"hit_rate": 0.75, "micro_recall": 0.5625, "mrr": 0.500,  "ndcg": 0.4377, "valid": 199, "future": 0,   "expired": 0},
+        20: {"hit_rate": 0.75, "micro_recall": 0.6042, "mrr": 0.500,  "ndcg": 0.4529, "valid": 368, "future": 0,   "expired": 0},
+    },
+    "D": {
+        5:  {"hit_rate": 0.60, "micro_recall": 0.3125, "mrr": 0.3892, "ndcg": 0.3070, "valid": 100, "future": 0,   "expired": 0},
+        10: {"hit_rate": 0.75, "micro_recall": 0.4792, "mrr": 0.4069, "ndcg": 0.3631, "valid": 199, "future": 0,   "expired": 0},
+        20: {"hit_rate": 0.75, "micro_recall": 0.6042, "mrr": 0.4069, "ndcg": 0.4048, "valid": 368, "future": 0,   "expired": 0},
+    },
+}
+
+TT36_D_DIAGNOSTICS = [
+    {"id":"Q001","type":"현행·단일규정","scope":4,"fallback":False,"c@5":1,"d@5":1,"c@10":1,"d@10":1,"c@20":1,"d@20":1},
+    {"id":"Q002","type":"현행·상하위연결","scope":3,"fallback":False,"c@5":1,"d@5":1,"c@10":2,"d@10":2,"c@20":2,"d@20":2},
+    {"id":"Q003","type":"현행·단일규정","scope":41,"fallback":False,"c@5":1,"d@5":1,"c@10":1,"d@10":1,"c@20":1,"d@20":1},
+    {"id":"Q004","type":"현행·기술기준","scope":14,"fallback":False,"c@5":0,"d@5":0,"c@10":1,"d@10":1,"c@20":1,"d@20":1},
+    {"id":"Q005","type":"현행·기술기준","scope":97,"fallback":True,"c@5":1,"d@5":1,"c@10":2,"d@10":2,"c@20":2,"d@20":2},
+    {"id":"Q006","type":"현행·기술기준","scope":0,"fallback":True,"c@5":2,"d@5":2,"c@10":3,"d@10":3,"c@20":3,"d@20":3},
+    {"id":"Q007","type":"조건·예외","scope":26,"fallback":False,"c@5":2,"d@5":0,"c@10":2,"d@10":1,"c@20":2,"d@20":2},
+    {"id":"Q008","type":"조건·예외","scope":26,"fallback":False,"c@5":1,"d@5":0,"c@10":2,"d@10":1,"c@20":2,"d@20":2},
+    {"id":"Q009","type":"복합조건","scope":0,"fallback":True,"c@5":1,"d@5":1,"c@10":1,"d@10":1,"c@20":1,"d@20":1},
+    {"id":"Q010","type":"기술기준·훈련","scope":66,"fallback":False,"c@5":2,"d@5":1,"c@10":5,"d@10":3,"c@20":5,"d@20":5},
+    {"id":"Q011","type":"기술기준·훈련","scope":0,"fallback":True,"c@5":1,"d@5":1,"c@10":1,"d@10":1,"c@20":2,"d@20":2},
+    {"id":"Q012","type":"별표18·표","scope":3,"fallback":True,"c@5":1,"d@5":1,"c@10":1,"d@10":1,"c@20":1,"d@20":1},
+    {"id":"Q013","type":"위임관계","scope":3,"fallback":False,"c@5":2,"d@5":2,"c@10":2,"d@10":2,"c@20":2,"d@20":2},
+    {"id":"Q014","type":"위임관계","scope":7,"fallback":False,"c@5":1,"d@5":2,"c@10":1,"d@10":2,"c@20":2,"d@20":2},
+    {"id":"Q015","type":"시행관계·별표17","scope":26,"fallback":False,"c@5":2,"d@5":1,"c@10":2,"d@10":1,"c@20":2,"d@20":2},
+    {"id":"Q016","type":"시행관계·별표9","scope":36,"fallback":False,"c@5":0,"d@5":0,"c@10":0,"d@10":0,"c@20":0,"d@20":0},
+    {"id":"Q017","type":"과거시점","scope":0,"fallback":True,"c@5":0,"d@5":0,"c@10":0,"d@10":0,"c@20":0,"d@20":0},
+    {"id":"Q018","type":"과거시점","scope":0,"fallback":True,"c@5":0,"d@5":0,"c@10":0,"d@10":0,"c@20":0,"d@20":0},
+    {"id":"Q019","type":"시간·유효기간","scope":0,"fallback":True,"c@5":0,"d@5":0,"c@10":0,"d@10":0,"c@20":0,"d@20":0},
+    {"id":"Q020","type":"미래시행","scope":0,"fallback":True,"c@5":0,"d@5":0,"c@10":0,"d@10":0,"c@20":0,"d@20":0},
+]
 
 
 @st.cache_data(ttl=120)     # 구글시트를 2분에 한 번 재조회
@@ -144,7 +192,6 @@ def rq_section(rqs):
     for rq in rqs:
         sid = rq.get("id", "")
         status = rq.get("status", "")
-        # 상태 색 아이콘 (앞부분 매칭)
         icon = "🟡"
         for k, v in RQ_STATUS_COLOR.items():
             if status.startswith(k):
@@ -188,6 +235,166 @@ def action_plan_section(ap):
                 st.markdown(f"- {n}")
 
 
+def tt36_pilot_section():
+    """TT36 Pilot A/B/C/D 성능 비교 섹션"""
+    st.subheader("🧪 TT36 Pilot 성능 비교 (20문항 × 4시스템)")
+    st.caption(
+        "출처: TT36_Pilot_ABCD_Review_Metrics_20261014.json  ·  "
+        "⚠️ POSTHOC_DIAGNOSTIC_REVIEW_NOT_FINAL_PAPER_METRICS  ·  "
+        "Retrieval-only (No LLM), NOT FROZEN"
+    )
+
+    tab1, tab2, tab3, tab4 = st.tabs([
+        "📊 Top-K 성능 비교", "↔️ 시스템 간 비교", "🔍 System D 문항별 진단", "📋 버전 유효성"
+    ])
+
+    # ── Tab 1: Top-K 성능 비교 ──────────────────────────────────────
+    with tab1:
+        st.markdown("#### Hit Rate · Micro Recall · MRR · nDCG  (A / B / C / D)")
+
+        for k in [5, 10, 20]:
+            st.markdown(f"##### Top-{k}")
+            rows = []
+            for sys in ["A", "B", "C", "D"]:
+                m = TT36_METRICS[sys][k]
+                rows.append({
+                    "시스템": f"System {sys}",
+                    f"Hit@{k}": f"{m['hit_rate']*100:.0f}%",
+                    f"Micro Recall@{k}": f"{m['micro_recall']*100:.1f}%",
+                    f"MRR@{k}": f"{m['mrr']:.3f}",
+                    f"nDCG@{k}": f"{m['ndcg']:.3f}",
+                })
+            tdf = pd.DataFrame(rows)
+            st.dataframe(tdf, use_container_width=True, hide_index=True)
+
+        st.caption(
+            "Gold TU 총 48건 (20문항). "
+            "Hit@K = 해당 문항의 Gold TU 중 1개 이상이 Top-K에 포함된 문항 비율. "
+            "Micro Recall@K = 전체 Gold TU 중 Top-K에 포함된 비율."
+        )
+
+    # ── Tab 2: 시스템 간 비교 (A-B, B-C, C-D) ──────────────────────
+    with tab2:
+        st.markdown("#### 시스템 간 성능 차이 (Δ = 후자 − 전자)")
+
+        pairs = [("A", "B"), ("B", "C"), ("A", "C"), ("C", "D")]
+        pair_labels = {"AB": "A → B", "BC": "B → C", "AC": "A → C", "CD": "C → D"}
+
+        for k in [5, 10, 20]:
+            st.markdown(f"##### Top-{k}")
+            rows = []
+            for s1, s2 in pairs:
+                m1 = TT36_METRICS[s1][k]
+                m2 = TT36_METRICS[s2][k]
+                dh = m2["hit_rate"] - m1["hit_rate"]
+                dr = m2["micro_recall"] - m1["micro_recall"]
+                dm = m2["mrr"] - m1["mrr"]
+                dn = m2["ndcg"] - m1["ndcg"]
+                lbl = pair_labels.get(s1+s2, f"{s1}→{s2}")
+                rows.append({
+                    "비교": lbl,
+                    f"ΔHit@{k}": f"{dh:+.0%}",
+                    f"ΔRecall@{k}": f"{dr:+.1%}",
+                    f"ΔMRR@{k}": f"{dm:+.3f}",
+                    f"ΔnDCG@{k}": f"{dn:+.3f}",
+                    "해석": (
+                        "B: 전버전 혼입으로 급락" if s1=="A" and s2=="B" else
+                        "C: 시간필터로 B 대비 대폭 회복" if s1=="B" and s2=="C" else
+                        "A vs C: C가 MRR/Recall 소폭 우위" if s1=="A" and s2=="C" else
+                        "D@5 낮음(Graph 미재순위화 영향)"
+                    ),
+                })
+            tdf = pd.DataFrame(rows)
+            st.dataframe(tdf, use_container_width=True, hide_index=True)
+
+        st.info(
+            "**핵심 관찰**\n"
+            "- **A → B**: 전버전 DB 혼입으로 Hit@5 70%→20%, Recall 급락\n"
+            "- **B → C**: 시간필터 적용으로 전구간 회복. C ≥ A\n"
+            "- **A → C**: C가 Recall@10/20·MRR 소폭 우위 (valid_to 필터로 미래법령 차단)\n"
+            "- **C → D**: D Top-5 성능 저하 — Graph 검색 경로 간 점수 미재순위화(GRAPH_FIRST_STABLE_UNION_NOT_SCORE_RERANKED)\n"
+            "- **D@20 = C@20**: Recall·Covered 동일 — 추가 Graph TU가 Top-20 내 순위 확장 효과"
+        )
+
+    # ── Tab 3: System D 문항별 진단 ─────────────────────────────────
+    with tab3:
+        st.markdown("#### System D 문항별 진단 (C vs D, Gold@5/10/20)")
+
+        diag_rows = []
+        for q in TT36_D_DIAGNOSTICS:
+            fb_icon = "🔴 Fallback" if q["fallback"] else "🟢 Graph"
+            diag_rows.append({
+                "문항": q["id"],
+                "유형": q["type"],
+                "Graph 전략": fb_icon,
+                "Scope TU수": q["scope"],
+                "C Gold@5": q["c@5"],
+                "D Gold@5": q["d@5"],
+                "C Gold@10": q["c@10"],
+                "D Gold@10": q["d@10"],
+                "C Gold@20": q["c@20"],
+                "D Gold@20": q["d@20"],
+                "D vs C @5": "=" if q["d@5"]==q["c@5"] else ("▲" if q["d@5"]>q["c@5"] else "▼"),
+            })
+        diag_df = pd.DataFrame(diag_rows)
+
+        # 색상 하이라이트
+        def highlight_diff(val):
+            if val == "▼":
+                return "background-color: #ffe0e0; color: #c00"
+            if val == "▲":
+                return "background-color: #e0ffe0; color: #060"
+            return ""
+
+        styled = diag_df.style.applymap(highlight_diff, subset=["D vs C @5"])
+        st.dataframe(styled, use_container_width=True, hide_index=True)
+
+        st.caption(
+            "🔴 Fallback = GRAPH_SCOPE_EMPTY(scope=0) 또는 FILTERED_ANN_EMPTY(scoped_search=0) → C와 동일 결과. "
+            "▼ = D가 C보다 Gold 적게 검색. "
+            "Q007·Q008·Q010·Q015: Graph 검색했으나 점수 미재순위화로 Gold가 Top-5에서 밀려남."
+        )
+
+        # Fallback 요약
+        fallback_qs = [q["id"] for q in TT36_D_DIAGNOSTICS if q["fallback"]]
+        nonfallback_worse = [q["id"] for q in TT36_D_DIAGNOSTICS if not q["fallback"] and q["d@5"] < q["c@5"]]
+        col1, col2, col3 = st.columns(3)
+        col1.metric("Fallback 문항 수", f"{len(fallback_qs)}/20", help=", ".join(fallback_qs))
+        col2.metric("Graph 검색 문항", f"{20-len(fallback_qs)}/20")
+        col3.metric("Graph 검색 中 @5 성능 저하", f"{len(nonfallback_worse)}문항", help=", ".join(nonfallback_worse))
+
+    # ── Tab 4: 버전 유효성 ──────────────────────────────────────────
+    with tab4:
+        st.markdown("#### Top-K 검색 결과의 시간적 유효성 분포")
+        st.caption("Q: 각 시스템이 반환한 청크의 valid_from/valid_to 기준 분류 (Gold 정합성과 무관)")
+
+        for k in [5, 10, 20]:
+            st.markdown(f"##### Top-{k} (총 반환 = 20문항 × {k})")
+            rows = []
+            for sys in ["A", "B", "C", "D"]:
+                m = TT36_METRICS[sys][k]
+                total = m["valid"] + m.get("future", 0) + m.get("expired", 0)
+                rows.append({
+                    "시스템": f"System {sys}",
+                    "현행 유효": m["valid"],
+                    "미래 시행": m.get("future", 0),
+                    "만료 (구버전)": m.get("expired", 0),
+                    "합계": total,
+                    "유효 비율": f"{m['valid']/total*100:.0f}%" if total else "—",
+                })
+            tdf = pd.DataFrame(rows)
+            st.dataframe(tdf, use_container_width=True, hide_index=True)
+
+        st.warning(
+            "**System A**: `valid_to IS NULL` 필터가 미래 시행 법령을 제외하지 않음 — "
+            "Top-10 기준 200건 중 42건(21%)이 미래 시행 버전.\n\n"
+            "**System B**: 전버전 DB 사용으로 Top-10 기준 200건 중 165건(83%)이 만료 버전.\n\n"
+            "**System C/D**: 시간 필터 적용 — 전 구간 현행 유효 100%."
+        )
+
+    st.divider()
+
+
 @st.fragment(run_every="30s")   # 이 블록만 30초마다 자동 갱신
 def dashboard():
     source_label, project_due, manuscript, action_plan, research_questions, df = load_data()
@@ -220,6 +427,7 @@ def dashboard():
     manuscript_section(manuscript)
     rq_section(research_questions)
     action_plan_section(action_plan)
+    tt36_pilot_section()
 
     st.subheader("Phase별 진행률")
     for phase, g in df.groupby("phase", sort=False):
