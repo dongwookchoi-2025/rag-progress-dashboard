@@ -479,8 +479,17 @@ research_questions = [
             "파일럿(v1.2) 에서 이미 B abstain 15 vs A abstain 6으로 격차가 확인됨."
         ),
         "answer_timing": "TT38 최종 점수·통계 산출 후 (Holdout 80문항 기준, 목표 2026-10 중순)",
-        "current_signal": "파일럿 v1.2 B abstain 15 / A abstain 6 — B 열위 방향 일치. TT35 완료·TT36 착수(2026-10-12) — Pilot20 실행 직전",
-        "status": "TT36 Pilot20 실행 중(Freeze 준비)",
+        "current_signal": (
+            "【TT36 Pilot20 Retrieval 실측 2026-10-14】 "
+            "Hit@10: A=75% · B=30% · C=75% · D=75%. "
+            "Micro Recall@10: A=52.1% · B=12.5% · C=56.3% · D=47.9%. "
+            "MRR@10: A=0.475 · B=0.147 · C=0.500 · D=0.407. "
+            "A > B 방향 강력 확인 — B는 Hit@10에서 A 대비 45%p 급락, "
+            "Recall@10에서 39.6%p 하락. 버전 유효성: A Top-10의 42건(21%)이 미래 시행 법령으로 "
+            "A 필터(`valid_to IS NULL`)의 한계 확인됨. "
+            "본실험(TT37~39) Freeze 결정 대기 중."
+        ),
+        "status": "TT36 Pilot20 Retrieval 완료 · Freeze 대기",
     },
     {
         "id": "RQ2",
@@ -495,8 +504,15 @@ research_questions = [
             "Holdout 80문항에서도 같은 방향이 유지될 것으로 예상."
         ),
         "answer_timing": "TT38 최종 점수·통계 산출 후",
-        "current_signal": "파일럿 v1.2 C abstain 5 / B abstain 15 — C 우위 방향 일치. TT35 완료·TT36 착수(2026-10-12) — Pilot20 실행 직전",
-        "status": "TT36 Pilot20 실행 중(Freeze 준비)",
+        "current_signal": (
+            "【TT36 Pilot20 Retrieval 실측 2026-10-14】 "
+            "C vs B — Hit@10: C 75% vs B 30% (+45%p). "
+            "Micro Recall@10: C 56.3% vs B 12.5% (+43.8%p). "
+            "MRR@10: C 0.500 vs B 0.147 (+0.353). "
+            "버전 유효성: C Top-10 = 100% 현행 유효 / B Top-10 = 만료 버전 83%(165/200건). "
+            "C > B 방향 압도적으로 확인. NOT FROZEN — Freeze 결정 대기 중."
+        ),
+        "status": "TT36 Pilot20 Retrieval 완료 · Freeze 대기",
     },
     {
         "id": "RQ3",
@@ -511,8 +527,18 @@ research_questions = [
             "단순 조회형 문항에서는 C와 차이가 없을 수 있음."
         ),
         "answer_timing": "TT38 최종 점수·통계 산출 후 (C–D 유형별 분해 분석 포함)",
-        "current_signal": "파일럿 v1.2 C vs D 동등 (abstain 5 vs 5, error 0 vs 0) — 본실험에서 유형별 분리 필요. TT35 완료·TT36 착수(2026-10-12) — Pilot20 실행 직전",
-        "status": "TT36 Pilot20 실행 중(Freeze 준비)",
+        "current_signal": (
+            "【TT36 Pilot20 Retrieval 실측 2026-10-14】 "
+            "C vs D — Hit@10: C 75% = D 75% (동등). "
+            "Micro Recall@10: C 56.3% vs D 47.9% (C +8.4%p). "
+            "MRR@10: C 0.500 vs D 0.407 (C +0.093). "
+            "⚠️ D Top-5 성능 저하: Hit@5 C=70% vs D=60%, Recall@5 C=39.6% vs D=31.3% — "
+            "원인: Graph 경로 간 점수 미재순위화(GRAPH_FIRST_STABLE_UNION_NOT_SCORE_RERANKED). "
+            "Fallback 9/20문항(GRAPH_SCOPE_EMPTY 7건+FILTERED_ANN_EMPTY 2건). "
+            "D@20 = C@20 (Recall 60.4% 동등) — Graph가 Top-20 순위 확장에는 기여. "
+            "현재 시그널: C ≥ D, D Top-5 재순위화 보완 필요. NOT FROZEN — Freeze 결정 대기 중."
+        ),
+        "status": "TT36 Pilot20 Retrieval 완료 · Freeze 대기",
     },
     {
         "id": "RQ4",
@@ -527,8 +553,18 @@ research_questions = [
             "최종 권고는 TT38 통계검정·오류분석·TT39 Discussion 집필 후 확정."
         ),
         "answer_timing": "TT39 Discussion 작성 후 (목표 2026-10 후반)",
-        "current_signal": "파일럿 신호 기반 잠정 방향: C 또는 D 권고 예상 — TT35 완료·TT36 착수(2026-10-12) Pilot20 실행 직전, 본실험(TT37~39) 대기 중",
-        "status": "TT36 Pilot20 실행 중(Freeze 준비)",
+        "current_signal": (
+            "【TT36 Pilot20 Retrieval 실측 2026-10-14 종합】 "
+            "MRR@10 순위: C(0.500) > A(0.475) > D(0.407) ≫ B(0.147). "
+            "Hit@10: A=C=D=75% (동등) > B=30%. "
+            "Recall@10: C(56.3%) > A(52.1%) > D(47.9%) ≫ B(12.5%). "
+            "잠정 결론: B 탈락 확정적. C가 전구간 안정적 최우위. "
+            "A는 미래법령 필터 미비(Top-10 중 21% 미래 시행). "
+            "D는 Top-5 재순위화 미비로 열위하나, Top-20에서 C와 동등 회복. "
+            "현재 시그널: C 권고 우위 — D는 재순위화 보완 후 재평가 필요. "
+            "NOT FROZEN — TT37 본실험 Freeze 결정 대기 중."
+        ),
+        "status": "TT36 Pilot20 Retrieval 완료 · Freeze 대기",
     },
 ]
 

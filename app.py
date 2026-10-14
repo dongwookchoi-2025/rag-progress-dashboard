@@ -424,38 +424,43 @@ def dashboard():
         st.markdown(f"**작업종료 예정일: {project_due}**")
     st.divider()
 
-    manuscript_section(manuscript)
-    rq_section(research_questions)
-    action_plan_section(action_plan)
-    tt36_pilot_section()
+    main_tab, pilot_tab = st.tabs(["📋 Task 진행 현황", "🧪 TT36 Pilot 성능 비교"])
 
-    st.subheader("Phase별 진행률")
-    for phase, g in df.groupby("phase", sort=False):
-        pct = int(round(g["progress"].mean()))
-        label, bar = st.columns([2, 3])
-        label.markdown(f"**{phase}**  ·  {(g['status']=='완료').sum()}/{len(g)} 완료")
-        bar.progress(pct / 100, text=f"{pct}%")
-    st.divider()
+    with main_tab:
+        manuscript_section(manuscript)
+        rq_section(research_questions)
+        action_plan_section(action_plan)
 
-    st.subheader("Task 상세 — 항목을 클릭하면 작업내용이 펼쳐집니다")
-    show_done = st.checkbox("완료 항목도 보기", value=False)
-    view = df if show_done else df[df["status"] != "완료"]
+        st.subheader("Phase별 진행률")
+        for phase, g in df.groupby("phase", sort=False):
+            pct = int(round(g["progress"].mean()))
+            label, bar = st.columns([2, 3])
+            label.markdown(f"**{phase}**  ·  {(g['status']=='완료').sum()}/{len(g)} 완료")
+            bar.progress(pct / 100, text=f"{pct}%")
+        st.divider()
 
-    for phase, group in view.groupby("phase", sort=False):
-        st.markdown(f"#### {phase}")
-        for _, r in group.iterrows():
-            icon = STATUS_COLOR.get(r["status"], "")
-            header = f"{icon} {r['id']} · {r['name']}  —  {r['status']} ({int(r['progress'])}%) · {r['owner']}"
-            expanded = r["status"] in ("진행중", "검토중") or bool(r.get("blocker"))
-            with st.expander(header, expanded=expanded):
-                detail_block(r)
+        st.subheader("Task 상세 — 항목을 클릭하면 작업내용이 펼쳐집니다")
+        show_done = st.checkbox("완료 항목도 보기", value=True)
+        view = df if show_done else df[df["status"] != "완료"]
 
-    st.divider()
-    with st.expander("전체 표로 보기"):
-        st.dataframe(
-            df[["id", "phase", "name", "owner", "status", "progress", "due"]],
-            use_container_width=True, hide_index=True,
-        )
+        for phase, group in view.groupby("phase", sort=False):
+            st.markdown(f"#### {phase}")
+            for _, r in group.iterrows():
+                icon = STATUS_COLOR.get(r["status"], "")
+                header = f"{icon} {r['id']} · {r['name']}  —  {r['status']} ({int(r['progress'])}%) · {r['owner']}"
+                expanded = r["status"] in ("진행중", "검토중") or bool(r.get("blocker"))
+                with st.expander(header, expanded=expanded):
+                    detail_block(r)
+
+        st.divider()
+        with st.expander("전체 표로 보기"):
+            st.dataframe(
+                df[["id", "phase", "name", "owner", "status", "progress", "due"]],
+                use_container_width=True, hide_index=True,
+            )
+
+    with pilot_tab:
+        tt36_pilot_section()
 
 
 st.title("항공안전법령 RAG 검증 — 진행 현황")
