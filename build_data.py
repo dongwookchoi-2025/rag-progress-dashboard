@@ -222,14 +222,16 @@ tasks = [
 
  {"id":"TT36","phase":"Phase 7 · 실험하고 비교하기","name":"Pilot 20문항 실행·설정 Freeze","owner":"최동욱","status":"진행중","progress":20,"due":"2026-09-19",
   "goal":"Pilot 20으로 허용된 설정선택을 끝낸 뒤 code/config/data/Gold를 Freeze하여 본실험 결과를 본 후 튜닝하는 것을 차단한다.",
-  "pred":"TT29, TT35","succ":"TT37","collab":"정재훈","blocker":"공통 LLM provider/model/revision 및 reranker 결정 PENDING; 서버 최신 해시 readback 미완료",
+  "pred":"TT29, TT35","succ":"TT37","collab":"정재훈","blocker":"공통 LLM model/revision PENDING_TT36_PILOT_FREEZE(PI 핀 필요); reranker 정책 PI 결정 PENDING(BAAI/bge-reranker-v2-m3 다운로드 완료); A/B/C/D 모든 시스템 rerank 적용 불가 상태(legacy contract — PI 결정 후 해소)",
   "outputs":"Pilot_Freeze / YAML freeze_hashes / Freeze_Log",
   "detail":"2026-10-12 연구책임자 TT36 착수 승인(START_AUTHORIZED). "
            "담당: 최동욱(주담당·Freeze 승인), 정재훈(QA), 설지원(A/B/C/D 운영환경). "
-           "착수 직후 게이트: 시스템 A/B/C/D·Python코드·Milvus 15,966벡터·Neo4j 연결 및 해시 확인; "
+           "착수 직후 게이트: 시스템 A/B/C/D·Python코드·DuckDB chunks_final 15,654행·Parquet 468행·Neo4j 연결 및 해시 확인; "
            "각 시스템이 Q001–Q020만 사용, Main enabled=false 검증; "
-           "reranker 불일치(TT35 YAML prohibited_features vs common_conditions) 해소 후 실행. "
-           "2026-10-13 현재: 설정 사전점검 READ_ONLY_CONFIG_REVIEW / PILOT_NOT_EXECUTED / FREEZE_PENDING."},
+           "reranker 정책(BAAI/bge-reranker-v2-m3 다운로드 완료) PI 결정 PENDING. "
+           "2026-10-13 Preflight 결과: CONTROL_APPLIED_ONLY_PILOT_NOT_EXECUTED. "
+           "BLOCK: 공통 LLM model/revision PENDING_TT36_PILOT_FREEZE — 핀 완료 후 Pilot 실행 가능. "
+           "TT37 main.enabled=false 확인. active_config SHA256: d17c88bc."},
 
  {"id":"TT37","phase":"Phase 7 · 실험하고 비교하기","name":"4개 시스템 Holdout 80문항 본실험","owner":"설지원","status":"미착수","progress":0,"due":"2026-09-20",
   "goal":"동일 Holdout 80을 A/B/C/D에 실행하고 모든 retrieval evidence·version·answer·latency·trace를 단일 run dataset에 저장한다.",
